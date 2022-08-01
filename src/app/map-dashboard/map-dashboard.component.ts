@@ -17,7 +17,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.latitude = this.QUEBEC_CITY.latitude;
     this.longitude = this.QUEBEC_CITY.longitude;
   }
-
+//
   ngOnInit() {
 
     this.map = new ol.Map({
