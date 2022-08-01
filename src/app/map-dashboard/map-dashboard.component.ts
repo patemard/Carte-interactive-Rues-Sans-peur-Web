@@ -12,8 +12,12 @@ export class MapDashboardComponent extends Helper implements OnInit {
   longitude: number;
 
   map: any;
-  constructor() { super();}
-
+  constructor() {
+    super();
+    this.latitude = this.QUEBEC_CITY.latitude;
+    this.longitude = this.QUEBEC_CITY.longitude;
+  }
+//
   ngOnInit() {
 
     this.map = new ol.Map({
@@ -24,7 +28,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
         })
       ],
       view: new ol.View({
-        center: ol.proj.fromLonLat([this.QUEBEC.latitude, this.QUEBEC.longitude]),
+        center: ol.proj.fromLonLat([this.longitude, this.latitude]),
         zoom: 8
       })
     });
