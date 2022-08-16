@@ -123,8 +123,4 @@ export class MapDashboardComponent extends Helper implements OnInit {
     // console.log(layer, "layer")
   }
 
-  saveTag() {
-    console.log(  this.currentTag);
-  }
-
 }
