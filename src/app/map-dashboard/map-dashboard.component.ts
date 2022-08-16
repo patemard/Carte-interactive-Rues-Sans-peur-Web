@@ -1,6 +1,8 @@
+import { ThisReceiver } from '@angular/compiler';
 import { Component, OnInit } from '@angular/core';
 import { Helper } from '../helper';
 import { Coord } from '../Models/Coord';
+import { Tag } from '../Models/tag';
 declare var ol: any;
 
 @Component({
@@ -11,12 +13,13 @@ declare var ol: any;
 export class MapDashboardComponent extends Helper implements OnInit {
   latitude: number;
   longitude: number;
-
+  tags: Tag[];
   map: any;
   constructor() {
     super();
     this.latitude = this.QUEBEC_CITY.latitude;
     this.longitude = this.QUEBEC_CITY.longitude;
+    this.tags = [];
   }
   ngOnInit() {
     this.map = new ol.Map({
@@ -37,11 +40,14 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
     this.map.on('click', (evt: any) => {
       console.log(ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326'));
-      // Donne [0]: latt, [1]: long.
+      // [0]: latt, [1]: long.
       let Coords = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
-      let Coordinates = new Coord(Coords[1], Coords[0]);
-      this.createTag(Coordinates);
-      this.setCenter(Coordinates);
+      let Coordinates = new Coord(Coords[0] ,Coords[1]);
+      if (this.map.getView().getZoom() >= 18) {
+        this.createTag(Coordinates);
+      } else {
+        this.setCenter(Coordinates);
+      }
     })
     this.initPopup();
   }
@@ -67,13 +73,12 @@ export class MapDashboardComponent extends Helper implements OnInit {
       };
     }
     this.map.on('singleclick',  (event: any) => {
-
+      // check pour tag fais avec createTag()
       if (this.map.hasFeatureAtPixel(event.pixel) === true) {
-        console.log(event)
-        console.log(this.map)
+        console.log(event, "event")
+        console.log(this.map, "this.map")
           var coordinate = event.coordinate;
 
-      //   if (content){content.innerHTML = '<b>Hello world!</b><br />I am a popup.';}
           overlay.setPosition(coordinate);
       } else {
           overlay.setPosition(undefined);
@@ -88,9 +93,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
     view.setZoom(18);
   }
 
-  // Mettre pour que zoom 18 sois le minimum pour mettre un poiunt
   createTag(Coord: Coord) {
-    var layer = new ol.layer.Vector({
+    let layer = new ol.layer.Vector({
       source: new ol.source.Vector({
           features: [
               new ol.Feature({
@@ -99,7 +103,22 @@ export class MapDashboardComponent extends Helper implements OnInit {
           ]
       })
     });
-  this.map.addLayer(layer);
+
+    let ids:any = [];
+     this.tags.forEach(tag=>{
+      ids.push(tag._id);
+     })
+    let highestId = Math.max(ids);
+    let newId = highestId ? highestId + 1 : 1;
+    let newTag: Tag = {
+      _id: newId,
+      coord: Coord = {longitude: Coord.longitude,latitude: Coord.latitude},
+    };
+    layer.tag = newTag;
+
+    this.map.addLayer(layer);
+    this.tags.push(newTag);
+    // console.log(layer, "layer")
   }
 
 }
