@@ -14,12 +14,14 @@ export class MapDashboardComponent extends Helper implements OnInit {
   latitude: number;
   longitude: number;
   tags: Tag[];
+  currentTag: Tag;
   map: any;
   constructor() {
     super();
     this.latitude = this.QUEBEC_CITY.latitude;
     this.longitude = this.QUEBEC_CITY.longitude;
     this.tags = [];
+    this.currentTag = new Tag();
   }
   ngOnInit() {
     this.map = new ol.Map({
@@ -119,6 +121,10 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.map.addLayer(layer);
     this.tags.push(newTag);
     // console.log(layer, "layer")
+  }
+
+  saveTag() {
+    console.log(  this.currentTag);
   }
 
 }
