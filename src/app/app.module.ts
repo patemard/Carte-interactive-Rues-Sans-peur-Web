@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule} from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
@@ -9,7 +9,10 @@ import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.compo
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatInputModule} from '@angular/material/input';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
-import {MatCardModule} from '@angular/material/card';
+import { MatCardModule } from '@angular/material/card';
+import { MatButtonModule } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -30,8 +33,10 @@ import {MatCardModule} from '@angular/material/card';
       // wildcard
       {path: '**', component: PageNotFoundComponent}
     ]),
+    FormsModule,
     BrowserAnimationsModule,
     MatInputModule,
+    MatButtonModule,
     MatCardModule
   ],
   providers: [

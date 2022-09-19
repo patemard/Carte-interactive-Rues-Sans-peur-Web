@@ -8,14 +8,23 @@
       <form class="tag-form">
         <mat-form-field class="full-width" appearance="fill">
           <mat-label>Titre</mat-label>
-          <input matInput placeholder="Situation">
+          <input name="titleInput"
+          matInput placeholder="Titre"
+          [(ngModel)]="currentTag.title">
         </mat-form-field>
 
         <mat-form-field class="full-width" appearance="fill">
           <mat-label>Description</mat-label>
-          <textarea matInput placeholder=""></textarea>
+          <textarea name="descInput"
+          matInput placeholder="Description"
+          [(ngModel)]="currentTag.description"></textarea>
         </mat-form-field>
       </form>
+      <button name="saveBtn"
+      mat-raised-button color="primary"
+      (click)="saveTag()" >Sauvegarder
+      </button>
+
     </div>
   </mat-card>
   </div>
