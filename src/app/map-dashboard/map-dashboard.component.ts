@@ -1,8 +1,11 @@
 import { ThisReceiver } from '@angular/compiler';
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import { Helper } from '../helper';
 import { Coord } from '../Models/Coord';
 import { Tag } from '../Models/tag';
+import { TagService } from '../Service/tag.service';
+import { Router } from '@angular/router';
+import { FormBuilder, FormGroup } from '@angular/forms';
 declare var ol: any;
 
 @Component({
@@ -16,12 +19,27 @@ export class MapDashboardComponent extends Helper implements OnInit {
   tags: Tag[];
   currentTag: Tag;
   map: any;
-  constructor() {
+  description: string;
+  title: string;
+  // tagForm: FormGroup;
+  constructor(
+      private tagService: TagService,
+      private router: Router,
+      private ngZone: NgZone,
+      // public formBuilder: FormBuilder
+      ) {
     super();
     this.latitude = this.QUEBEC_CITY.latitude;
     this.longitude = this.QUEBEC_CITY.longitude;
     this.tags = [];
     this.currentTag = new Tag();
+    this.description = '';
+    this.title = '';
+    // this.tagForm = this.formBuilder.group({
+    //   title: [''],
+    //   description: [''],
+    //   coord: []
+    // })
   }
   ngOnInit() {
     this.map = new ol.Map({
@@ -45,6 +63,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       // [0]: latt, [1]: long.
       let Coords = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
       let Coordinates = new Coord(Coords[0] ,Coords[1]);
+      this.currentTag.coord = Coordinates;
       if (this.map.getView().getZoom() >= 18) {
         this.createTag(Coordinates);
       } else {
@@ -123,4 +142,20 @@ export class MapDashboardComponent extends Helper implements OnInit {
     // console.log(layer, "layer")
   }
 
-}
+
+  onSubmit(): any {
+
+    this.tagService.addTag(this.currentTag)
+    .subscribe(() => {
+        console.log('Data added successfully!')
+        this.ngZone.run(() => this.router.navigateByUrl('/Map'))
+      }, (err: any) => {
+        console.log(err);
+    });
+  }
+
+  log() {
+    console.log(this.currentTag);
+  }
+
+  }

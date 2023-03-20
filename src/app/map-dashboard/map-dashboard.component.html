@@ -19,12 +19,8 @@
           matInput placeholder="Description"
           [(ngModel)]="currentTag.description"></textarea>
         </mat-form-field>
+        <button mat-button (click)="onSubmit()">Click me!</button>
       </form>
-      <button name="saveBtn"
-      mat-raised-button color="primary"
-      (click)="saveTag()" >Sauvegarder
-      </button>
-
     </div>
   </mat-card>
   </div>
