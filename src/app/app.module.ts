@@ -8,12 +8,13 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-
+import {MatRadioModule} from '@angular/material/radio'
 
 @NgModule({
   declarations: [
@@ -39,6 +40,8 @@ import { HttpClientModule } from '@angular/common/http';
     MatInputModule,
     MatButtonModule,
     MatCardModule,
+    MatSelectModule,
+    MatRadioModule,
     HttpClientModule,
   ],
   providers: [

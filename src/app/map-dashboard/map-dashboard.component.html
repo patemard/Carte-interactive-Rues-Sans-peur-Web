@@ -13,6 +13,24 @@
           [(ngModel)]="currentTag.title">
         </mat-form-field>
 
+        <mat-form-field appearance="fill">
+          <mat-label>Émotion</mat-label>
+          <mat-select [(ngModel)]="selectedEmotion" >
+            <mat-option *ngFor="let emotion of emotions" class="{{emotion.color}}" [value]="emotion.name">
+              <i class="fa-solid fa-{{emotion.icon}} fa-xl" title="{{emotion.name}}"></i>{{emotion.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="fill">
+          <mat-label>Transport</mat-label>
+          <mat-select [(ngModel)]="selectedTransport" >
+            <mat-option *ngFor="let transport of transports" [value]="transport.name">
+              <i class="fa-solid fa-{{transport.icon}} fa-xl" title="{{transport.name}}"></i>{{transport.name}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
         <mat-form-field class="full-width" appearance="fill">
           <mat-label>Description</mat-label>
           <textarea name="descInput"
