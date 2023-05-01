@@ -1,11 +1,9 @@
-import { ThisReceiver } from '@angular/compiler';
 import { Component, NgZone, OnInit } from '@angular/core';
 import { Helper } from '../helper';
 import { Coord } from '../Models/Coord';
 import { Tag } from '../Models/tag';
 import { TagService } from '../Service/tag.service';
 import { Router } from '@angular/router';
-import { FormBuilder, FormGroup } from '@angular/forms';
 declare var ol: any;
 
 @Component({
@@ -21,12 +19,28 @@ export class MapDashboardComponent extends Helper implements OnInit {
   map: any;
   description: string;
   title: string;
-  // tagForm: FormGroup;
+  selectedEmotion: any;
+  selectedTransport: any;
+
+  emotions = [
+    { name: "Évènement", icon: "circle-exclamation", color: "blue" },
+    { name: "Fierté ", icon: "face-smile", color: "yellow" },
+    { name: "tristesse ", icon: "face-sad-tear", color: "light-blue" },
+    { name: "frustration", icon: "face-angry", color: "purple" },
+    { name: "peur", icon: "frown-open", color: "red" }
+  ]
+
+  transports = [
+    { name: "Marche", icon: "person-walking"},
+    { name: "Vélo ", icon: "bicycle"},
+    { name: "Bus ", icon: "bus" },
+    { name: "Voiture ", icon: "car"},
+  ]
+
   constructor(
       private tagService: TagService,
       private router: Router,
       private ngZone: NgZone,
-      // public formBuilder: FormBuilder
       ) {
     super();
     this.latitude = this.QUEBEC_CITY.latitude;
@@ -35,12 +49,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.currentTag = new Tag();
     this.description = '';
     this.title = '';
-    // this.tagForm = this.formBuilder.group({
-    //   title: [''],
-    //   description: [''],
-    //   coord: []
-    // })
   }
+
   ngOnInit() {
     this.map = new ol.Map({
       target: 'map',
@@ -57,19 +67,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
         zoom: 14
       })
     });
-
-    this.map.on('click', (evt: any) => {
-      console.log(ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326'));
-      // [0]: latt, [1]: long.
-      let Coords = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
-      let Coordinates = new Coord(Coords[0] ,Coords[1]);
-      this.currentTag.coord = Coordinates;
-      if (this.map.getView().getZoom() >= 18) {
-        this.createTag(Coordinates);
-      } else {
-        this.setCenter(Coordinates);
-      }
-    })
     this.initPopup();
   }
 
@@ -93,19 +90,31 @@ export class MapDashboardComponent extends Helper implements OnInit {
           return false;
       };
     }
+    this.map.on('click', (evt: any) => {
+      console.log(ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326'));
+      // [0]: latt, [1]: long.
+      let Coords = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
+      let Coordinates = new Coord(Coords[0] ,Coords[1]);
+      this.currentTag.coord = Coordinates;
+      if (this.map.getView().getZoom() >= 18) {
+        this.createTag(Coordinates);
+      } else {
+        this.setCenter(Coordinates);
+      }
+
+    })
     this.map.on('singleclick',  (event: any) => {
       // check pour tag fais avec createTag()
       if (this.map.hasFeatureAtPixel(event.pixel) === true) {
         console.log(event, "event")
         console.log(this.map, "this.map")
           var coordinate = event.coordinate;
-
           overlay.setPosition(coordinate);
       } else {
           overlay.setPosition(undefined);
           if (closer) {closer.blur();}
       }
-  });
+    });
   }
 
   setCenter(Coord: Coord) {
@@ -125,26 +134,11 @@ export class MapDashboardComponent extends Helper implements OnInit {
       })
     });
 
-    let ids:any = [];
-     this.tags.forEach(tag=>{
-      ids.push(tag._id);
-     })
-    let highestId = Math.max(ids);
-    let newId = highestId ? highestId + 1 : 1;
-    let newTag: Tag = {
-      _id: newId,
-      coord: Coord = {longitude: Coord.longitude,latitude: Coord.latitude},
-    };
-    layer.tag = newTag;
-
     this.map.addLayer(layer);
-    this.tags.push(newTag);
-    // console.log(layer, "layer")
   }
 
 
   onSubmit(): any {
-
     this.tagService.addTag(this.currentTag)
     .subscribe(() => {
         console.log('Data added successfully!')
