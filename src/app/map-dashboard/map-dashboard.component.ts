@@ -25,9 +25,9 @@ export class MapDashboardComponent extends Helper implements OnInit {
   emotions = [
     { name: "Évènement", icon: "circle-exclamation", color: "blue" },
     { name: "Fierté ", icon: "face-smile", color: "yellow" },
-    { name: "tristesse ", icon: "face-sad-tear", color: "light-blue" },
-    { name: "frustration", icon: "face-angry", color: "purple" },
-    { name: "peur", icon: "frown-open", color: "red" }
+    { name: "Tristesse ", icon: "face-sad-tear", color: "light-blue" },
+    { name: "Frustration", icon: "face-angry", color: "purple" },
+    { name: "Peur", icon: "frown-open", color: "red" }
   ]
 
   transports = [

@@ -5,6 +5,8 @@ export class Tag {
   coord?: Coord;
   description?: string;
   title?: string;
+  genre?: string;
+  transport?: string
 
   constructor() {
   }

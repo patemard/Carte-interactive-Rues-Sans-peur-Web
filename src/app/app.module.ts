@@ -27,10 +27,9 @@ import {MatRadioModule} from '@angular/material/radio'
   imports: [
     BrowserModule,
     RouterModule.forRoot([
-      {path: 'Acceuil', component: HomeComponent },
       {path: 'Map', component: MapDashboardComponent},
       {path: 'Admin', component: AdminDashboardComponent},
-      {path: '', redirectTo: '/Acceuil', pathMatch: 'full'},
+      {path: '', redirectTo: '/Map', pathMatch: 'full'},
 
       // wildcard
       {path: '**', component: PageNotFoundComponent}
