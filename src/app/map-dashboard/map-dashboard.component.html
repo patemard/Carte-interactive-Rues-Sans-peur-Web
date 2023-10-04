@@ -4,55 +4,74 @@
   <div class="container px-4 text-center">
       <h1 class="fw-bolder">Bienvenue dans la cartographie émotionnelle!</h1>
       <p class="lead">{{loremIpsum}}</p>
-      <a class="btn btn-lg btn-light" href="#about">Participer a l'aventure</a>
+      <a class="btn btn-lg btn-outline-atv" href="#about">gravida eget massa</a>
   </div>
 </header>
 
 
 <div id="map" class="map"></div>
   <div id="popup" class="ol-popup">
-    <mat-card>
-      <a href="#" id="popup-closer" class="ol-popup-closer"></a>
+    <mat-card *ngIf="showPopup">
       <div id="popup-content">
         <form class="tag-form">
           <mat-form-field class="full-width" appearance="fill">
             <mat-label>Titre</mat-label>
             <input name="titleInput"
-            matInput placeholder="Titre"
-            [(ngModel)]="currentTag.title">
+              matInput placeholder="Titre"
+              [(ngModel)]="currentTag.title"
+              [disabled]="disableEdit">
           </mat-form-field>
 
-          <mat-form-field appearance="fill">
-            <mat-label>Émotion</mat-label>
-            <mat-select [(ngModel)]="selectedEmotion" name="Sélection émotion">
-              <mat-option *ngFor="let emotion of emotions" class="{{emotion.color}}" [value]="emotion.name">
-                <i class="fa-solid fa-{{emotion.icon}} fa-xl" title="{{emotion.name}}"></i>{{emotion.name}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
-          <mat-form-field appearance="fill">
-            <mat-label>Transport</mat-label>
-            <mat-select [(ngModel)]="selectedTransport" name="Sélection transport">
-              <mat-option *ngFor="let transport of transports" [value]="transport.name">
-                <i class="fa-solid fa-{{transport.icon}} fa-xl" title="{{transport.name}}"></i>{{transport.name}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+        <div class="row">
+          <div class="col-md-6">
+            <mat-form-field appearance="fill">
+              <mat-label>Émotion</mat-label>
+              <mat-select name="Sélection émotion"
+                [(ngModel)]="selectedEmotion" [disabled]="disableEdit">
+                <mat-option *ngFor="let emotion of emotions" class="{{emotion.class}}" [value]="emotion.name">
+                  <i class="fa-solid fa-{{emotion.icon}} fa-xl" title="{{emotion.name}}"></i>{{emotion.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field appearance="fill">
+              <mat-label>Transport</mat-label>
+              <mat-select name="Sélection transport"
+                [(ngModel)]="selectedTransport" [disabled]="disableEdit">
+                <mat-option *ngFor="let transport of transports" [value]="transport.name">
+                  <i class="fa-solid fa-{{transport.icon}} fa-xl" title="{{transport.name}}"></i>{{transport.name}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </div>
 
           <mat-form-field class="full-width" appearance="fill">
             <mat-label>Description</mat-label>
             <textarea name="descInput"
-            matInput placeholder="Description"
-            [(ngModel)]="currentTag.description"></textarea>
+              matInput placeholder="Description"
+              [(ngModel)]="currentTag.description"
+              [disabled]="disableEdit"></textarea>
           </mat-form-field>
-          <button mat-button (click)="onSubmit()">Cartographier cette émotion</button>
+          
+          <div class="row">
+            <div class="col-md-4">
+              <button mat-raised-button 
+                (click)="onSubmit()"
+                [disabled]="disableEdit">Cartographier cette émotion</button>
+            </div>      
+            <div class="col-md-3 offset-md-5">
+             <button mat-raised-button
+               (click)="initializeOnLoad()">Fermer</button>
+            </div>
+          </div>
         </form>
       </div>
     </mat-card>
   </div>
   <!-- Contact section-->
-  <section id="contact">
+  <section id="contact" class="bg-secondary">
     <div class="container px-4">
         <div class="row gx-4 justify-content-center">
             <div class="col-lg-8">

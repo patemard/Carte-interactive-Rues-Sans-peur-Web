@@ -1,9 +1,9 @@
 import { Component, NgZone, OnInit } from '@angular/core';
 import { Helper } from '../helper';
-import { Coord } from '../Models/Coord';
 import { Tag } from '../Models/tag';
 import { TagService } from '../Service/tag.service';
 import { Router } from '@angular/router';
+import { Coordinates } from '../Models/Coordinates';
 declare var ol: any;
 
 @Component({
@@ -11,23 +11,27 @@ declare var ol: any;
   templateUrl: './map-dashboard.component.html',
   styleUrls: ['./map-dashboard.component.css']
 })
+
 export class MapDashboardComponent extends Helper implements OnInit {
-  latitude: number;
-  longitude: number;
-  tags: Tag[];
-  currentTag: Tag;
-  map: any;
-  description: string;
-  title: string;
+  latitude: number = 0;
+  longitude: number = 0;
+  currentTag: Tag = new Tag;
+  map: any; 
+  description: string = '';
+  title: string = '';
   selectedEmotion: any;
   selectedTransport: any;
+  layer: any;
+  showPopup: boolean = false;
+  disableEdit: boolean = false;
+  tagList: any = [];
 
   emotions = [
-    { name: "Évènement", icon: "circle-exclamation", color: "blue" },
-    { name: "Fierté ", icon: "face-smile", color: "yellow" },
-    { name: "Tristesse ", icon: "face-sad-tear", color: "light-blue" },
-    { name: "Frustration", icon: "face-angry", color: "purple" },
-    { name: "Peur", icon: "frown-open", color: "red" }
+    { name: "Évènement", icon: "circle-exclamation"},
+    { name: "Fierté ", icon: "face-smile", class: "yellow" },
+    { name: "Tristesse ", icon: "face-sad-tear"  },
+    { name: "Frustration", icon: "face-angry" },
+    { name: "Peur", icon: "frown-open"}
   ]
 
   transports = [
@@ -42,13 +46,20 @@ export class MapDashboardComponent extends Helper implements OnInit {
       private router: Router,
       private ngZone: NgZone,
       ) {
-    super();
+    super();    
+    this.initializeOnLoad();
+  }
+
+  initializeOnLoad() {
     this.latitude = this.QUEBEC_CITY.latitude;
     this.longitude = this.QUEBEC_CITY.longitude;
-    this.tags = [];
     this.currentTag = new Tag();
     this.description = '';
-    this.title = '';
+    this.title = '';  
+    this.showPopup = false;
+    this.disableEdit = false;
+    this.selectedEmotion = '';
+    this.selectedTransport = '';
   }
 
   ngOnInit() {
@@ -67,13 +78,70 @@ export class MapDashboardComponent extends Helper implements OnInit {
         zoom: 14
       })
     });
+    this.map.addEventListener('wheel', this.processWheelEvent)
     this.initPopup();
+    this.getTags();
+  }
+
+  getTags() {
+    this.tagService.getTags()
+    .subscribe(data => {
+      this.tagList = data;
+      console.log(data)
+      this.populateLayers();
+    })
+  }
+
+  populateLayers() {
+    // let tagListGeoJson = [];
+    // for (let i = 0; i < this.tagList.length; i++) {
+    //   const tag = this.tagList[i];
+    //   tagListGeoJson.push(this.mapToGeoJSON(tag));
+    // }
+    // let tagListString = JSON.stringify(tagListGeoJson)
+    // let tagListGeoJSONFormat = tagListString.slice(1,-1);
+
+    let vector = new ol.layer.Vector({
+      source: new ol.source.Vector({
+        // url:,
+        format: new ol.format.GeoJSON(),
+        wrapX: false
+      })
+    });
+
+    // console.log(tagListGeoJSONFormat)
+    
+    // const features = new ol.format.GeoJSON().readFeatures(tagListGeoJSONFormat);
+    // vector.addFeatures(features);
+
+    this.map.addLayer(vector);
+    
+  }
+
+  mapToGeoJSON(tag: any) {
+    return {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [Number(tag.latitude), Number(tag.longitude)] 
+      },
+      "properties": {
+        "title": tag.title,
+        "description": tag.text,
+        "transport": tag.transport,
+        "emotion": tag.emotion
+      }
+    }
+  }
+
+  processWheelEvent(evt: any) {
+    evt.preventDefault();
   }
 
   initPopup() {
     var container = document.getElementById('popup');
     var content = document.getElementById('popup-content');
-    var closer = document.getElementById('popup-closer');
+    // var closer = document.getElementById('popup-closer');
 
     var overlay = new ol.Overlay({
         element: container,
@@ -82,74 +150,99 @@ export class MapDashboardComponent extends Helper implements OnInit {
             duration: 250
         }
     });
+
     this.map.addOverlay(overlay);
-    if (closer) {
-      closer.onclick = function() {
-          overlay.setPosition(undefined);
-          if (closer) {closer.blur();}
-          return false;
-      };
-    }
     this.map.on('click', (evt: any) => {
-      console.log(ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326'));
-      // [0]: latt, [1]: long.
-      let Coords = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
-      let Coordinates = new Coord(Coords[0] ,Coords[1]);
-      this.currentTag.coord = Coordinates;
-      if (this.map.getView().getZoom() >= 18) {
-        this.createTag(Coordinates);
+      if (this.map.hasFeatureAtPixel(evt.pixel) === true) {
+        var feature = this.map.forEachFeatureAtPixel(evt.pixel, 
+          function(feature: any) {
+            return feature;
+          })
+          
+        this.currentTag = {
+          id: feature.values_.data.id,
+          title: feature.values_.data.title,
+          description: feature.values_.data.text,
+         }
+        this.selectedEmotion = feature.values_.data.emotion;
+        this.selectedTransport = feature.values_.data.transport;
+        this.showPopup = true;
+        this.disableEdit = true;
+        console.log( feature.values_.data)
+        
       } else {
-        this.setCenter(Coordinates);
+        this.initializeOnLoad();
+        // [0]: latt, [1]: long.
+        let Coords = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
+        this.currentTag.coordinates = new Coordinates(Coords[0] ,Coords[1]);
+        
+        if (this.map.getView().getZoom() >= 18) {
+          this.showPopup = true;
+          overlay.setPosition(evt.coordinate);
+        } else {
+          this.setCenter(this.currentTag.coordinates);
+        }
       }
-
     })
-    this.map.on('singleclick',  (event: any) => {
-      // check pour tag fais avec createTag()
-      if (this.map.hasFeatureAtPixel(event.pixel) === true) {
-        console.log(event, "event")
-        console.log(this.map, "this.map")
-          var coordinate = event.coordinate;
-          overlay.setPosition(coordinate);
-      } else {
-          overlay.setPosition(undefined);
-          if (closer) {closer.blur();}
-      }
-    });
   }
+  
 
-  setCenter(Coord: Coord) {
+  setCenter(Coord: Coordinates) {
     var view = this.map.getView();
     view.setCenter(ol.proj.fromLonLat([Coord.longitude, Coord.latitude]));
     view.setZoom(18);
   }
 
-  createTag(Coord: Coord) {
-    let layer = new ol.layer.Vector({
+  /**
+   * Creates the tag's visual point on the map.
+   * @param data - tag data
+   */
+  createTag(data: any) {
+    this.layer = new ol.layer.Vector({
       source: new ol.source.Vector({
           features: [
               new ol.Feature({
-                  geometry: new ol.geom.Point(ol.proj.fromLonLat([Coord.longitude, Coord.latitude]))
+                  geometry: new ol.geom.Point(ol.proj.fromLonLat([data.longitude, data.latitude])),
+                  data: data
               })
           ]
       })
     });
 
-    this.map.addLayer(layer);
+    this.map.addLayer(this.layer);
+
   }
 
 
   onSubmit(): any {
-    this.tagService.addTag(this.currentTag)
-    .subscribe(() => {
-        console.log('Data added successfully!')
-        this.ngZone.run(() => this.router.navigateByUrl('/Map'))
-      }, (err: any) => {
-        console.log(err);
-    });
+    if (this.isFormValid()) {
+      this.currentTag.emotion = this.selectedEmotion;
+      this.currentTag.transport = this.selectedTransport;
+
+      this.tagService.addTag(this.currentTag)
+      .subscribe((data) => {
+          console.log('Data added successfully!', data)
+          this.ngZone.run(() => this.router.navigateByUrl('/Map'))
+          this.createTag(data);
+          this.initializeOnLoad();
+        }, (err: any) => {
+          console.log(err);
+      });
+    }
+
+  }
+
+  isFormValid(): boolean {
+    return !!(
+      this.currentTag.title && 
+      this.selectedEmotion && 
+      this.selectedTransport &&
+      this.currentTag.description
+      ) 
   }
 
   log() {
     console.log(this.currentTag);
   }
 
-  }
+}

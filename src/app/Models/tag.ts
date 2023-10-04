@@ -1,14 +1,15 @@
-import { Coord } from "./Coord";
+import { Coordinates } from "./Coordinates";
 
 export class Tag {
-  _id?: number;
-  coord?: Coord;
+  id?: number;
+  coordinates?: Coordinates;
   description?: string;
   title?: string;
-  genre?: string;
-  transport?: string
+  transport?: any
+  emotion?: any;
 
   constructor() {
   }
+
 
 }

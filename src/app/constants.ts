@@ -1,8 +1,8 @@
-import { Coord } from "./Models/Coord";
+
 
 export class Constants  {
-    QUEBEC_CITY: Coord = {latitude: 46.813877, longitude: -71.207977};
-    QUEBEC: Coord = {latitude: 52.476089, longitude:  -71.825867};
+    QUEBEC_CITY: any = {latitude: 46.813877, longitude: -71.207977};
+    QUEBEC: any = {latitude: 52.476089, longitude:  -71.825867};
 
    loremIpsum = " Lorem ipsum dolor sit amet, consectetur adipiscing elit. "+
    "Aliquam vitae eros sit amet dolor cursus fringilla at a neque. Phasellus "+

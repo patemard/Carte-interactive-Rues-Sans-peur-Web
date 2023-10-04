@@ -58,8 +58,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   --bs-danger: #dc3545;
   --bs-light: #f8f9fa;
   --bs-dark: #212529;
-  --bs-primary-rgb: 13, 110, 253;
-  --bs-secondary-rgb: 108, 117, 125;
+  --bs-primary-rgb: 97, 164, 255;
+  --bs-secondary-rgb: 237, 237, 221;
   --bs-success-rgb: 25, 135, 84;
   --bs-info-rgb: 13, 202, 240;
   --bs-warning-rgb: 255, 193, 7;
@@ -2994,6 +2994,24 @@ textarea.form-control-lg {
   --bs-btn-disabled-bg: #212529;
   --bs-btn-disabled-border-color: #212529;
 }
+
+.btn-outline-atv {
+  --bs-btn-color: #ededdd;
+  --bs-btn-border-color: #ededdd;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-bg: #9dcffc;
+  --bs-btn-hover-border-color: #ededdd;
+  --bs-btn-focus-shadow-rgb: 13, 110, 253;
+  --bs-btn-active-color: #fff;
+  --bs-btn-active-bg: #ff7c5b;
+  --bs-btn-active-border-color: #ffa700;
+  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #ffd710;
+  --bs-btn-disabled-bg: transparent;
+  --bs-btn-disabled-border-color: #0d6efd;
+  --bs-gradient: none;
+}
+
 
 .btn-outline-primary {
   --bs-btn-color: #0d6efd;
