@@ -1,20 +1,20 @@
 
 <!-- Header-->
-<header class="bg-primary bg-gradient text-white">
+<!-- <header class="bg-primary bg-gradient text-white">
   <div class="container px-4 text-center">
       <h1 class="fw-bolder">Bienvenue dans la cartographie émotionnelle!</h1>
       <p class="lead">{{loremIpsum}}</p>
       <a class="btn btn-lg btn-outline-atv" href="#about">gravida eget massa</a>
   </div>
-</header>
+</header> -->
 
 
 <div id="map" class="map"></div>
   <div id="popup" class="ol-popup">
-    <mat-card *ngIf="showPopup">
+    <mat-card *ngIf="showPopup" ngClass="{{selectedEmotion.class}}">
       <div id="popup-content">
-        <form class="tag-form">
-          <mat-form-field class="full-width" appearance="fill">
+        <form class="tag-form" >
+          <mat-form-field class="full-width " appearance="fill">
             <mat-label>Titre</mat-label>
             <input name="titleInput"
               matInput placeholder="Titre"
@@ -29,7 +29,7 @@
               <mat-select name="Sélection émotion"
                 [(ngModel)]="selectedEmotion" [disabled]="disableEdit">
                 <mat-option *ngFor="let emotion of emotions" class="{{emotion.class}}" [value]="emotion.name">
-                  <i class="fa-solid fa-{{emotion.icon}} fa-xl" title="{{emotion.name}}"></i>{{emotion.name}}
+                  <i class="fa-solid fa-{{emotion.icon}} fa-xl" ></i>{{emotion.name}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -40,7 +40,7 @@
               <mat-select name="Sélection transport"
                 [(ngModel)]="selectedTransport" [disabled]="disableEdit">
                 <mat-option *ngFor="let transport of transports" [value]="transport.name">
-                  <i class="fa-solid fa-{{transport.icon}} fa-xl" title="{{transport.name}}"></i>{{transport.name}}
+                  <i class="fa-solid fa-{{transport.icon}} fa-xl" ></i>{{transport.name}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -58,8 +58,10 @@
           <div class="row">
             <div class="col-md-4">
               <button mat-raised-button 
+                *ngIf="!disableEdit"
                 (click)="onSubmit()"
-                [disabled]="disableEdit">Cartographier cette émotion</button>
+                [disabled]="disableEdit ||!isFormValid()">Cartographier cette émotion
+              </button>
             </div>      
             <div class="col-md-3 offset-md-5">
              <button mat-raised-button
@@ -71,7 +73,7 @@
     </mat-card>
   </div>
   <!-- Contact section-->
-  <section id="contact" class="bg-secondary">
+  <!-- <section id="contact" class="bg-secondary">
     <div class="container px-4">
         <div class="row gx-4 justify-content-center">
             <div class="col-lg-8">
@@ -80,8 +82,8 @@
             </div>
         </div>
     </div>
-  </section>
+  </section> -->
   <!-- Footer-->
   <footer class="py-5 bg-dark">
-      <div class="container px-4"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2023</p></div>
+      <div class="container px-4"><p class="m-0 text-center text-white">&copy; Rues sans peurs</p></div>
   </footer>
