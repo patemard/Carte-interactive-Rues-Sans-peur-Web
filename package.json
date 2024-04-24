@@ -23,10 +23,10 @@
     "ol-ext": "^3.2.28",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.14.4"
+    "zone.js": "^0.14.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^16.2.14",
+    "@angular-devkit/build-angular": "^17.3.5",
     "@angular/cli": "^16.2.14",
     "@angular/compiler-cli": "^17.3.5",
     "@types/jasmine": "~3.10.0",
