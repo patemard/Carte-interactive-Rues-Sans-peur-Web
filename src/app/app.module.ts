@@ -7,14 +7,15 @@ import { MapDashboardComponent } from './map-dashboard/map-dashboard.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { AdminDashboardComponent } from './admin-dashboard/admin-dashboard.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatLegacyInputModule as MatInputModule} from '@angular/material/legacy-input';
-import {MatLegacySelectModule as MatSelectModule} from '@angular/material/legacy-select';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
-import { MatLegacyCardModule as MatCardModule } from '@angular/material/legacy-card';
-import { MatLegacyButtonModule as MatButtonModule } from '@angular/material/legacy-button';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import {MatLegacyRadioModule as MatRadioModule} from '@angular/material/legacy-radio'
+import { MatFormFieldModule } from '@angular/material/form-field';
+import {MatSelectModule} from '@angular/material/select';
+import {MatInputModule} from '@angular/material/input';
+import {MatIconModule} from '@angular/material/icon';
+import {MatDividerModule} from '@angular/material/divider';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -36,11 +37,13 @@ import {MatLegacyRadioModule as MatRadioModule} from '@angular/material/legacy-r
     ]),
     FormsModule,
     BrowserAnimationsModule,
+
+    MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
-    MatCardModule,
+    MatDividerModule,
+    MatIconModule,
     MatSelectModule,
-    MatRadioModule,
     HttpClientModule,
   ],
   providers: [
