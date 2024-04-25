@@ -11,7 +11,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 export class TagService {
 
   // Node/Express API
-  REST_API: string = 'https://localhost:10000/api';
+  REST_API: string = 'http://localhost:10000/api';
 
   // Http Header
   httpHeaders = new HttpHeaders().set('Content-Type', 'application/json');
