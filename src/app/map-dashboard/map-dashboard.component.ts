@@ -15,8 +15,9 @@ import Overlay from 'ol/Overlay';
 import { fromLonLat } from 'ol/proj';
 import { Vector as VectorLayer } from 'ol/layer';
 import { Vector as VectorSource } from 'ol/source';
-import { Style, Circle, Fill, Stroke } from 'ol/style';
+import { Style, Circle, Fill, Stroke, Icon } from 'ol/style';
 import Text from 'ol/style/Text';
+import Geocoder from 'ol-geocoder';
 
 @Component({
   selector: 'app-map-dashboard',
@@ -37,12 +38,15 @@ export class MapDashboardComponent extends Helper implements OnInit {
   showPopup: boolean = false;
   disableEdit: boolean = false;
   tagList: any = [];
-  emotions: {name: string, icon: string, class?: string, rgb?: string}[] = [
-    { name: "Évènement", icon: "circle-exclamation", class: "text-success", rgb: "rgba(40, 167, 69, 0.8)"},
-    { name: "Fierté ", icon: "face-smile", class: "text-warning", rgb: "rgba(255, 193, 7, 0.8)" },
-    { name: "Tristesse ", icon: "face-sad-tear", class: "text-primary", rgb: "rgba(0, 123, 255, 0.8)"  },
-    { name: "Frustration", icon: "face-angry" , class: "text-danger", rgb: "rgba(220, 53, 69, 0.8)"},
-    { name: "Peur", icon: "frown-open", class: "text-info", rgb: "rgba(91, 162, 184, 0.8)"}
+
+  srcResult: any;
+  //class a fixer
+  emotions: {name: string, icon: string, class?: string, rgb?: string, png: string}[] = [
+    { name: "Évènement", icon: "circle-exclamation", class: "text-success", rgb: "rgba(40, 167, 69, 0.8)", png: "black"},
+    { name: "Fierté ", icon: "face-smile", class: "text-warning", rgb: "rgba(255, 193, 7, 0.8)", png: "greeen" },
+    { name: "Tristesse ", icon: "face-sad-tear", class: "text-primary", rgb: "rgba(0, 123, 255, 0.8)", png: "yellow"  },
+    { name: "Frustration", icon: "face-angry" , class: "text-danger", rgb: "rgba(220, 53, 69, 0.8)", png: "red"},
+    { name: "Peur", icon: "frown-open", class: "text-info", rgb: "rgba(91, 162, 184, 0.8)", png: "blue"}
   ]
 
   transports = [
@@ -55,7 +59,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
   constructor(
       private tagService: TagService,
       private router: Router,
-      private ngZone: NgZone,
+      private ngZone: NgZone
       ) {
     super();    
     this.initializeOnLoad();
@@ -74,6 +78,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
   }
 
   ngOnInit() {
+    
     this.map = new Map({
       target: 'map',
       layers: [
@@ -88,7 +93,20 @@ export class MapDashboardComponent extends Helper implements OnInit {
         constrainOnlyCenter: true,
         zoom: 14
       })
+      
     });
+    // Add search control https://www.npmjs.com/package/ol-geocoder
+    const geocoder = new Geocoder('nominatim', {
+      provider: 'osm',
+      lang: 'fr',
+      placeholder: 'Recherchez un endroit',
+      limit: 5,
+      debug: false,
+      autoComplete: true,
+      keepOpen: true,
+
+    });
+    this.map.addControl(geocoder);
     this.map.addEventListener('wheel', this.processWheelEvent)
     this.initPopup();
     this.getTags();
@@ -124,10 +142,10 @@ export class MapDashboardComponent extends Helper implements OnInit {
           id: feature.values_.data.id,
           title: feature.values_.data.title,
           description: feature.values_.data.text,
+          emotion: feature.values_.data.emotion
         }
         this.selectedEmotion = feature.values_.data.emotion;
         this.selectedTransport = feature.values_.data.transport;
-        this.showPopup = true;
         this.disableEdit = true;
         overlay.setPosition(evt.coordinate);
       } else {
@@ -186,7 +204,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
       geometry: point,
       data: data
     });
-    
     // Define a style for the point feature
     const style = new Style({
       image: new Circle({
@@ -194,6 +211,14 @@ export class MapDashboardComponent extends Helper implements OnInit {
         fill: new Fill({ color: this.emotions.find(x=>x.name === data.emotion)?.rgb }) //couleur relatif au emotgion
       })
     });
+    // const style = new Style({
+    //   image: new Icon({
+    //     color: this.emotions.find(x=>x.name === data.emotion)?.rgb,
+    //     scale: 0.05,
+    //     crossOrigin: 'anonymous',
+    //     src: 'assets/png/'+ this.emotions.find(x=>x.name === data.emotion)?.png + 'Pin.png'
+    //   })
+    // });
 
     // Apply the style to the feature
     feature.setStyle(style);
@@ -236,6 +261,32 @@ export class MapDashboardComponent extends Helper implements OnInit {
       this.selectedTransport &&
       this.currentTag.description
       ) 
+  }
+
+
+
+  onFileSelected() {
+    const inputNode: any = document.querySelector('#file');
+  
+    if (typeof (FileReader) !== 'undefined') {
+      const reader = new FileReader();
+  
+      reader.onload = (e: any) => {
+        this.srcResult = e.target.result;
+      };
+  
+      reader.readAsArrayBuffer(inputNode.files[0]);
+      this.tagService.addImage(this.srcResult)
+      .subscribe((data: any) => {
+        console.log('Data added successfully!', data)
+        this.ngZone.run(() => this.router.navigateByUrl('/Map'))
+        this.addPointFeature(data);
+
+        this.initializeOnLoad();
+      }, (err: any) => {
+        console.log(err);
+    });
+    }
   }
 
   loadMarkerData(): void {

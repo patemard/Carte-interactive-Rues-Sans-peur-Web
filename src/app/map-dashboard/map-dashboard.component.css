@@ -2,24 +2,12 @@
   height: 90%;
   width: 100%;
 }
-
-.blue{
-  color: #1241fa;
+#popupCard {
+  background-color: transparent !important;
+  border: none !important;
 }
 
-.yellow{
-  color: #E1E111;
+#cardImg {
+  width: 30vh;
+  height: 22vh;
 }
-
-.light-blue{
-  color: #88ADF9;
-}
-
-.red{
-  color: #fb0000;
-}
-
-.purple{
-  color: #90fd;
-}
-

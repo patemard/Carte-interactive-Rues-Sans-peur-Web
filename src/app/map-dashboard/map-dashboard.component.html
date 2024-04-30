@@ -11,15 +11,14 @@
 
 <div id="map" class="map"></div>
   <div id="popup" class="ol-popup">
-    <mat-card *ngIf="showPopup" ngClass="{{selectedEmotion.class}}">
+    <mat-card *ngIf="showPopup" id="popupCard">
       <div id="popup-content">
         <form class="tag-form" >
           <mat-form-field class="full-width " appearance="fill">
             <mat-label>Titre</mat-label>
             <input name="titleInput"
               matInput placeholder="Titre"
-              [(ngModel)]="currentTag.title"
-              [disabled]="disableEdit">
+              [(ngModel)]="currentTag.title">
           </mat-form-field>
 
         <div class="row">
@@ -27,9 +26,9 @@
             <mat-form-field appearance="fill">
               <mat-label>Émotion</mat-label>
               <mat-select name="Sélection émotion"
-                [(ngModel)]="selectedEmotion" [disabled]="disableEdit">
-                <mat-option *ngFor="let emotion of emotions" class="{{emotion.class}}" [value]="emotion.name">
-                  <i class="fa-solid fa-{{emotion.icon}} fa-xl" ></i>{{emotion.name}}
+                [(ngModel)]="selectedEmotion">
+                <mat-option *ngFor="let emotion of emotions" [ngStyle]="{'color': emotion.rgb}" [value]="emotion.name">
+                  <i class="fa-solid fa-{{emotion.icon}} fa-xl"></i>{{emotion.name}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -38,7 +37,7 @@
             <mat-form-field appearance="fill">
               <mat-label>Transport</mat-label>
               <mat-select name="Sélection transport"
-                [(ngModel)]="selectedTransport" [disabled]="disableEdit">
+                [(ngModel)]="selectedTransport">
                 <mat-option *ngFor="let transport of transports" [value]="transport.name">
                   <i class="fa-solid fa-{{transport.icon}} fa-xl" ></i>{{transport.name}}
                 </mat-option>
@@ -51,25 +50,66 @@
             <mat-label>Description</mat-label>
             <textarea name="descInput"
               matInput placeholder="Description"
-              [(ngModel)]="currentTag.description"
-              [disabled]="disableEdit"></textarea>
-          </mat-form-field>
+              [(ngModel)]="currentTag.description"></textarea>
+           </mat-form-field>
           
           <div class="row">
             <div class="col-md-4">
-              <button  *ngIf="!disableEdit"
-                mat-raised-button color="primary"
-                (click)="onSubmit()"
-                [disabled]="disableEdit ||!isFormValid()">Cartographier
+              <button  *ngIf="isFormValid()"
+                mat-raised-button color="accent"
+                matTooltip="Sauvegarder ce témoigage"
+                (click)="onSubmit()">Cartographier
+              </button>
+              <button  *ngIf="!isFormValid()! "
+                mat-stroked-button color="accent"
+                matTooltip="Formulaire incomplet.">Cartographier
               </button>
             </div>      
-            <div class="col-md-3 offset-md-5">
-             <button mat-raised-button color="accent"
-               (click)="initializeOnLoad()">Fermer</button>
+            <div class="col-md-5">
+              <!-- <button type="button" mat-raised-button color="primary"
+              (click)="fileInput.click()">Téléverser un image</button>
+              <input hidden (change)="onFileSelected()" #fileInput type="file" id="file"> -->
+            </div> 
+            <div class="col-md-3">
+             <button mat-raised-button
+               matTooltip="Abandonner la sauvegarde."
+               (click)="initializeOnLoad()">Fermer
+             </button>
             </div>
           </div>
         </form>
       </div>
+    </mat-card> 
+     <mat-card *ngIf="disableEdit"
+      class="example-card">
+      <mat-card-header>
+        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title>{{currentTag.title}}</mat-card-title>
+        <mat-card-subtitle>{{currentTag.emotion}}</mat-card-subtitle>
+      </mat-card-header>
+      <img mat-card-image id="cardImg"
+       src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+      <mat-card-content>
+        <p>
+          {{currentTag.description}}
+        </p>
+      </mat-card-content>
+      <mat-card-actions>
+        <div class="row">
+          <div class="col-md-2">
+            <button mat-fab color="warn" aria-label="Example icon button with a heart icon">
+              <mat-icon>favorite</mat-icon>
+            </button>
+          </div>
+          <div class="col-md-8">
+          </div>
+          <div class="col-md-2">
+            <button mat-fab color="primary" aria-label="Example icon button with a delete icon">
+              <mat-icon>delete</mat-icon>
+            </button>  
+          </div>
+        </div>
+      </mat-card-actions>
     </mat-card>
   </div>
   <!-- Contact section-->
