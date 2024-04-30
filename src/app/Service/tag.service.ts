@@ -60,7 +60,13 @@ export class TagService {
       )
   }
 
-
+  addImage(data: any): Observable<any> {
+    let API_URL = `${this.REST_API}/add-image`;
+    return this.httpClient.post(API_URL, data)
+    .pipe(
+      catchError(this.handleError)
+    )
+}
   // Error
   handleError(error: HttpErrorResponse) {
     let errorMessage = '';
