@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { RessourceDialogComponent } from './dialogs/ressource-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +8,18 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'mapApp';
+
+  constructor(public dialog: MatDialog) {}
+
+  
+  openDialog() {
+    
+    const dialogRef = this.dialog.open(RessourceDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  
+  }
+
 }

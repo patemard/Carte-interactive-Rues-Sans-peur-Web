@@ -18,6 +18,8 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonModule} from '@angular/material/button';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatCardModule} from '@angular/material/card';
+import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import { RessourceDialogComponent } from './dialogs/ressource-dialog.component';
 
 @NgModule({
   declarations: [
@@ -25,14 +27,14 @@ import {MatCardModule} from '@angular/material/card';
     HomeComponent,
     MapDashboardComponent,
     PageNotFoundComponent,
-    AdminDashboardComponent
+    AdminDashboardComponent,
+    RessourceDialogComponent
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot([
-      {path: 'Map', component: MapDashboardComponent},
+      {path: '', component: MapDashboardComponent},
       {path: 'Admin', component: AdminDashboardComponent},
-      {path: '', redirectTo: '/Map', pathMatch: 'full'},
 
       // wildcard
       {path: '**', component: PageNotFoundComponent}
@@ -48,6 +50,7 @@ import {MatCardModule} from '@angular/material/card';
     MatSelectModule,
     MatTooltipModule,
     MatCardModule,
+    MatDialogModule,
 
     HttpClientModule,
   ],

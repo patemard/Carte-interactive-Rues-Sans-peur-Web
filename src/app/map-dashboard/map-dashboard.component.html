@@ -11,7 +11,7 @@
 
 <div id="map" class="map"></div>
   <div id="popup" class="ol-popup">
-    <mat-card *ngIf="showPopup" id="popupCard">
+    <mat-card *ngIf="showPopup" id="popupCard" class="card-positioning">
       <div id="popup-content">
         <form class="tag-form" >
           <mat-form-field class="full-width " appearance="fill">
@@ -60,7 +60,7 @@
                 matTooltip="Sauvegarder ce témoigage"
                 (click)="onSubmit()">Cartographier
               </button>
-              <button  *ngIf="!isFormValid()! "
+              <button  *ngIf="!isFormValid()"
                 mat-stroked-button color="accent"
                 matTooltip="Formulaire incomplet.">Cartographier
               </button>
@@ -70,7 +70,7 @@
               (click)="fileInput.click()">Téléverser un image</button>
               <input hidden (change)="onFileSelected()" #fileInput type="file" id="file"> -->
             </div> 
-            <div class="col-md-3">
+            <div class="col-md-2">
              <button mat-raised-button
                matTooltip="Abandonner la sauvegarde."
                (click)="initializeOnLoad()">Fermer
@@ -80,8 +80,9 @@
         </form>
       </div>
     </mat-card> 
+    
      <mat-card *ngIf="disableEdit"
-      class="example-card">
+      class="card-positioning">
       <mat-card-header>
         <div mat-card-avatar class="example-header-image"></div>
         <mat-card-title>{{currentTag.title}}</mat-card-title>
@@ -125,5 +126,5 @@
   </section> -->
   <!-- Footer-->
   <footer class="py-5 bg-dark">
-      <div class="container px-4"><p class="m-0 text-center text-white">&copy; Rues sans peurs</p></div>
+      <div class="container px-4"><p class="m-0 text-center text-white">&copy; Rues Sans Peurs</p></div>
   </footer>
