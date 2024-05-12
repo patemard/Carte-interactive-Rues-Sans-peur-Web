@@ -42,11 +42,11 @@ export class MapDashboardComponent extends Helper implements OnInit {
   srcResult: any;
   //class a fixer
   emotions: {name: string, icon: string, class?: string, rgb?: string, png: string}[] = [
-    { name: "Évènement", icon: "circle-exclamation", class: "text-success", rgb: "rgba(40, 167, 69, 0.8)", png: "black"},
-    { name: "Fierté ", icon: "face-smile", class: "text-warning", rgb: "rgba(255, 193, 7, 0.8)", png: "greeen" },
-    { name: "Tristesse ", icon: "face-sad-tear", class: "text-primary", rgb: "rgba(0, 123, 255, 0.8)", png: "yellow"  },
-    { name: "Frustration", icon: "face-angry" , class: "text-danger", rgb: "rgba(220, 53, 69, 0.8)", png: "red"},
-    { name: "Peur", icon: "frown-open", class: "text-info", rgb: "rgba(91, 162, 184, 0.8)", png: "blue"}
+    { name: "Évènement", icon: "circle-exclamation", class: "text-success", rgb: "rgba(40, 167, 69, 0.75)", png: "black"},
+    { name: "Fierté ", icon: "face-smile", class: "text-warning", rgb: "rgba(255, 193, 7, 0.75)", png: "greeen" },
+    { name: "Tristesse ", icon: "face-sad-tear", class: "text-primary", rgb: "rgba(0, 123, 255, 0.75)", png: "yellow"  },
+    { name: "Frustration", icon: "face-angry" , class: "text-danger", rgb: "rgba(220, 53, 69, 0.75)", png: "red"},
+    { name: "Peur", icon: "frown-open", class: "text-info", rgb: "rgba(91, 162, 184, 0.75)", png: "blue"}
   ]
 
   transports = [
@@ -78,7 +78,14 @@ export class MapDashboardComponent extends Helper implements OnInit {
   }
 
   ngOnInit() {
-    
+    this.initMap();
+    this.initGeoCoder();
+    this.initPopup();
+    this.getTags();
+    // this.loadMarkerData()
+  }
+
+  initMap() {
     this.map = new Map({
       target: 'map',
       layers: [
@@ -93,28 +100,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
         constrainOnlyCenter: true,
         zoom: 14
       })
-      
     });
-    // Add search control https://www.npmjs.com/package/ol-geocoder
-    const geocoder = new Geocoder('nominatim', {
-      provider: 'osm',
-      lang: 'fr',
-      placeholder: 'Recherchez un endroit',
-      limit: 5,
-      debug: false,
-      autoComplete: true,
-      keepOpen: true,
-
-    });
-    this.map.addControl(geocoder);
-    this.map.addEventListener('wheel', this.processWheelEvent)
-    this.initPopup();
-    this.getTags();
-    // this.loadMarkerData()
-  }
-
-  processWheelEvent(evt: any) {
-    evt.preventDefault();
   }
 
   initPopup() {
@@ -133,20 +119,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       this.initializeOnLoad();
 
       if (this.map.hasFeatureAtPixel(evt.pixel)) {
-
-        var feature = this.map.forEachFeatureAtPixel(evt.pixel, function(feature: any) {
-            return feature;
-        })
-        
-        this.currentTag = {
-          id: feature.values_.data.id,
-          title: feature.values_.data.title,
-          description: feature.values_.data.text,
-          emotion: feature.values_.data.emotion
-        }
-        this.selectedEmotion = feature.values_.data.emotion;
-        this.selectedTransport = feature.values_.data.transport;
-        this.disableEdit = true;
+        this.clickedOnTag(evt);
         overlay.setPosition(evt.coordinate);
       } else {
         // [0]: latt, [1]: long.
@@ -164,6 +137,51 @@ export class MapDashboardComponent extends Helper implements OnInit {
     })
 
   }
+
+  initGeoCoder() {
+    // Add search control https://www.npmjs.com/package/ol-geocoder
+    const geocoder = new Geocoder('nominatim', {
+      provider: 'osm',
+      lang: 'en',
+      placeholder: 'Recherchez un endroit',
+      limit: 5,
+      debug: false,
+      autoComplete: true,
+      keepOpen: true,
+      countrycodes: 'ca'
+    });
+    this.map.addControl(geocoder);
+    this.map.addEventListener('wheel', this.processWheelEvent)
+    // this.loadMarkerData()
+  }
+
+  processWheelEvent(evt: any) {
+    evt.preventDefault();
+  }
+
+
+
+  clickedOnTag(evt:any) {
+    var feature = this.map.forEachFeatureAtPixel(evt.pixel, function(feature: any) {
+        return feature;
+    })
+    this.disableEdit = feature.values_.data;// La Search met un tag, si on clic sur celui ci, il faut pas voir la carte complete
+    
+    this.currentTag = {
+      id: feature.values_.data.id,
+      title: feature.values_.data.title,
+      description: feature.values_.data.text,
+      emotion: feature.values_.data.emotion,
+    }
+//  this.currentTag.emotion.icon= this.emotions.find(x => x.name === this.currentTag.emotion)?.icon;
+    let completedCard = document.getElementById('completedCard');
+    let color = this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb;
+    if (color && completedCard) {
+      completedCard.style.background =color;
+    } 
+    this.selectedEmotion = feature.values_.data.emotion;
+    this.selectedTransport = feature.values_.data.transport;
+  }
   
   setCenter(zoom: number) {
     var view = this.map.getView();
@@ -178,11 +196,11 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.tagService.getTags()
     .subscribe(data => {
       this.tagList = data;
-      console.log(data)
       this.tagList.forEach((tag: Tag) => {
         tag.label = this.emotions.find(x => x.name === tag.emotion)?.class;
         this.addPointFeature(tag);
       });
+      console.log( this.tagList)
     })
   }
 
@@ -239,11 +257,11 @@ export class MapDashboardComponent extends Helper implements OnInit {
     if (this.isFormValid()) {
       this.currentTag.emotion = this.selectedEmotion;
       this.currentTag.transport = this.selectedTransport;
-
+      this.currentTag.description = this.currentTag.description?.trim()
       this.tagService.addTag(this.currentTag)
       .subscribe((data) => {
           console.log('Data added successfully!', data)
-          this.ngZone.run(() => this.router.navigateByUrl('/Map'))
+          this.ngZone.run(() => this.router.navigateByUrl('/'))
           this.addPointFeature(data);
 
           this.initializeOnLoad();
@@ -354,5 +372,5 @@ export class MapDashboardComponent extends Helper implements OnInit {
     }
 
     return style;
-}
+  }
 }

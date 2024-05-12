@@ -76,10 +76,10 @@
 			</div> 
 			<div class="col-md-2">
 				<button mat-raised-button
-					id="closeBtn"
-					matTooltip="Abandonner la sauvegarde."
-					(click)="initializeOnLoad()">Fermer
-				</button>
+          id="closeBtn"
+          matTooltip="Abandonner la sauvegarde."
+          (click)="initializeOnLoad()">Fermer
+        </button>
 			</div>
 		</div>
 		</mat-card-footer>
@@ -88,9 +88,10 @@
     </mat-card> 
     
      <mat-card
-      [hidden]="!disableEdit"
-	    id="completedCard"
-      class="card-positioning">
+        [hidden]="!disableEdit"
+        id="completedCard"
+        class="card-positioning"
+      >
       <mat-card-header>
         <div mat-card-avatar class="example-header-image"></div>
         <mat-card-title>{{currentTag.title}}</mat-card-title>
@@ -101,17 +102,16 @@
       <mat-card-content class="text-center">
         <p> {{currentTag.description}}</p>
       </mat-card-content>
-      <mat-card-actions>
-        <div >
-          <button mat-fab color="warn" aria-label="Example icon button with a heart icon">
-            <mat-icon>favorite</mat-icon>
-          </button>
-        </div>
-        <div>
-          <button mat-fab color="primary" aria-label="Example icon button with a delete icon">
-            <mat-icon>delete</mat-icon>
-          </button>  
-        </div>
+      <mat-card-actions class="centered">
+        <button mat-button>
+          <i class="fa fa-heart" aria-hidden="true"></i>
+        </button>
+        <button mat-button>
+          <i class="fa fa-share-square-o" aria-hidden="true"></i>
+        </button>
+        <button mat-button>
+          <i class="fa fa-flag" aria-hidden="true"></i>
+        </button>
       </mat-card-actions>
     </mat-card>
   </div>
