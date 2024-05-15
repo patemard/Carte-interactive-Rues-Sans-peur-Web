@@ -24,3 +24,27 @@
  
  }
 
+ .bleu-atv {
+  background-color: #1F1750 !important;
+ } 
+ .bleu-pale-atv {
+  background-color: #61A4FF !important;
+ }
+ .bleu-pale2-atv {
+  background-color: #9DCFFC !important;
+ }
+ .orange-atv {
+  background-color:#FF8300 !important;
+ }
+
+ .orange-pale-atv {
+  background-color: #FBA400 !important;
+ }
+
+ .rouge-atv {
+  background-color:#ED594D !important;
+ }
+
+ .rouge-pale-atv {
+  background-color: #FF7C5B !important;
+ }

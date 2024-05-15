@@ -8,18 +8,21 @@ import { RessourceDialogComponent } from './dialogs/ressource-dialog.component';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
+  isOpen = false;
 
   constructor(public dialog: MatDialog) {}
 
   
   openDialog() {
-    
-    const dialogRef = this.dialog.open(RessourceDialogComponent);
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
-    });
+    if (!this.isOpen ) {
+      this.isOpen = true;
+      const dialogRef = this.dialog.open(RessourceDialogComponent);
   
+      dialogRef.afterClosed().subscribe(result => {
+        this.isOpen = false
+        console.log(`Dialog result: ${result}`);
+      });
+    }
   }
 
 }
