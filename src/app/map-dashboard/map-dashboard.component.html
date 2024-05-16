@@ -86,14 +86,17 @@
         </form>
       </div>
     </mat-card> 
-    
-     <mat-card
+  
+    <mat-card
         [hidden]="!disableEdit"
         id="completedCard"
         class="card-positioning"
       >
       <mat-card-header>
         <div mat-card-avatar class="example-header-image"></div>
+          <i class="fa fa-times" id="completedCardClose"
+            (click)="disableEdit=false" aria-hidden="true">
+          </i>
         <mat-card-title>{{currentTag.title}}</mat-card-title>
         <mat-card-subtitle>{{currentTag.emotion}}</mat-card-subtitle>
       </mat-card-header>
@@ -127,6 +130,6 @@
     </div>
   </section> -->
   <!-- Footer-->
-  <footer class="py-5 bg-dark bleu-pale-atv">
+  <footer class="py-5 bg-dark bleu-atv">
       <div class="container px-4"><p class="m-0 text-center text-white">&copy; Rues Sans Peur</p></div>
   </footer>

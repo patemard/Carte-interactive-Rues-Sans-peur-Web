@@ -16,7 +16,10 @@ export class AppComponent {
   openDialog() {
     if (!this.isOpen ) {
       this.isOpen = true;
-      const dialogRef = this.dialog.open(RessourceDialogComponent);
+      const dialogRef = this.dialog.open(RessourceDialogComponent, {
+        height: '70%',
+        width: '40%',
+      });
   
       dialogRef.afterClosed().subscribe(result => {
         this.isOpen = false

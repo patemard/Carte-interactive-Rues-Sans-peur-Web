@@ -1,5 +1,5 @@
 .map {
-  height: 93%;
+  height: 91%;
   width: 100%;
 }
 #popupCard {
@@ -27,6 +27,13 @@
   width: min-content;
 }
 
+#completedCardClose {
+  cursor: pointer;
+  position: absolute;       
+  top: 0px;    
+  right: 0px;
+}
+
 .example-header-image {
   background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
   background-size: cover;
@@ -36,3 +43,4 @@
   display: flex;
   justify-content: center;
 }
+
