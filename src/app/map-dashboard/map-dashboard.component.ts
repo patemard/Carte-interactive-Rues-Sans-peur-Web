@@ -1,4 +1,4 @@
-import { Component, NgZone, OnInit } from '@angular/core';
+import {Component, ComponentFactoryResolver, NgZone, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import { Helper } from '../helper';
 import { Tag } from '../Models/tag';
 import { TagService } from '../Service/tag.service';
@@ -10,14 +10,18 @@ import TileLayer from 'ol/layer/Tile';
 import OSM from 'ol/source/OSM';
 import Map from 'ol/Map';
 import Feature from 'ol/Feature';
-import Point from 'ol/geom/Point';
 import Overlay from 'ol/Overlay';
 import { fromLonLat } from 'ol/proj';
 import { Vector as VectorLayer } from 'ol/layer';
 import { Vector as VectorSource } from 'ol/source';
-import { Style, Circle, Fill, Stroke, Icon } from 'ol/style';
+import { Point, LineString } from 'ol/geom';
+import { Style, Stroke, Fill, Circle } from 'ol/style';
 import Text from 'ol/style/Text';
 import Geocoder from 'ol-geocoder';
+import Draw from 'ol/interaction/Draw';
+import GeoJSON from 'ol/format/GeoJSON';
+import {MatDialog} from "@angular/material/dialog";
+import {TagChoiceDialogComponent} from "../dialogs/tagChoice-dialog.component";
 
 @Component({
   selector: 'app-map-dashboard',
@@ -29,17 +33,26 @@ export class MapDashboardComponent extends Helper implements OnInit {
   latitude: number = 0;
   longitude: number = 0;
   currentTag: Tag = new Tag;
-  map: any; 
+  map: any;
   description: string = '';
   title: string = '';
   selectedEmotion: any;
   selectedTransport: any;
   layer: any;
+  showChoice: boolean = false;
+
   showPopup: boolean = false;
   disableEdit: boolean = false;
-  tagList: any = [];
+  protected drawingStarted: boolean = false;
 
+  tagList: any = [];
+  trajectoryCoords: any =[];
+
+  geocoder: any;
   srcResult: any;
+
+  @ViewChild('dialogContainer', { read: ViewContainerRef }) dialogContainer: ViewContainerRef | undefined;
+
   //class a fixer
   emotions: {name: string, icon: string, class?: string, rgb?: string, png: string}[] = [
     { name: "Évènement", icon: "circle-exclamation", class: "text-success", rgb: "rgba(40, 167, 69, 0.75)", png: "black"},
@@ -59,9 +72,11 @@ export class MapDashboardComponent extends Helper implements OnInit {
   constructor(
       private tagService: TagService,
       private router: Router,
+      public dialog: MatDialog,
+      private componentFactoryResolver: ComponentFactoryResolver,
       private ngZone: NgZone
       ) {
-    super();    
+    super();
     this.initializeOnLoad();
   }
 
@@ -70,7 +85,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.longitude = this.QUEBEC_CITY.longitude;
     this.currentTag = new Tag();
     this.description = '';
-    this.title = '';  
+    this.title = '';
     this.showPopup = false;
     this.disableEdit = false;
     this.selectedEmotion = ''
@@ -84,6 +99,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.getTags();
     // this.loadMarkerData()
   }
+
 
   initMap() {
     this.map = new Map({
@@ -101,7 +117,20 @@ export class MapDashboardComponent extends Helper implements OnInit {
         zoom: 14
       })
     });
+    // Listen for map view changes and update geocoder extent accordingly
+    // this.map.on('moveend', () => {
+    //   this.updateGeocoderExtent();
+    // });
   }
+    // Function to update geocoder's search extent
+  // updateGeocoderExtent() {
+  //   var extent = this.map.getView().calculateExtent(this.map.getSize());
+  //     console.log("extent", extent)
+  //   this.geocoder.options.bounded = true; // Ensure geocoder search is bounded
+  //   this.geocoder.options.viewbox = extent; // Set the search extent to the current map extent
+
+  //   this.geocoder.options.extent = extent; // Set the search extent to the current map extent
+  // }
 
   initPopup() {
     var container = document.getElementById('popup');
@@ -114,8 +143,11 @@ export class MapDashboardComponent extends Helper implements OnInit {
       });
       this.map.addOverlay(overlay);
     }
-    
+
     this.map.on('click', (evt: any) => {
+      if (this.drawingStarted) {
+        return;
+      }
       this.initializeOnLoad();
 
       if (this.map.hasFeatureAtPixel(evt.pixel)) {
@@ -124,12 +156,12 @@ export class MapDashboardComponent extends Helper implements OnInit {
       } else {
         // [0]: latt, [1]: long.
         let Coords = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
-        this.currentTag.longitude = Coords[0] 
+        this.currentTag.longitude = Coords[0]
         this.currentTag.latitude = Coords[1];
-        
+
         if (this.map.getView().getZoom() >= 18) {
-          this.showPopup = true;
-          overlay.setPosition(evt.coordinate);
+          this.showChoice = true;
+           overlay.setPosition(evt.coordinate);
         } else {
           this.setCenter(18);
         }
@@ -140,21 +172,113 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   initGeoCoder() {
     // Add search control https://www.npmjs.com/package/ol-geocoder
-    const geocoder = new Geocoder('nominatim', {
+    this.geocoder = new Geocoder('nominatim', {
       provider: 'osm',
-      lang: 'en',
+      lang: 'fr-ca',
       placeholder: 'Recherchez un endroit',
       limit: 5,
       debug: false,
       autoComplete: true,
       keepOpen: true,
-      countrycodes: 'ca'
+      preventDefault: true,
+      countrycodes: 'ca',
+      params: {
+        viewbox: this.QUEBEC_BOUNDING_BOX
+      }
     });
-    this.map.addControl(geocoder);
+    this.map.addControl(this.geocoder);
     this.map.addEventListener('wheel', this.processWheelEvent)
-    // this.loadMarkerData()
+
+    // this.loadMarkerData()gcd-input-query
+    // let geocoderInput = document.getElementById('gcd-input-query');
+    // console.log(geocoderInput);
+
+    // if (geocoderInput) {
+    //   geocoderInput.addEventListener('beforequery', function(event) {
+    //     // Your event handling code here
+    //     console.log('Input value changed:', event);
+    //   });
+    // }
+    //   this.geocoder.on('beforequery', (evt: any) => {
+    //     // it's up to you
+    //     console.info(evt);
+    //   });
   }
 
+  initDrawing() {
+  // Create a vector source and layer for the trajectory
+  this.drawingStarted = true;
+  // Create a vector source and layer for the trajectory
+  const vectorSource = new VectorSource();
+  const vectorLayer = new VectorLayer({
+    source: vectorSource,
+    style: new Style({
+      stroke: new Stroke({
+        color: 'blue',
+        width: 3,
+      }),
+      image: new Circle({
+        radius: 5,
+        fill: new Fill({
+          color: 'blue',
+        }),
+      }),
+    }),
+  });
+  this.map.addLayer(vectorLayer);
+
+  // Enable drawing interaction for points
+  const draw = new Draw({
+    source: vectorSource,
+    type: 'Point',
+  });
+  this.map.addInteraction(draw);
+
+  // Collect points and create a line feature
+  const points: number[][] = [];
+  draw.on('drawend', (event: any) => {
+    console.log('drawend')
+    const feature = event.feature;
+    const coordinates = (feature.getGeometry() as Point).getCoordinates();
+    points.push(coordinates);
+
+    // Create a LineString feature if we have at least two points
+    if (points.length > 1) {
+      const lineString = new LineString(points);
+      const lineFeature = new Feature({
+        geometry: lineString,
+      });
+
+      // Clear the previous line feature and add the new one
+      vectorSource.clear();
+      vectorSource.addFeature(lineFeature);
+    }
+  });
+
+  // Save the trajectory as GeoJSON
+  document.getElementById('saveTrajectory')?.addEventListener('click', () => {
+    const format = new GeoJSON();
+    const features = vectorSource.getFeatures();
+    const geojson = format.writeFeatures(features, {
+      dataProjection: 'EPSG:4326',
+      featureProjection: 'EPSG:3857',
+    });
+
+    // Save or display the GeoJSON string
+    console.log(geojson);
+    this.trajectoryCoords = geojson;
+    this.drawingStarted=false;
+    this.showPopup = true;
+    this.map.removeInteraction(draw);
+  });
+
+  // Handle potential errors during rendering
+  this.map.on('rendercomplete', (event:any) => {
+    if (!event.frameState.layerStates) {
+      console.error('Layer states are undefined.');
+    }
+  });
+  }
   processWheelEvent(evt: any) {
     evt.preventDefault();
   }
@@ -166,7 +290,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
         return feature;
     })
     this.disableEdit = feature.values_.data;// La Search met un tag, si on clic sur celui ci, il faut pas voir la carte complete
-    
+
     this.currentTag = {
       id: feature.values_.data.id,
       title: feature.values_.data.title,
@@ -175,14 +299,19 @@ export class MapDashboardComponent extends Helper implements OnInit {
     }
 //  this.currentTag.emotion.icon= this.emotions.find(x => x.name === this.currentTag.emotion)?.icon;
     let completedCard = document.getElementById('completedCard');
+    let closeBtn = document.getElementById('closeBtn');
+
     let color = this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb;
     if (color && completedCard) {
       completedCard.style.background =color;
-    } 
+    }
+    if (color && closeBtn) {
+      closeBtn.style.background = color;
+    }
     this.selectedEmotion = feature.values_.data.emotion;
     this.selectedTransport = feature.values_.data.transport;
   }
-  
+
   setCenter(zoom: number) {
     var view = this.map.getView();
     view.setCenter(ol.proj.fromLonLat([this.currentTag.longitude, this.currentTag.latitude]));
@@ -209,7 +338,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
    * Creates the tag's visual point on the map.
    * @param data - tag data
    */
-  
+
   addPointFeature(data: any): void {
     // Define coordinates for the point (longitude, latitude)
     const coordinates = fromLonLat([data.longitude, data.latitude]);
@@ -256,14 +385,16 @@ export class MapDashboardComponent extends Helper implements OnInit {
   onSubmit(): any {
     if (this.isFormValid()) {
       this.currentTag.emotion = this.selectedEmotion;
+      this.currentTag.trajectoryCoords = this.trajectoryCoords;
       this.currentTag.transport = this.selectedTransport;
       this.currentTag.description = this.currentTag.description?.trim()
       this.tagService.addTag(this.currentTag)
       .subscribe((data) => {
-          console.log('Data added successfully!', data)
-          this.ngZone.run(() => this.router.navigateByUrl('/'))
+        console.log('Data added successfully!', data)
+        this.ngZone.run(() => this.router.navigateByUrl('/'))
+        if (!this.trajectoryCoords) {
           this.addPointFeature(data);
-
+        }
           this.initializeOnLoad();
         }, (err: any) => {
           console.log(err);
@@ -274,25 +405,25 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   isFormValid(): boolean {
     return !!(
-      this.currentTag.title && 
-      this.selectedEmotion && 
+      this.currentTag.title &&
+      this.selectedEmotion &&
       this.selectedTransport &&
       this.currentTag.description
-      ) 
+      )
   }
 
 
 
   onFileSelected() {
     const inputNode: any = document.querySelector('#file');
-  
+
     if (typeof (FileReader) !== 'undefined') {
       const reader = new FileReader();
-  
+
       reader.onload = (e: any) => {
         this.srcResult = e.target.result;
       };
-  
+
       reader.readAsArrayBuffer(inputNode.files[0]);
       this.tagService.addImage(this.srcResult)
       .subscribe((data: any) => {
@@ -373,4 +504,15 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
     return style;
   }
+
+
+  openDialog(): void {
+    if (this.dialogContainer) {
+      this.dialogContainer.clear();
+      const componentFactory = this.componentFactoryResolver.resolveComponentFactory(TagChoiceDialogComponent);
+      this.dialogContainer.createComponent(componentFactory);
+    }
+  }
+
+
 }

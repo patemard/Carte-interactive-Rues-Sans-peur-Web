@@ -16,17 +16,17 @@
     float: left !important;
     height: 26.75px !important;
     width: 26.75px !important;
-    margin-top: 7% !important;
+    margin-top: 15% !important;
   }
 
  .ol-zoom.ol-unselectable.ol-control {
-    margin-top: 7% !important;
- 
+    margin-top: 15% !important;
+
  }
 
  .bleu-atv {
   background-color: #1F1750 !important;
- } 
+ }
  .bleu-pale-atv {
   background-color: #61A4FF !important;
  }

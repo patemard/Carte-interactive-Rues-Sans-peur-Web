@@ -9,6 +9,7 @@ export class Tag {
   label?: string;
   transport?: any
   emotion?: any;
+  trajectoryCoords?: string[]
   rgb?: any;
 
   constructor() {

@@ -9,6 +9,7 @@
 </header> -->
 
 
+
 <div id="map" class="map"></div>
   <div id="popup" class="ol-popup">
     <mat-card *ngIf="showPopup" id="popupCard" class="card-positioning">
@@ -55,7 +56,7 @@
 				[(ngModel)]="currentTag.description">
 			</textarea>
 		</mat-form-field>
-		
+
 		<mat-card-footer>
 		<div class="row">
 			<div class="col-md-4">
@@ -68,12 +69,12 @@
 					mat-stroked-button color="accent"
 					matTooltip="Formulaire incomplet.">Cartographier
 				</button>
-			</div>      
+			</div>
 			<div class="col-md-5">
 				<!-- <button type="button" mat-raised-button color="primary"
 				(click)="fileInput.click()">Téléverser un image</button>
 				<input hidden (change)="onFileSelected()" #fileInput type="file" id="file"> -->
-			</div> 
+			</div>
 			<div class="col-md-2">
 				<button mat-raised-button
           id="closeBtn"
@@ -85,13 +86,13 @@
 		</mat-card-footer>
         </form>
       </div>
-    </mat-card> 
-  
+    </mat-card>
+
     <mat-card
         [hidden]="!disableEdit"
         id="completedCard"
         class="card-positioning"
-      >
+    >
       <mat-card-header>
         <div mat-card-avatar class="example-header-image"></div>
           <i class="fa fa-times" id="completedCardClose"
@@ -117,6 +118,20 @@
         </button>
       </mat-card-actions>
     </mat-card>
+
+    <mat-card *ngIf="showChoice">
+      <mat-card-header>
+        <mat-card-title>Choix localisation</mat-card-title>
+      </mat-card-header>
+      <mat-card-actions>
+        <button mat-button (click)="showChoice=false; showPopup=true;">Point</button>
+        <button mat-button (click)="showChoice=false; initDrawing()">Trajectoire</button>
+      </mat-card-actions>
+    </mat-card>
+    <button [hidden]="!drawingStarted" id="saveTrajectory"
+      mat-button >Sauvegarder Trajectoire
+    </button>
+
   </div>
   <!-- Contact section-->
   <!-- <section id="contact" class="bg-secondary">

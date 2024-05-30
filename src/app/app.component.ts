@@ -19,6 +19,7 @@ export class AppComponent {
       const dialogRef = this.dialog.open(RessourceDialogComponent, {
         height: '70%',
         width: '40%',
+        panelClass: 'bleu-pale-atv'
       });
   
       dialogRef.afterClosed().subscribe(result => {

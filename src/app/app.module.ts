@@ -18,8 +18,12 @@ import {MatDividerModule} from '@angular/material/divider';
 import {MatButtonModule} from '@angular/material/button';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatCardModule} from '@angular/material/card';
-import {MatDialog, MatDialogModule} from '@angular/material/dialog';
+import {
+  MatDialogModule
+
+} from '@angular/material/dialog';
 import { RessourceDialogComponent } from './dialogs/ressource-dialog.component';
+import {TagChoiceDialogComponent} from "./dialogs/tagChoice-dialog.component";
 
 @NgModule({
   declarations: [
@@ -27,6 +31,8 @@ import { RessourceDialogComponent } from './dialogs/ressource-dialog.component';
     HomeComponent,
     MapDashboardComponent,
     PageNotFoundComponent,
+    TagChoiceDialogComponent,
+
     AdminDashboardComponent,
     RessourceDialogComponent
   ],
@@ -41,7 +47,6 @@ import { RessourceDialogComponent } from './dialogs/ressource-dialog.component';
     ]),
     FormsModule,
     BrowserAnimationsModule,
-
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
@@ -51,7 +56,6 @@ import { RessourceDialogComponent } from './dialogs/ressource-dialog.component';
     MatTooltipModule,
     MatCardModule,
     MatDialogModule,
-
     HttpClientModule,
   ],
   providers: [
