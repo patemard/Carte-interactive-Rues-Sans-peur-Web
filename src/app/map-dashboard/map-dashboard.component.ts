@@ -3,7 +3,6 @@ import { Helper } from '../helper';
 import { Tag } from '../Models/tag';
 import { TagService } from '../Service/tag.service';
 import { Router } from '@angular/router';
-import { Coordinates } from '../Models/Coordinates';
 declare var ol: any;
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
@@ -348,13 +347,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
         stroke: new Stroke({
           color: color , //couleur relatif au emotion
           width: 3,
-        }),
-        image: new Circle({
-          radius: 5,
-          fill: new Fill({
-            color: color,
-          }),
-        }),
+        })
       }),
 
     });
@@ -366,6 +359,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
     if (features.length > 0) {
       const firstFeature = features[0];
+      firstFeature.set('data', tag)
       const geometry = firstFeature.getGeometry();
       if (geometry && geometry.getType() === 'LineString') {
         const coordinates = (geometry as any).getCoordinates();
