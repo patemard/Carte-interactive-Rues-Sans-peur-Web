@@ -296,6 +296,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       title: feature.values_.data.title,
       description: feature.values_.data.text,
       emotion: feature.values_.data.emotion,
+      trajectory: feature.values_.data.emotion
     }
 //  this.currentTag.emotion.icon= this.emotions.find(x => x.name === this.currentTag.emotion)?.icon;
     let completedCard = document.getElementById('completedCard');
@@ -327,13 +328,60 @@ export class MapDashboardComponent extends Helper implements OnInit {
       this.tagList = data;
       this.tagList.forEach((tag: Tag) => {
         tag.label = this.emotions.find(x => x.name === tag.emotion)?.class;
-        this.addPointFeature(tag);
+        const isTrajectory = tag.trajectory !== undefined && tag.trajectory.length !== 0
+        if (isTrajectory) {
+          this.addTrajectory(tag)
+        } else {
+          this.addPointFeature(tag);
+        }
       });
-      console.log( this.tagList)
     })
   }
 
 
+  private addTrajectory(tag: Tag) {
+    let color = this.emotions.find(x=>x.name === tag.emotion)?.rgb;
+    const vectorSource = new VectorSource();
+    const vectorLayer = new VectorLayer({
+      source: vectorSource,
+      style: new Style({
+        stroke: new Stroke({
+          color: color , //couleur relatif au emotion
+          width: 3,
+        }),
+        image: new Circle({
+          radius: 5,
+          fill: new Fill({
+            color: color,
+          }),
+        }),
+      }),
+
+    });
+    const format = new GeoJSON();
+    const features = format.readFeatures(tag.trajectory, {
+      featureProjection: 'EPSG:3857'// Projected coordinate system used by the map
+    });
+    let firstCoordinate: any;
+
+    if (features.length > 0) {
+      const firstFeature = features[0];
+      const geometry = firstFeature.getGeometry();
+      if (geometry && geometry.getType() === 'LineString') {
+        const coordinates = (geometry as any).getCoordinates();
+        firstCoordinate = coordinates[0];
+        console.log('First Coordinate:', firstCoordinate);
+      }
+    }
+    vectorSource.clear();
+    vectorSource.addFeatures(features);
+
+    const coordinates = fromLonLat([firstCoordinate[0], firstCoordinate[1]]);
+
+    // Add the vector layer to the map
+    this.map.addLayer(vectorLayer);
+
+  }
   /**
    * Creates the tag's visual point on the map.
    * @param data - tag data
@@ -342,6 +390,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
   addPointFeature(data: any): void {
     // Define coordinates for the point (longitude, latitude)
     const coordinates = fromLonLat([data.longitude, data.latitude]);
+    let color = this.emotions.find(x=>x.name === data.emotion)?.rgb;
+
 
     // Create a point geometry
     const point = new Point(coordinates);
@@ -355,7 +405,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     const style = new Style({
       image: new Circle({
         radius: 6,
-        fill: new Fill({ color: this.emotions.find(x=>x.name === data.emotion)?.rgb }) //couleur relatif au emotgion
+        fill: new Fill({ color: color }) //couleur relatif au emotion
       })
     });
     // const style = new Style({
@@ -385,16 +435,14 @@ export class MapDashboardComponent extends Helper implements OnInit {
   onSubmit(): any {
     if (this.isFormValid()) {
       this.currentTag.emotion = this.selectedEmotion;
-      this.currentTag.trajectoryCoords = this.trajectoryCoords;
+      this.currentTag.trajectory = this.trajectoryCoords;
       this.currentTag.transport = this.selectedTransport;
       this.currentTag.description = this.currentTag.description?.trim()
       this.tagService.addTag(this.currentTag)
       .subscribe((data) => {
         console.log('Data added successfully!', data)
         this.ngZone.run(() => this.router.navigateByUrl('/'))
-        if (!this.trajectoryCoords) {
-          this.addPointFeature(data);
-        }
+        this.getTags();
           this.initializeOnLoad();
         }, (err: any) => {
           console.log(err);
