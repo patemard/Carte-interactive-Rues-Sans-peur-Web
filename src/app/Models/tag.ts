@@ -1,4 +1,3 @@
-import { Coordinates } from "./Coordinates";
 
 export class Tag {
   id?: number;
