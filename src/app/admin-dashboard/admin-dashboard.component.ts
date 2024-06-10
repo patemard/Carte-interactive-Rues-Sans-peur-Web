@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, EventEmitter, Inject, OnInit, Output, ViewChild, ViewContainerRef} from '@angular/core';
+import {TagService} from "../Service/tag.service";
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -6,10 +7,29 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./admin-dashboard.component.css']
 })
 export class AdminDashboardComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
+  loginPass: boolean = false;
+  currentPassword: string;
+  password: string = "123456" // TODO: put in DB hashed
+  private _tagService: TagService;
+  constructor(tagService: TagService) {
+    this._tagService = tagService;
+    this.currentPassword = '';
   }
 
+  ngOnInit(): void {
+
+  }
+
+
+  login() {
+    console.log(this.currentPassword)
+    if (this.currentPassword === this.password) {
+      this.loginPass = true;
+      this._tagService.isAdmin = true;
+    } else {
+      this._tagService.isAdmin = false;
+      this.loginPass = false;
+
+    }
+  }
 }

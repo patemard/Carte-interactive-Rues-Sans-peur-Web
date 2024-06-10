@@ -32,7 +32,6 @@ import {TagChoiceDialogComponent} from "./dialogs/tagChoice-dialog.component";
     MapDashboardComponent,
     PageNotFoundComponent,
     TagChoiceDialogComponent,
-
     AdminDashboardComponent,
     RessourceDialogComponent
   ],
@@ -40,7 +39,7 @@ import {TagChoiceDialogComponent} from "./dialogs/tagChoice-dialog.component";
     BrowserModule,
     RouterModule.forRoot([
       {path: '', component: MapDashboardComponent},
-      {path: 'Admin', component: AdminDashboardComponent},
+      {path: 'admin', component: AdminDashboardComponent},
 
       // wildcard
       {path: '**', component: PageNotFoundComponent}
