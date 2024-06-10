@@ -9,7 +9,7 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 })
 
 export class TagService {
-
+  public isAdmin = false;
   // Node/Express API
   REST_API: string = 'http://localhost:10000/api';
 
