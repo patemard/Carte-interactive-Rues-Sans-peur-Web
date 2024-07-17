@@ -1,6 +1,6 @@
 
 export class Tag {
-  id?: number;
+  id?: string;
   latitude?: number;
   longitude?: number;
   description?: string;

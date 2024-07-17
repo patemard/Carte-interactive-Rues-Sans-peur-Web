@@ -95,11 +95,11 @@
     >
       <mat-card-header>
         <div mat-card-avatar class="example-header-image"></div>
-          <i class="fa fa-times" id="completedCardClose"
-            (click)="disableEdit=false" aria-hidden="true">
-          </i>
-        <mat-card-title>{{currentTag.title}}</mat-card-title>
-        <mat-card-subtitle>{{currentTag.emotion}}</mat-card-subtitle>
+        <button type="button" class="close completedCardClose" aria-label="Close" (click)="disableEdit=false">
+          <span aria-hidden="true">&times;</span>
+        </button>
+          <mat-card-title>{{currentTag.title}}</mat-card-title>
+          <mat-card-subtitle>{{currentTag.emotion}}</mat-card-subtitle>
       </mat-card-header>
       <img mat-card-image id="cardImg"
        	src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
@@ -108,26 +108,38 @@
       </mat-card-content>
       <mat-card-actions class="centered">
         <button mat-button>
-          <i class="fa fa-heart" aria-hidden="true"></i>
+          <i class="fa fa-heart" aria-hidden="true" title="Solidaire"></i>
         </button>
         <button mat-button>
-          <i class="fa fa-share-square-o" aria-hidden="true"></i>
+          <i class="fa fa-share-square-o" aria-hidden="true" title="Partager"></i>
         </button>
         <button mat-button>
-          <i class="fa fa-flag" aria-hidden="true"></i>
+          <i class="fa fa-flag" aria-hidden="true" title="Signaler"></i>
+        </button>
+        <button mat-button *ngIf="tagService.isAdmin"
+          type="button" class="close" aria-label="Close" 
+          title="Supprimer"
+          (click)="delete(currentTag.id || '')">
+          <i class="fa fa-trash" aria-hidden="true"></i>
         </button>
       </mat-card-actions>
     </mat-card>
 
     <mat-card *ngIf="showChoice">
-      <mat-card-header>
+
+      <mat-card-header> 
+      <button type="button" class="close completedCardClose" aria-label="Close" (click)="showChoice=false">
+        <span aria-hidden="true">&times;</span>
+      </button>
         <mat-card-title>Choix localisation</mat-card-title>
       </mat-card-header>
       <mat-card-actions>
         <button mat-button (click)="showChoice=false; showPopup=true;">Point</button>
         <button mat-button (click)="showChoice=false; initDrawing()">Trajectoire</button>
       </mat-card-actions>
-    </mat-card>
+    </mat-card> 
+   
+   <!-- TODO -->
     <button [hidden]="!drawingStarted" id="saveTrajectory"
       mat-button >Sauvegarder Trajectoire
     </button>

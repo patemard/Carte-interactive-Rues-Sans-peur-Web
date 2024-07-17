@@ -5,7 +5,7 @@
 #popupCard {
   background-color: transparent !important;
   border: none !important;
-  box-shadow: none !important; 
+  box-shadow: none !important;
 }
 
 #cardImg {
@@ -27,20 +27,30 @@
   width: min-content;
 }
 
-#completedCardClose {
+.completedCardClose {
   cursor: pointer;
-  position: absolute;       
-  top: 0px;    
-  right: 0px;
+  position: absolute;
+  top: 4%;
+  right: 4%;
 }
 
 .example-header-image {
   background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
   background-size: cover;
 }
-
 .centered{
   display: flex;
   justify-content: center;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
+
+body {
+  background: #141926;
+  font-family: Helvetica, Arial, sans-serif; 
+}
+
+
+
 

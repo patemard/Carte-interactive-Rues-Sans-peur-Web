@@ -1,4 +1,10 @@
-import {Component, ComponentFactoryResolver, NgZone, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
+import {
+  Component,
+  NgZone,
+  OnInit,
+  ViewChild,
+  ViewContainerRef
+} from '@angular/core';
 import { Helper } from '../helper';
 import { Tag } from '../Models/tag';
 import { TagService } from '../Service/tag.service';
@@ -67,16 +73,17 @@ export class MapDashboardComponent extends Helper implements OnInit {
     { name: "Bus ", icon: "bus" },
     { name: "Voiture ", icon: "car"},
   ]
+  feature: any;
 
   constructor(
-      private tagService: TagService,
+      protected tagService: TagService,
       private router: Router,
       public dialog: MatDialog,
-      private componentFactoryResolver: ComponentFactoryResolver,
-      private ngZone: NgZone
+      private ngZone: NgZone,
       ) {
     super();
     this.initializeOnLoad();
+    console.log("this.tagService.isAdmin", this.tagService.isAdmin)
   }
 
   initializeOnLoad() {
@@ -148,25 +155,23 @@ export class MapDashboardComponent extends Helper implements OnInit {
         return;
       }
       this.initializeOnLoad();
-
-      if (this.map.hasFeatureAtPixel(evt.pixel)) {
-        this.clickedOnTag(evt);
-        overlay.setPosition(evt.coordinate);
-      } else {
-        // [0]: latt, [1]: long.
-        let Coords = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
-        this.currentTag.longitude = Coords[0]
-        this.currentTag.latitude = Coords[1];
-
-        if (this.map.getView().getZoom() >= 18) {
-          this.showChoice = true;
-           overlay.setPosition(evt.coordinate);
-        } else {
-          this.setCenter(18);
+        if (this.map.hasFeatureAtPixel(evt.pixel)) {
+          this.clickedOnTag(evt);
+          overlay.setPosition(evt.coordinate);
+        } else if (!this.tagService.isAdmin) {
+          // [0]: latt, [1]: long.
+          let Coords = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
+          this.currentTag.longitude = Coords[0]
+          this.currentTag.latitude = Coords[1];
+  
+          if (this.map.getView().getZoom() >= 18) {
+            this.showChoice = true;
+            overlay.setPosition(evt.coordinate);
+          } else {
+            this.setCenter(18);
+          }
         }
-      }
     })
-
   }
 
   initGeoCoder() {
@@ -285,17 +290,20 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
 
   clickedOnTag(evt:any) {
-    var feature = this.map.forEachFeatureAtPixel(evt.pixel, function(feature: any) {
+    this.showChoice = false;
+    
+    this.feature = this.map.forEachFeatureAtPixel(evt.pixel, function(feature: any) {
         return feature;
     })
-    this.disableEdit = feature.values_.data;// La Search met un tag, si on clic sur celui ci, il faut pas voir la carte complete
+
+    this.disableEdit = this.feature.values_.data;// La Search met un tag, si on clic sur celui ci, il faut pas voir la carte complete
 
     this.currentTag = {
-      id: feature.values_.data.id,
-      title: feature.values_.data.title,
-      description: feature.values_.data.text,
-      emotion: feature.values_.data.emotion,
-      trajectory: feature.values_.data.emotion
+      id: this.feature.values_.data.id,
+      title: this.feature.values_.data.title,
+      description: this.feature.values_.data.text,
+      emotion: this.feature.values_.data.emotion,
+      trajectory: this.feature.values_.data.emotion
     }
 //  this.currentTag.emotion.icon= this.emotions.find(x => x.name === this.currentTag.emotion)?.icon;
     let completedCard = document.getElementById('completedCard');
@@ -308,8 +316,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
     if (color && closeBtn) {
       closeBtn.style.background = color;
     }
-    this.selectedEmotion = feature.values_.data.emotion;
-    this.selectedTransport = feature.values_.data.transport;
+    this.selectedEmotion = this.feature.values_.data.emotion;
+    this.selectedTransport = this.feature.values_.data.transport;
   }
 
   setCenter(zoom: number) {
@@ -337,6 +345,19 @@ export class MapDashboardComponent extends Helper implements OnInit {
     })
   }
 
+  delete(id: string) {
+    if (id) {
+      this.tagService.deleteTag(id)
+      .subscribe( res =>{
+        this.currentTag = new Tag();
+        this.disableEdit = false;
+        this.getTags();
+        this.feature.values_ = null;
+        this.map.render();
+      })
+    }
+
+  }
 
   private addTrajectory(tag: Tag) {
     let color = this.emotions.find(x=>x.name === tag.emotion)?.rgb;
@@ -364,7 +385,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
       if (geometry && geometry.getType() === 'LineString') {
         const coordinates = (geometry as any).getCoordinates();
         firstCoordinate = coordinates[0];
-        console.log('First Coordinate:', firstCoordinate);
       }
     }
     vectorSource.clear();
@@ -385,8 +405,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     // Define coordinates for the point (longitude, latitude)
     const coordinates = fromLonLat([data.longitude, data.latitude]);
     let color = this.emotions.find(x=>x.name === data.emotion)?.rgb;
-
-
+    
     // Create a point geometry
     const point = new Point(coordinates);
 
@@ -547,14 +566,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
     return style;
   }
 
-
-  openDialog(): void {
-    if (this.dialogContainer) {
-      this.dialogContainer.clear();
-      const componentFactory = this.componentFactoryResolver.resolveComponentFactory(TagChoiceDialogComponent);
-      this.dialogContainer.createComponent(componentFactory);
-    }
-  }
 
 
 }
