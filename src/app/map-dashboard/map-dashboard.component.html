@@ -23,126 +23,134 @@
               [(ngModel)]="currentTag.title">
           </mat-form-field>
 
-        <div class="row">
-          <div class="col-md-6">
-            <mat-form-field appearance="fill">
-              <mat-label>Émotion</mat-label>
-              <mat-select name="Sélection émotion"
-                [(ngModel)]="selectedEmotion">
-                <mat-option *ngFor="let emotion of emotions" [ngStyle]="{'color': emotion.rgb}" [value]="emotion.name">
-                  <i class="fa-solid fa-{{emotion.icon}} fa-xl"></i>{{emotion.name}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="fill">
+                <mat-label>Émotion</mat-label>
+                <mat-select name="Sélection émotion"
+                  [(ngModel)]="selectedEmotion">
+                  <mat-option *ngFor="let emotion of emotions" [ngStyle]="{'color': emotion.rgb}" [value]="emotion.name">
+                    <i class="fa-solid fa-{{emotion.icon}} fa-xl"></i>{{emotion.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="fill">
+                <mat-label>Transport</mat-label>
+                <mat-select name="Sélection transport"
+                  [(ngModel)]="selectedTransport">
+                  <mat-option *ngFor="let transport of transports" [value]="transport.name">
+                    <i class="fa-solid fa-{{transport.icon}} fa-xl" ></i>{{transport.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
           </div>
-          <div class="col-md-6">
-            <mat-form-field appearance="fill">
-              <mat-label>Transport</mat-label>
-              <mat-select name="Sélection transport"
-                [(ngModel)]="selectedTransport">
-                <mat-option *ngFor="let transport of transports" [value]="transport.name">
-                  <i class="fa-solid fa-{{transport.icon}} fa-xl" ></i>{{transport.name}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
+
+          <mat-form-field class="full-width" appearance="fill">
+            <mat-label>Description</mat-label>
+            <textarea name="descInput"
+              maxlength="255"
+              matInput placeholder="Description"
+              [(ngModel)]="currentTag.description">
+            </textarea>
+          </mat-form-field>
+
+          <mat-card-footer>
+          <div class="row">
+            <div class="col-md-4">
+              <button  *ngIf="isFormValid()"
+                mat-raised-button color="accent"
+                matTooltip="Sauvegarder ce témoigage"
+                (click)="onSubmit()">Cartographier
+              </button>
+              <button  *ngIf="!isFormValid()"
+                mat-stroked-button color="accent"
+                matTooltip="Formulaire incomplet.">Cartographier
+              </button>
+            </div>
+            <div class="col-md-5">
+              <!-- <button type="button" mat-raised-button color="primary"
+              (click)="fileInput.click()">Téléverser un image</button>
+              <input hidden (change)="onFileSelected()" #fileInput type="file" id="file"> -->
+            </div>
+            <div class="col-md-2">
+              <button mat-raised-button
+                id="closeBtn"
+                matTooltip="Abandonner la sauvegarde."
+                (click)="initializeOnLoad()">Fermer
+              </button>
+            </div>
           </div>
-        </div>
-
-		<mat-form-field class="full-width" appearance="fill">
-			<mat-label>Description</mat-label>
-			<textarea name="descInput"
-        maxlength="255"
-				matInput placeholder="Description"
-				[(ngModel)]="currentTag.description">
-			</textarea>
-		</mat-form-field>
-
-		<mat-card-footer>
-		<div class="row">
-			<div class="col-md-4">
-				<button  *ngIf="isFormValid()"
-					mat-raised-button color="accent"
-					matTooltip="Sauvegarder ce témoigage"
-					(click)="onSubmit()">Cartographier
-				</button>
-				<button  *ngIf="!isFormValid()"
-					mat-stroked-button color="accent"
-					matTooltip="Formulaire incomplet.">Cartographier
-				</button>
-			</div>
-			<div class="col-md-5">
-				<!-- <button type="button" mat-raised-button color="primary"
-				(click)="fileInput.click()">Téléverser un image</button>
-				<input hidden (change)="onFileSelected()" #fileInput type="file" id="file"> -->
-			</div>
-			<div class="col-md-2">
-				<button mat-raised-button
-          id="closeBtn"
-          matTooltip="Abandonner la sauvegarde."
-          (click)="initializeOnLoad()">Fermer
-        </button>
-			</div>
-		</div>
-		</mat-card-footer>
+          </mat-card-footer>
         </form>
       </div>
     </mat-card>
-
     <mat-card
-        [hidden]="!disableEdit"
-        id="completedCard"
-        class="card-positioning"
+      [hidden]="!showCard"
+      id="completedCard"
+      class="centered"
+      [ngStyle]="{'background-color': completedCardColor}"
     >
       <mat-card-header>
         <div mat-card-avatar class="example-header-image"></div>
-        <button type="button" class="close completedCardClose" aria-label="Close" (click)="disableEdit=false">
+        <button type="button" class="close completedCardClose" aria-label="Close" (click)="showCard=false">
           <span aria-hidden="true">&times;</span>
         </button>
           <mat-card-title>{{currentTag.title}}</mat-card-title>
           <mat-card-subtitle>{{currentTag.emotion}}</mat-card-subtitle>
       </mat-card-header>
       <img mat-card-image id="cardImg"
-       	src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
-      <mat-card-content class="text-center">
-        <p> {{currentTag.description}}</p>
-      </mat-card-content>
-      <mat-card-actions class="centered">
-        <button mat-button>
-          <i class="fa fa-heart" aria-hidden="true" title="Solidaire"></i>
-        </button>
-        <button mat-button>
-          <i class="fa fa-share-square-o" aria-hidden="true" title="Partager"></i>
-        </button>
-        <button mat-button>
-          <i class="fa fa-flag" aria-hidden="true" title="Signaler"></i>
-        </button>
-        <button mat-button *ngIf="tagService.isAdmin"
-          type="button" class="close" aria-label="Close" 
-          title="Supprimer"
-          (click)="delete(currentTag.id || '')">
-          <i class="fa fa-trash" aria-hidden="true"></i>
-        </button>
-      </mat-card-actions>
+        src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+        <mat-card-content class="text-center">
+          <p> {{currentTag.description}}</p>
+        </mat-card-content>
+        <mat-card-actions class="centered">
+          <button mat-button 
+            id="heartBtn"
+            [class.clicked]="isClicked"
+            [disabled]="isClicked"
+            (click)="heart()"
+          >
+            <i class="fa fa-heart" aria-hidden="true" title="Solidaire"></i>
+            <span class="counter" *ngIf="currentTag.heart">{{ currentTag.heart }}</span>
+          </button>
+          <button mat-button>
+            <i class="fa fa-share-square-o" aria-hidden="true" title="Partager"></i>
+          </button>
+          <button mat-button>
+            <i class="fa fa-flag" aria-hidden="true" title="Signaler"></i>
+          </button>
+          <button mat-button *ngIf="tagService.isAdmin"
+            type="button" class="close" aria-label="Close" 
+            title="Supprimer"
+            (click)="delete(currentTag.id || '')">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+          </button>
+        </mat-card-actions>
     </mat-card>
 
-    <mat-card *ngIf="showChoice">
 
-      <mat-card-header> 
-      <button type="button" class="close completedCardClose" aria-label="Close" (click)="showChoice=false">
-        <span aria-hidden="true">&times;</span>
-      </button>
-        <mat-card-title>Choix localisation</mat-card-title>
-      </mat-card-header>
-      <mat-card-actions>
-        <button mat-button (click)="showChoice=false; showPopup=true;">Point</button>
-        <button mat-button (click)="showChoice=false; initDrawing()">Trajectoire</button>
-      </mat-card-actions>
-    </mat-card> 
+
+      <mat-card *ngIf="showChoice">
+
+        <mat-card-header> 
+        <button type="button" class="close completedCardClose" aria-label="Close" (click)="showChoice=false">
+          <span aria-hidden="true">&times;</span>
+        </button>
+          <mat-card-title>Choix localisation</mat-card-title>
+        </mat-card-header>
+        <mat-card-actions>
+          <button mat-button (click)="showChoice=false; showPopup=true;">Point</button>
+          <button mat-button (click)="showChoice=false; initDrawing()">Trajectoire</button>
+        </mat-card-actions>
+      </mat-card> 
    
-   <!-- TODO -->
-    <button [hidden]="!drawingStarted" id="saveTrajectory"
-      mat-button >Sauvegarder Trajectoire
-    </button>
+       <!-- TODO -->
+      <button [hidden]="!drawingStarted" id="saveTrajectory"
+        mat-button >Sauvegarder Trajectoire
+      </button>
 
   </div>
   <!-- Contact section-->

@@ -1,41 +1,41 @@
+<section class="vh-100 gradient-custom" *ngIf="!loginPass">
+  <div class="container py-5 h-100">
+    <div class="row d-flex justify-content-center align-items-center h-100">
+      <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+        <div class="card bg-dark text-white" style="border-radius: 1rem;">
+          <div class="card-body p-5 text-center">
+
+            <div class="mb-md-5 mt-md-4 pb-5">
 
 
+              <div data-mdb-input-init class="form-outline form-white mb-4">
+                <input type="email" id="typeEmailX" class="form-control form-control-lg" />
+              </div>
+              <mat-dialog-actions>
 
-<!-- Modal -->
-<!--<div class="modal fade centered" style="margin-top: 20%" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
-<!--  <div class="modal-dialog" role="document">-->
-<!--    <div class="modal-content">-->
-<!--      <div class="modal-header">-->
-<!--        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>-->
-<!--        <button type="button" class="close" data-dismiss="modal" aria-label="Close">-->
-<!--          <span aria-hidden="true">&times;</span>-->
-<!--        </button>-->
-<!--      </div>-->
-<!--      <div class="modal-body">-->
-<!--        ...-->
-<!--      </div>-->
-<!--      <div class="modal-footer">-->
-<!--        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>-->
-<!--        <button type="button" class="btn btn-primary">Save changes</button>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</div>-->
+                <div data-mdb-input-init class="form-outline form-white mb-4">
+                  <input name="PasswordInput"
+                    id="typePasswordX"
+                    class="form-control form-control-lg"
+                    maxlength="50"
+                    type="password"
+                    matInput placeholder="mot de passe"
+                    [(ngModel)]="currentPassword"
+                  >
+                </div>
+  
+                <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-5" type="submit"  (click)="login()">Connecter</button>
+              </mat-dialog-actions>
 
-<div class="centered" style="margin-top: 20%" *ngIf="!loginPass">
-  <h2 mat-dialog-title>Mot de passe</h2>
+            </div>
 
-  <mat-dialog-actions>
-      <input name="PasswordInput"
-             maxlength="50"
-             matInput placeholder="mot de passe"
-             [(ngModel)]="currentPassword"
-      >
-      <button mat-button  (click)="login()">Connecter</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-
-  </mat-dialog-actions>
-</div>
   <app-map-dashboard
-      *ngIf="loginPass"
-  ></app-map-dashboard>
+    *ngIf="loginPass"
+  ></app-map-dashboard> 

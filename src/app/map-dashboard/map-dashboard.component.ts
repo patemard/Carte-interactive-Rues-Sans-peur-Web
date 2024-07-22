@@ -45,19 +45,19 @@ export class MapDashboardComponent extends Helper implements OnInit {
   selectedTransport: any;
   layer: any;
   showChoice: boolean = false;
-
+  completedCardColor: string = '';
   showPopup: boolean = false;
-  disableEdit: boolean = false;
   protected drawingStarted: boolean = false;
+  feature: any;
+  isClicked: boolean = false;
+  showCard: boolean = false;
 
   tagList: any = [];
   trajectoryCoords: any =[];
 
   geocoder: any;
   srcResult: any;
-
-  @ViewChild('dialogContainer', { read: ViewContainerRef }) dialogContainer: ViewContainerRef | undefined;
-
+  
   //class a fixer
   emotions: {name: string, icon: string, class?: string, rgb?: string, png: string}[] = [
     { name: "Évènement", icon: "circle-exclamation", class: "text-success", rgb: "rgba(40, 167, 69, 0.75)", png: "black"},
@@ -73,7 +73,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
     { name: "Bus ", icon: "bus" },
     { name: "Voiture ", icon: "car"},
   ]
-  feature: any;
 
   constructor(
       protected tagService: TagService,
@@ -93,9 +92,11 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.description = '';
     this.title = '';
     this.showPopup = false;
-    this.disableEdit = false;
+    this.showCard = false;
+    this.isClicked = false;
     this.selectedEmotion = ''
     this.selectedTransport = '';
+    this.completedCardColor = '';
   }
 
   ngOnInit() {
@@ -151,26 +152,26 @@ export class MapDashboardComponent extends Helper implements OnInit {
     }
 
     this.map.on('click', (evt: any) => {
-      if (this.drawingStarted) {
+      if (this.drawingStarted || this.showPopup || this.showCard) {
         return;
       }
       this.initializeOnLoad();
-        if (this.map.hasFeatureAtPixel(evt.pixel)) {
-          this.clickedOnTag(evt);
+      if (this.map.hasFeatureAtPixel(evt.pixel)) {
+        this.clickedOnTag(evt);
+        overlay.setPosition(evt.coordinate);
+      } else if (!this.tagService.isAdmin) {
+        // [0]: latt, [1]: long.
+        let Coords = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
+        this.currentTag.longitude = Coords[0]
+        this.currentTag.latitude = Coords[1];
+
+        if (this.map.getView().getZoom() >= 18) {
+          this.showChoice = true;
           overlay.setPosition(evt.coordinate);
-        } else if (!this.tagService.isAdmin) {
-          // [0]: latt, [1]: long.
-          let Coords = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
-          this.currentTag.longitude = Coords[0]
-          this.currentTag.latitude = Coords[1];
-  
-          if (this.map.getView().getZoom() >= 18) {
-            this.showChoice = true;
-            overlay.setPosition(evt.coordinate);
-          } else {
-            this.setCenter(18);
-          }
+        } else {
+          this.setCenter(18);
         }
+      }
     })
   }
 
@@ -192,7 +193,11 @@ export class MapDashboardComponent extends Helper implements OnInit {
     });
     this.map.addControl(this.geocoder);
     this.map.addEventListener('wheel', this.processWheelEvent)
-
+    this.geocoder.on('addresschosen',  (evt: any) => {
+      const coord = evt.coordinate;
+      this.map.getView().setCenter(coord);
+      this.map.getView().setZoom(18);
+    });
     // this.loadMarkerData()gcd-input-query
     // let geocoderInput = document.getElementById('gcd-input-query');
     // console.log(geocoderInput);
@@ -269,19 +274,12 @@ export class MapDashboardComponent extends Helper implements OnInit {
     });
 
     // Save or display the GeoJSON string
-    console.log(geojson);
     this.trajectoryCoords = geojson;
     this.drawingStarted=false;
     this.showPopup = true;
     this.map.removeInteraction(draw);
   });
 
-  // Handle potential errors during rendering
-  this.map.on('rendercomplete', (event:any) => {
-    if (!event.frameState.layerStates) {
-      console.error('Layer states are undefined.');
-    }
-  });
   }
   processWheelEvent(evt: any) {
     evt.preventDefault();
@@ -296,26 +294,18 @@ export class MapDashboardComponent extends Helper implements OnInit {
         return feature;
     })
 
-    this.disableEdit = this.feature.values_.data;// La Search met un tag, si on clic sur celui ci, il faut pas voir la carte complete
-
+    this.showCard = this.feature.values_.data;
+    
     this.currentTag = {
       id: this.feature.values_.data.id,
       title: this.feature.values_.data.title,
       description: this.feature.values_.data.text,
       emotion: this.feature.values_.data.emotion,
-      trajectory: this.feature.values_.data.emotion
+      trajectory: this.feature.values_.data.trajectory,
+      heart: this.feature.values_.data.heart || 0
     }
-//  this.currentTag.emotion.icon= this.emotions.find(x => x.name === this.currentTag.emotion)?.icon;
-    let completedCard = document.getElementById('completedCard');
-    let closeBtn = document.getElementById('closeBtn');
 
-    let color = this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb;
-    if (color && completedCard) {
-      completedCard.style.background =color;
-    }
-    if (color && closeBtn) {
-      closeBtn.style.background = color;
-    }
+    this.completedCardColor = this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb || '';
     this.selectedEmotion = this.feature.values_.data.emotion;
     this.selectedTransport = this.feature.values_.data.transport;
   }
@@ -335,7 +325,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
       this.tagList = data;
       this.tagList.forEach((tag: Tag) => {
         tag.label = this.emotions.find(x => x.name === tag.emotion)?.class;
-        const isTrajectory = tag.trajectory !== undefined && tag.trajectory.length !== 0
+   
+        const isTrajectory = tag.trajectory && tag.trajectory.length !== 0
         if (isTrajectory) {
           this.addTrajectory(tag)
         } else {
@@ -350,13 +341,12 @@ export class MapDashboardComponent extends Helper implements OnInit {
       this.tagService.deleteTag(id)
       .subscribe( res =>{
         this.currentTag = new Tag();
-        this.disableEdit = false;
+        this.showCard = false;
         this.getTags();
         this.feature.values_ = null;
         this.map.render();
       })
     }
-
   }
 
   private addTrajectory(tag: Tag) {
@@ -566,6 +556,23 @@ export class MapDashboardComponent extends Helper implements OnInit {
     return style;
   }
 
+
+  heart() {
+    if (!this.currentTag.heart ) {
+      this.currentTag.heart = 0;
+    }
+    this.currentTag.heart++;
+    this.isClicked = true;
+    //todo:  update tag
+
+    
+    this.tagService.updateTag(this.currentTag.id, this.currentTag).subscribe(res => {
+      this.getTags()
+      this.map.render();
+      
+    })
+    
+  }
 
 
 }
