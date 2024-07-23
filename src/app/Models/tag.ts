@@ -10,8 +10,11 @@ export class Tag {
   emotion?: any;
   trajectory?: any
   rgb?: any;
+  heart: number;
+  flagged?: number;
 
   constructor() {
+    this.heart = 0;
   }
 
 

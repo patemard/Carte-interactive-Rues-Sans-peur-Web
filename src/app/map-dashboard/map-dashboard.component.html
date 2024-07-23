@@ -109,12 +109,12 @@
         <mat-card-actions class="centered">
           <button mat-button 
             id="heartBtn"
-            [class.clicked]="isClicked"
-            [disabled]="isClicked"
+            [class.clicked]="heartIsClicked"
+            [disabled]="heartIsClicked"
             (click)="heart()"
           >
             <i class="fa fa-heart" aria-hidden="true" title="Solidaire"></i>
-            <span class="counter" *ngIf="currentTag.heart">{{ currentTag.heart }}</span>
+            <span class="counter" *ngIf="currentTag.heart">{{ currentTag.heart.length }}</span>
           </button>
           <button mat-button>
             <i class="fa fa-share-square-o" aria-hidden="true" title="Partager"></i>

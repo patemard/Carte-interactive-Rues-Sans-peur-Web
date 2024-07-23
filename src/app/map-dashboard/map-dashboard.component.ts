@@ -27,6 +27,7 @@ import Draw from 'ol/interaction/Draw';
 import GeoJSON from 'ol/format/GeoJSON';
 import {MatDialog} from "@angular/material/dialog";
 import {TagChoiceDialogComponent} from "../dialogs/tagChoice-dialog.component";
+import { IpService } from '../Service/ip.service';
 
 @Component({
   selector: 'app-map-dashboard',
@@ -40,6 +41,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
   currentTag: Tag = new Tag;
   map: any;
   description: string = '';
+  ipAddress: string = '';
   title: string = '';
   selectedEmotion: any;
   selectedTransport: any;
@@ -49,7 +51,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
   showPopup: boolean = false;
   protected drawingStarted: boolean = false;
   feature: any;
-  isClicked: boolean = false;
+  heartIsClicked: boolean = false;
   showCard: boolean = false;
 
   tagList: any = [];
@@ -79,6 +81,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       private router: Router,
       public dialog: MatDialog,
       private ngZone: NgZone,
+      private ipService: IpService,
       ) {
     super();
     this.initializeOnLoad();
@@ -93,7 +96,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.title = '';
     this.showPopup = false;
     this.showCard = false;
-    this.isClicked = false;
+    this.heartIsClicked = false;
     this.selectedEmotion = ''
     this.selectedTransport = '';
     this.completedCardColor = '';
@@ -104,7 +107,17 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.initGeoCoder();
     this.initPopup();
     this.getTags();
+    this.getUserIp();
     // this.loadMarkerData()
+  }
+  getUserIp() {
+    this.ipService.getIpAddress().subscribe( (data) => {
+        this.ipAddress = data.ip;
+      },
+      (error) => {
+        console.error('Failed to fetch IP address', error);
+      }
+    );
   }
 
 
@@ -302,9 +315,10 @@ export class MapDashboardComponent extends Helper implements OnInit {
       description: this.feature.values_.data.text,
       emotion: this.feature.values_.data.emotion,
       trajectory: this.feature.values_.data.trajectory,
-      heart: this.feature.values_.data.heart || 0
+      heart: this.feature.values_.data.heart || []
     }
-
+    
+    this.heartIsClicked = this.currentTag.heart.some(h => h === this.ipAddress);
     this.completedCardColor = this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb || '';
     this.selectedEmotion = this.feature.values_.data.emotion;
     this.selectedTransport = this.feature.values_.data.transport;
@@ -559,17 +573,15 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   heart() {
     if (!this.currentTag.heart ) {
-      this.currentTag.heart = 0;
+      this.currentTag.heart = [];
     }
-    this.currentTag.heart++;
-    this.isClicked = true;
-    //todo:  update tag
+    this.currentTag.heart.push(this.ipAddress);
+    this.heartIsClicked = true;
 
     
     this.tagService.updateTag(this.currentTag.id, this.currentTag).subscribe(res => {
       this.getTags()
       this.map.render();
-      
     })
     
   }
