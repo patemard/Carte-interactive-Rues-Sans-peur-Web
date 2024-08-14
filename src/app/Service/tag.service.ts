@@ -9,7 +9,10 @@ import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http
 })
 
 export class TagService {
-  public isAdmin = false;
+  private _isAdmin = false;
+  private _selectedTag: Tag | undefined;
+
+
   // Node/Express API
   REST_API: string = 'http://localhost:10000/api';
 
@@ -17,6 +20,22 @@ export class TagService {
   httpHeaders = new HttpHeaders().set('Content-Type', 'application/json');
 
   constructor(private httpClient: HttpClient) { }
+
+  public get isAdmin() {
+    return this._isAdmin;
+  }
+
+  public set isAdmin(isAdmin: boolean) {
+    this._isAdmin = isAdmin;
+  }
+
+  public get selectedTag() {
+    return this._selectedTag;
+  }
+
+  public set selectedTag(selectedTag: Tag | undefined) {
+    this._selectedTag = selectedTag;
+  }
 
   // Add
   addTag(data: Tag): Observable<any> {

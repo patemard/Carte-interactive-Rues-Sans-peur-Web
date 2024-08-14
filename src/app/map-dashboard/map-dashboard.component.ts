@@ -28,6 +28,7 @@ import GeoJSON from 'ol/format/GeoJSON';
 import {MatDialog} from "@angular/material/dialog";
 import {TagChoiceDialogComponent} from "../dialogs/tagChoice-dialog.component";
 import { IpService } from '../Service/ip.service';
+import { ConfirmDialogComponent } from '../dialogs/confirm-dialog.component';
 
 @Component({
   selector: 'app-map-dashboard',
@@ -52,6 +53,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
   protected drawingStarted: boolean = false;
   feature: any;
   heartIsClicked: boolean = false;
+  flagIsClicked: boolean = false;
   showCard: boolean = false;
 
   tagList: any = [];
@@ -315,9 +317,13 @@ export class MapDashboardComponent extends Helper implements OnInit {
       description: this.feature.values_.data.text,
       emotion: this.feature.values_.data.emotion,
       trajectory: this.feature.values_.data.trajectory,
-      heart: this.feature.values_.data.heart || []
+      heart: this.feature.values_.data.heart || [],
+      flagged: this.feature.values_.data.flagged || []
+
     }
-    
+    if (this.currentTag.flagged) {
+      this.flagIsClicked =  this.currentTag.flagged.some(h => h === this.ipAddress);
+    }
     this.heartIsClicked = this.currentTag.heart.some(h => h === this.ipAddress);
     this.completedCardColor = this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb || '';
     this.selectedEmotion = this.feature.values_.data.emotion;
@@ -337,6 +343,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.tagService.getTags()
     .subscribe(data => {
       this.tagList = data;
+      this.tagList = this.tagList.filter((x: Tag)=> x.active);
       this.tagList.forEach((tag: Tag) => {
         tag.label = this.emotions.find(x => x.name === tag.emotion)?.class;
    
@@ -451,6 +458,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   onSubmit(): any {
     if (this.isFormValid()) {
+      this.currentTag.active = true;
       this.currentTag.emotion = this.selectedEmotion;
       this.currentTag.trajectory = this.trajectoryCoords;
       this.currentTag.transport = this.selectedTransport;
@@ -578,12 +586,34 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.currentTag.heart.push(this.ipAddress);
     this.heartIsClicked = true;
 
+    this.tagService.updateTag(this.currentTag.id, this.currentTag).subscribe(res => {
+      this.getTags()
+      this.map.render();
+    })
+  }
+
+  flag() {
+    if (!this.currentTag.flagged) {
+      this.currentTag.flagged = [];
+    }
+    this.currentTag.flagged.push(this.ipAddress);
+    this.flagIsClicked = true;
     
     this.tagService.updateTag(this.currentTag.id, this.currentTag).subscribe(res => {
       this.getTags()
       this.map.render();
     })
+  }
+
+  openDeleteDialog(enterAnimationDuration: string, exitAnimationDuration: string): void  {
+    console.log(this.currentTag)
+    this.tagService.selectedTag = this.currentTag;
     
+    this.dialog.open(ConfirmDialogComponent, {
+      width: '250px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
   }
 
 

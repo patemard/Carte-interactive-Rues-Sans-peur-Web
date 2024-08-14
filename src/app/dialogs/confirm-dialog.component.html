@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>Actions modération</h1>
+<div mat-dialog-content>
+
+  <mat-select placeholder="Choix de l'action"
+    [(value)]="selectedAction">
+    <mat-option value="'hide'" cdkFocusInitial>Masquer</mat-option>
+    <mat-option value="'delete'">Supprimer</mat-option>
+  </mat-select>
+</div>
+
+<div mat-dialog-actions>
+
+  <button mat-button mat-dialog-close cdkFocusInitial  (click)="confirm()">Confirmer</button>
+
+  <button mat-button mat-dialog-close>Annuler</button>
+</div>

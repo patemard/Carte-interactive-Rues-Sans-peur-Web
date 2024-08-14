@@ -38,7 +38,7 @@
 
 body {
   background: #141926;
-  font-family: Helvetica, Arial, sans-serif; 
+  font-family: Helvetica, Arial, sans-serif;
 }
 
 
@@ -52,7 +52,12 @@ button {
   position: relative;
 }
 
-button.clicked .fa-heart {
+button.clicked .fa-heart  {
+  animation: beatHeart 0.5s linear;
+  color: red; /* Change heart color when clicked */
+}
+
+button.clicked .fa-flag {
   animation: beatHeart 0.5s linear;
   color: red; /* Change heart color when clicked */
 }

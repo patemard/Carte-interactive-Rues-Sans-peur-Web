@@ -1,6 +1,7 @@
 
 export class Tag {
   id?: string;
+  active?: boolean;
   latitude?: number;
   longitude?: number;
   description?: string;
@@ -10,11 +11,13 @@ export class Tag {
   emotion?: any;
   trajectory?: any
   rgb?: any;
-  heart: number;
-  flagged?: number;
+  heart: string[];
+  flagged?: string[];
 
   constructor() {
-    this.heart = 0;
+    this.heart = [];
+    this.flagged = [];
+
   }
 
 

@@ -107,25 +107,28 @@
           <p> {{currentTag.description}}</p>
         </mat-card-content>
         <mat-card-actions class="centered">
-          <button mat-button 
+          <button mat-button
             id="heartBtn"
             [class.clicked]="heartIsClicked"
             [disabled]="heartIsClicked"
-            (click)="heart()"
-          >
+            (click)="heart()">
             <i class="fa fa-heart" aria-hidden="true" title="Solidaire"></i>
             <span class="counter" *ngIf="currentTag.heart">{{ currentTag.heart.length }}</span>
           </button>
           <button mat-button>
             <i class="fa fa-share-square-o" aria-hidden="true" title="Partager"></i>
           </button>
-          <button mat-button>
+          <button mat-button
+            id="flagBtn"
+            [class.clicked]="flagIsClicked"
+            [disabled]="flagIsClicked"
+            (click)="flag()">
             <i class="fa fa-flag" aria-hidden="true" title="Signaler"></i>
           </button>
           <button mat-button *ngIf="tagService.isAdmin"
-            type="button" class="close" aria-label="Close" 
+            type="button" class="close" aria-label="Close"
             title="Supprimer"
-            (click)="delete(currentTag.id || '')">
+            (click)="openDeleteDialog('100', '250')">
             <i class="fa fa-trash" aria-hidden="true"></i>
           </button>
         </mat-card-actions>
@@ -135,7 +138,7 @@
 
       <mat-card *ngIf="showChoice">
 
-        <mat-card-header> 
+        <mat-card-header>
         <button type="button" class="close completedCardClose" aria-label="Close" (click)="showChoice=false">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -145,8 +148,8 @@
           <button mat-button (click)="showChoice=false; showPopup=true;">Point</button>
           <button mat-button (click)="showChoice=false; initDrawing()">Trajectoire</button>
         </mat-card-actions>
-      </mat-card> 
-   
+      </mat-card>
+
        <!-- TODO -->
       <button [hidden]="!drawingStarted" id="saveTrajectory"
         mat-button >Sauvegarder Trajectoire
