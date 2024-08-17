@@ -9,7 +9,7 @@ import {TagService} from "../Service/tag.service";
 export class AdminDashboardComponent implements OnInit {
   loginPass: boolean = false;
   currentPassword: string;
-  password: string = "123456" // TODO: put in DB hashed
+  password: string = "1" // TODO: put in DB hashed
   private _tagService: TagService;
   constructor(tagService: TagService) {
     this._tagService = tagService;

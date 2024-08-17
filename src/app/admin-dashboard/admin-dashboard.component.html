@@ -7,10 +7,6 @@
 
             <div class="mb-md-5 mt-md-4 pb-5">
 
-
-              <div data-mdb-input-init class="form-outline form-white mb-4">
-                <input type="email" id="typeEmailX" class="form-control form-control-lg" />
-              </div>
               <mat-dialog-actions>
 
                 <div data-mdb-input-init class="form-outline form-white mb-4">
@@ -23,8 +19,8 @@
                     [(ngModel)]="currentPassword"
                   >
                 </div>
-  
-                <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-5" type="submit"  (click)="login()">Connecter</button>
+
+                <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-atv btn-lg px-5" type="submit"  (click)="login()">Connecter</button>
               </mat-dialog-actions>
 
             </div>
@@ -38,4 +34,4 @@
 
   <app-map-dashboard
     *ngIf="loginPass"
-  ></app-map-dashboard> 
+  ></app-map-dashboard>

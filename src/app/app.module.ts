@@ -24,7 +24,8 @@ import {
 } from '@angular/material/dialog';
 import { RessourceDialogComponent } from './dialogs/ressource-dialog.component';
 import {TagChoiceDialogComponent} from "./dialogs/tagChoice-dialog.component";
-
+import { ConfirmDialogComponent } from './dialogs/confirm-dialog.component';
+import {ScrollingModule} from '@angular/cdk/scrolling';
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,7 +34,8 @@ import {TagChoiceDialogComponent} from "./dialogs/tagChoice-dialog.component";
     PageNotFoundComponent,
     TagChoiceDialogComponent,
     AdminDashboardComponent,
-    RessourceDialogComponent
+    RessourceDialogComponent,
+    ConfirmDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -56,6 +58,8 @@ import {TagChoiceDialogComponent} from "./dialogs/tagChoice-dialog.component";
     MatCardModule,
     MatDialogModule,
     HttpClientModule,
+    ScrollingModule
+
   ],
   providers: [
     {provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher}

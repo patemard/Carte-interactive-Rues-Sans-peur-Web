@@ -13,18 +13,8 @@ export class ConfirmDialogComponent {
 
   confirm(){
     console.log(this.selectedAction);
-    if (this.selectedAction == 'hide') {
 
-      // TOdo should return info to main component.
-      // let tag = this.tagService.selectedTag;
-      // if (tag) {
-      //   tag.active = false;
-      //   this.tagService.updateTag(tag.id, tag).subscribe();
-      // }
-      // update new inactive value
-    } else if (this.selectedAction == 'delete') {
-
-    }
+    this.dialogRef.close({event:this.selectedAction});
 
     }
 }

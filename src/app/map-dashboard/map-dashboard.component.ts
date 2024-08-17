@@ -586,10 +586,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.currentTag.heart.push(this.ipAddress);
     this.heartIsClicked = true;
 
-    this.tagService.updateTag(this.currentTag.id, this.currentTag).subscribe(res => {
-      this.getTags()
-      this.map.render();
-    })
+    this.updateTag(this.currentTag);
   }
 
   flag() {
@@ -599,7 +596,11 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.currentTag.flagged.push(this.ipAddress);
     this.flagIsClicked = true;
     
-    this.tagService.updateTag(this.currentTag.id, this.currentTag).subscribe(res => {
+    this.updateTag(this.currentTag);
+  }
+
+  updateTag(tag: Tag) {
+    this.tagService.updateTag(tag.id, tag).subscribe(res => {
       this.getTags()
       this.map.render();
     })
@@ -609,12 +610,28 @@ export class MapDashboardComponent extends Helper implements OnInit {
     console.log(this.currentTag)
     this.tagService.selectedTag = this.currentTag;
     
-    this.dialog.open(ConfirmDialogComponent, {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       width: '250px',
       enterAnimationDuration,
       exitAnimationDuration,
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('result', result);
+
+      if(result.event == 'hide'){
+        this.currentTag.active = false;
+        this.updateTag(this.currentTag);
+      }else if(result.event == 'delete'){
+        if (this.currentTag.id) {
+          this.delete(this.currentTag.id);
+        }
+      }
+    });
+
   }
+
+
 
 
 }
