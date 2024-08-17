@@ -29,8 +29,8 @@
                 <mat-label>Émotion</mat-label>
                 <mat-select name="Sélection émotion"
                   [(ngModel)]="selectedEmotion">
-                  <mat-option *ngFor="let emotion of emotions" [ngStyle]="{'color': emotion.rgb}" [value]="emotion.name">
-                    <i class="fa-solid fa-{{emotion.icon}} fa-xl"></i>{{emotion.name}}
+                  <mat-option *ngFor="let emotion of emotions" [ngClass]="emotion.class" [value]="emotion.name">
+                    <i class="fa fa-{{emotion.icon}} fa-xl"></i>{{emotion.name}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>

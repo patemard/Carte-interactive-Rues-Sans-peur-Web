@@ -64,11 +64,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
   
   //class a fixer
   emotions: {name: string, icon: string, class?: string, rgb?: string, png: string}[] = [
-    { name: "Évènement", icon: "circle-exclamation", class: "text-success", rgb: "rgba(40, 167, 69, 0.75)", png: "black"},
-    { name: "Fierté ", icon: "face-smile", class: "text-warning", rgb: "rgba(255, 193, 7, 0.75)", png: "greeen" },
-    { name: "Tristesse ", icon: "face-sad-tear", class: "text-primary", rgb: "rgba(0, 123, 255, 0.75)", png: "yellow"  },
-    { name: "Frustration", icon: "face-angry" , class: "text-danger", rgb: "rgba(220, 53, 69, 0.75)", png: "red"},
-    { name: "Peur", icon: "frown-open", class: "text-info", rgb: "rgba(91, 162, 184, 0.75)", png: "blue"}
+    { name: "Sécurisant", icon: "smile-o", class: "text-success", rgb: "rgba(40, 167, 69, 0.75)", png: "black"},
+    { name: "Insécurisant", icon: "frown-o" , class: "text-danger", rgb: "rgba(220, 53, 69, 0.75)", png: "red"}
   ]
 
   transports = [
