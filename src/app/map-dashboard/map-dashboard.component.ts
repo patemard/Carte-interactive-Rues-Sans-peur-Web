@@ -37,8 +37,6 @@ import { ConfirmDialogComponent } from '../dialogs/confirm-dialog.component';
 })
 
 export class MapDashboardComponent extends Helper implements OnInit {
-  latitude: number = 0;
-  longitude: number = 0;
   currentTag: Tag = new Tag;
   map: any;
   description: string = '';
@@ -46,8 +44,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
   title: string = '';
   selectedEmotion: any;
   selectedTransport: any;
+  selectedType: any;
   layer: any;
-  showChoice: boolean = false;
   completedCardColor: string = '';
   showPopup: boolean = false;
   protected drawingStarted: boolean = false;
@@ -61,19 +59,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   geocoder: any;
   srcResult: any;
-  
-  //class a fixer
-  emotions: {name: string, icon: string, class?: string, rgb?: string, png: string}[] = [
-    { name: "Sécurisant", icon: "smile-o", class: "text-success", rgb: "rgba(40, 167, 69, 0.75)", png: "black"},
-    { name: "Insécurisant", icon: "frown-o" , class: "text-danger", rgb: "rgba(220, 53, 69, 0.75)", png: "red"}
-  ]
 
-  transports = [
-    { name: "Marche", icon: "person-walking"},
-    { name: "Vélo ", icon: "bicycle"},
-    { name: "Bus ", icon: "bus" },
-    { name: "Voiture ", icon: "car"},
-  ]
 
   constructor(
       protected tagService: TagService,
@@ -88,8 +74,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
   }
 
   initializeOnLoad() {
-    this.latitude = this.QUEBEC_CITY.latitude;
-    this.longitude = this.QUEBEC_CITY.longitude;
     this.currentTag = new Tag();
     this.description = '';
     this.title = '';
@@ -98,6 +82,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.heartIsClicked = false;
     this.selectedEmotion = ''
     this.selectedTransport = '';
+    this.selectedType = '';
     this.completedCardColor = '';
   }
 
@@ -130,7 +115,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
         })
       ],
       view: new View({
-        center: fromLonLat([this.longitude, this.latitude]),
+        center: fromLonLat([this.QUEBEC_CITY.longitude, this.QUEBEC_CITY.latitude]),
         minZoom: 13,
         constrainOnlyCenter: true,
         zoom: 14
@@ -178,7 +163,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
         this.currentTag.latitude = Coords[1];
 
         if (this.map.getView().getZoom() >= 18) {
-          this.showChoice = true;
+          this.showPopup = true;
           overlay.setPosition(evt.coordinate);
         } else {
           this.setCenter(18);
@@ -288,11 +273,12 @@ export class MapDashboardComponent extends Helper implements OnInit {
     // Save or display the GeoJSON string
     this.trajectoryCoords = geojson;
     this.drawingStarted=false;
-    this.showPopup = true;
+    this.submitTrajectory()
     this.map.removeInteraction(draw);
   });
 
   }
+  
   processWheelEvent(evt: any) {
     evt.preventDefault();
   }
@@ -300,7 +286,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
 
   clickedOnTag(evt:any) {
-    this.showChoice = false;
     
     this.feature = this.map.forEachFeatureAtPixel(evt.pixel, function(feature: any) {
         return feature;
@@ -310,6 +295,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
     
     this.currentTag = {
       id: this.feature.values_.data.id,
+      latitude: this.feature.values_.data.latitude,
+      longitude: this.feature.values_.data.longitude,
       title: this.feature.values_.data.title,
       description: this.feature.values_.data.text,
       emotion: this.feature.values_.data.emotion,
@@ -325,6 +312,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.completedCardColor = this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb || '';
     this.selectedEmotion = this.feature.values_.data.emotion;
     this.selectedTransport = this.feature.values_.data.transport;
+    this.selectedType = this.currentTag.trajectory ? "Trajectoire" : "Point";
   }
 
   setCenter(zoom: number) {
@@ -454,12 +442,9 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
 
   onSubmit(): any {
-    if (this.isFormValid()) {
-      this.currentTag.active = true;
-      this.currentTag.emotion = this.selectedEmotion;
-      this.currentTag.trajectory = this.trajectoryCoords;
-      this.currentTag.transport = this.selectedTransport;
-      this.currentTag.description = this.currentTag.description?.trim()
+    console.log(this.selectedType); 
+    if (this.selectedType == "Point") {
+      this.setModel();
       this.tagService.addTag(this.currentTag)
       .subscribe((data) => {
         console.log('Data added successfully!', data)
@@ -469,8 +454,31 @@ export class MapDashboardComponent extends Helper implements OnInit {
         }, (err: any) => {
           console.log(err);
       });
+    } else if (this.selectedType == "Trajectoire"){
+      this.showPopup = false;
+      this.initDrawing();
     }
+  }
 
+  setModel() {
+    this.currentTag.active = true;
+    this.currentTag.emotion = this.selectedEmotion;
+    this.currentTag.transport = this.selectedTransport;
+    this.currentTag.description = this.currentTag.description?.trim()
+  }
+
+  submitTrajectory() {
+    this.setModel();
+    this.currentTag.trajectory = this.trajectoryCoords;
+    this.tagService.addTag(this.currentTag)
+    .subscribe((data) => {
+      console.log('Data added successfully!', data)
+      this.ngZone.run(() => this.router.navigateByUrl('/'))
+      this.getTags();
+        this.initializeOnLoad();
+      }, (err: any) => {
+        console.log(err);
+    });
   }
 
   isFormValid(): boolean {
@@ -478,7 +486,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
       this.currentTag.title &&
       this.selectedEmotion &&
       this.selectedTransport &&
-      this.currentTag.description
+      this.currentTag.description &&
+      this.selectedType
       )
   }
 

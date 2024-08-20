@@ -14,7 +14,7 @@
   <div id="popup" class="ol-popup">
     <mat-card *ngIf="showPopup" id="popupCard" class="card-positioning">
       <div id="popup-content">
-        <form class="tag-form" >
+        <form>
           <mat-form-field class="full-width " appearance="fill">
             <mat-label>Titre</mat-label>
             <input name="titleInput"
@@ -47,6 +47,26 @@
               </mat-form-field>
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-6">
+              <mat-form-field appearance="fill">
+                <mat-label>Type</mat-label>
+                <mat-select name="Sélection type"
+                  [(ngModel)]="selectedType">
+                  <mat-option *ngFor="let type of types" [value]="type.name">
+                    <i class="fa fa-{{type.icon}} fa-xl"></i>{{type.name}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="fill">
+                <mat-label>Auto identification</mat-label>
+                <input  matInput placeholder="Auto identification">
+              </mat-form-field>
+            </div>
+          </div>
+
 
           <mat-form-field class="full-width" appearance="fill">
             <mat-label>Description</mat-label>
@@ -87,6 +107,7 @@
         </form>
       </div>
     </mat-card>
+   
     <mat-card
       [hidden]="!showCard"
       id="completedCard"
@@ -135,20 +156,6 @@
     </mat-card>
 
 
-
-      <mat-card *ngIf="showChoice">
-
-        <mat-card-header>
-        <button type="button" class="close completedCardClose" aria-label="Close" (click)="showChoice=false">
-          <span aria-hidden="true">&times;</span>
-        </button>
-          <mat-card-title>Choix localisation</mat-card-title>
-        </mat-card-header>
-        <mat-card-actions>
-          <button mat-button (click)="showChoice=false; showPopup=true;">Point</button>
-          <button mat-button (click)="showChoice=false; initDrawing()">Trajectoire</button>
-        </mat-card-actions>
-      </mat-card>
 
        <!-- TODO -->
       <button [hidden]="!drawingStarted" id="saveTrajectory"

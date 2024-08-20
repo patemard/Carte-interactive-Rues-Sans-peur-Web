@@ -23,4 +23,23 @@ export class Constants  {
       " malesuada enim ipsum, quis pharetra lorem accumsan at. Etiam suscipit lorem" +
       " sed erat ultricies, ut pharetra sapien molestie. Sed a posuere orci, ut interdum ";
 
+
+  emotions: {name: string, icon: string, class?: string, rgb?: string, png: string}[] = [
+        { name: "Sécurisant", icon: "smile-o", class: "text-success", rgb: "rgba(40, 167, 69, 0.75)", png: "black"},
+        { name: "Insécurisant", icon: "frown-o" , class: "text-danger", rgb: "rgba(220, 53, 69, 0.75)", png: "red"}
+  ]
+    
+  transports = [
+      { name: "Marche", icon: "person-walking"},
+      { name: "Vélo ", icon: "bicycle"},
+      { name: "Bus ", icon: "bus" },
+      { name: "Voiture ", icon: "car"},
+  ]
+
+  types = [
+    {name: "Point", icon: "map-marker"},
+    {name: "Trajectoire", icon: "map-o"}
+  ]
+
+
 }
