@@ -25,6 +25,7 @@ import Text from 'ol/style/Text';
 import Geocoder from 'ol-geocoder';
 import Draw from 'ol/interaction/Draw';
 import GeoJSON from 'ol/format/GeoJSON';
+import Icon from 'ol/style/Icon'
 import {MatDialog} from "@angular/material/dialog";
 import {TagChoiceDialogComponent} from "../dialogs/tagChoice-dialog.component";
 import { IpService } from '../Service/ip.service';
@@ -66,7 +67,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       private router: Router,
       public dialog: MatDialog,
       private ngZone: NgZone,
-      private ipService: IpService,
+      private ipService: IpService
       ) {
     super();
     this.initializeOnLoad();
@@ -278,7 +279,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
   });
 
   }
-  
+
   processWheelEvent(evt: any) {
     evt.preventDefault();
   }
@@ -410,21 +411,27 @@ export class MapDashboardComponent extends Helper implements OnInit {
       geometry: point,
       data: data
     });
+
+
+    let style = undefined;
+    if (data.flagged && this.tagService.isAdmin) {
+      // if admiin view and flagged, show different icon
+      style = new Style({
+        image: new Icon({
+          scale: 0.18,
+          crossOrigin: 'anonymous',
+          src: 'assets/png/'+ 'signal.png'
+        })
+      });
+    } else {
     // Define a style for the point feature
-    const style = new Style({
-      image: new Circle({
-        radius: 6,
-        fill: new Fill({ color: color }) //couleur relatif au emotion
-      })
-    });
-    // const style = new Style({
-    //   image: new Icon({
-    //     color: this.emotions.find(x=>x.name === data.emotion)?.rgb,
-    //     scale: 0.05,
-    //     crossOrigin: 'anonymous',
-    //     src: 'assets/png/'+ this.emotions.find(x=>x.name === data.emotion)?.png + 'Pin.png'
-    //   })
-    // });
+      style = new Style({
+        image: new Circle({
+          radius: 6,
+          fill: new Fill({ color: color }) //couleur relatif au emotion
+        })
+      });
+    }
 
     // Apply the style to the feature
     feature.setStyle(style);
@@ -603,6 +610,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.flagIsClicked = true;
     
     this.updateTag(this.currentTag);
+    this.sendEmail();
   }
 
   updateTag(tag: Tag) {
@@ -635,6 +643,22 @@ export class MapDashboardComponent extends Helper implements OnInit {
       }
     });
 
+  }
+
+  sendEmail() {
+    const emailData = {
+      from: 'RuesSansPeur@gmail.com',
+      to: 'pat.emard@posteo.net',
+      subject: 'Témoignage Signalé',
+      text: 'Le témoignage #' + ' ' + this.currentTag.id + ' a éte signalé'
+    };
+
+    this.tagService.sendEmail(emailData)
+      .subscribe((response: any) => {
+        console.log('Email sent successfully!', response);
+      }, (error: any) => {
+        console.error('Failed to send email.', error);
+      });
   }
 
 
