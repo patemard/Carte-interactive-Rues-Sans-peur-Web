@@ -19,7 +19,7 @@ export class TagService {
   // Http Header
   httpHeaders = new HttpHeaders().set('Content-Type', 'application/json');
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   public get isAdmin() {
     return this._isAdmin;
@@ -99,5 +99,12 @@ export class TagService {
     console.log(errorMessage);
     return throwError(errorMessage);
   }
+
+  sendEmail(emailData: { from: string; to: string; subject: string; text: string; }) {
+    let API_URL = `${this.REST_API}/send-email`;
+
+    return this.httpClient.post(API_URL, emailData);
+  }
+
 
 }

@@ -13,6 +13,7 @@ export class Tag {
   rgb?: any;
   heart: string[];
   flagged?: string[];
+  identification?: string;
 
   constructor() {
     this.heart = [];
