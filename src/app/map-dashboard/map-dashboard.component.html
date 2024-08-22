@@ -136,8 +136,8 @@
             <i class="fa fa-heart" aria-hidden="true" title="Solidaire"></i>
             <span class="counter" *ngIf="currentTag.heart">{{ currentTag.heart.length }}</span>
           </button>
-          <button mat-button>
-            <i class="fa fa-share-square-o" aria-hidden="true" title="Partager"></i>
+          <button mat-button title="Partager">
+            <i class="fa fa-share-square-o" aria-hidden="true" (click)="copyUrlToclipboard()"></i>
           </button>
           <button mat-button
             id="flagBtn"

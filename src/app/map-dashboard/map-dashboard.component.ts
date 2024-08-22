@@ -30,6 +30,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {TagChoiceDialogComponent} from "../dialogs/tagChoice-dialog.component";
 import { IpService } from '../Service/ip.service';
 import { ConfirmDialogComponent } from '../dialogs/confirm-dialog.component';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-map-dashboard',
@@ -69,7 +70,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
       public dialog: MatDialog,
       private route: ActivatedRoute,
       private ngZone: NgZone,
-      private ipService: IpService
+      private ipService: IpService,
+      private location: Location
       ) {
     super();
     this.initializeOnLoad();
@@ -151,7 +153,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
       ],
       view: new View({
         center: fromLonLat([this.QUEBEC_CITY.longitude, this.QUEBEC_CITY.latitude]),
-        minZoom: 13,
         minZoom: 12,
         zoom: 14
       })
@@ -326,7 +327,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     
     this.showCard = true;
     this.overlay.setPosition(this.currentTag.mercatorCoord); 
-    
+    this.location.go("carte/" + this.currentTag.id)
 
     if (this.currentTag.flagged) {
       this.flagIsClicked =  this.currentTag.flagged.some(h => h === this.ipAddress);
@@ -696,6 +697,14 @@ export class MapDashboardComponent extends Helper implements OnInit {
         console.log('Email sent successfully!', response);
       }, (error: any) => {
         console.error('Failed to send email.', error);
+      });
+  }
+
+  copyUrlToclipboard() {
+  
+    navigator.clipboard.writeText(window.location.href).then(() => {
+
+      alert("Lien copié dans le presse papier."); // remplace par toast.
       });
   }
 
