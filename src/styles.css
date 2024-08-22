@@ -48,7 +48,10 @@
  .rouge-pale-atv {
   background-color: #FF7C5B !important;
  }
-.centered{
+ .centered{
   display: flex;
   justify-content: center;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }

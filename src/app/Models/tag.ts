@@ -4,6 +4,7 @@ export class Tag {
   active?: boolean;
   latitude?: number;
   longitude?: number;
+  mercatorCoord?: any;
   description?: string;
   title?: string;
   label?: string;

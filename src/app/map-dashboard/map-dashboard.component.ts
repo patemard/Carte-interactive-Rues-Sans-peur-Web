@@ -8,7 +8,7 @@ import {
 import { Helper } from '../helper';
 import { Tag } from '../Models/tag';
 import { TagService } from '../Service/tag.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 declare var ol: any;
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
@@ -40,6 +40,7 @@ import { ConfirmDialogComponent } from '../dialogs/confirm-dialog.component';
 export class MapDashboardComponent extends Helper implements OnInit {
   currentTag: Tag = new Tag;
   map: any;
+  overlay: any;
   description: string = '';
   ipAddress: string = '';
   title: string = '';
@@ -66,6 +67,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       protected tagService: TagService,
       private router: Router,
       public dialog: MatDialog,
+      private route: ActivatedRoute,
       private ngZone: NgZone,
       private ipService: IpService
       ) {
@@ -85,6 +87,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.selectedTransport = '';
     this.selectedType = '';
     this.completedCardColor = '';
+    this.ipAddress = '';
   }
 
   ngOnInit() {
@@ -93,11 +96,43 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.initPopup();
     this.getTags();
     this.getUserIp();
+    this.route.paramMap.subscribe(params => {
+      let id = params.get('id');
+      if (id) {
+          this.getTagFromUrl(id)
+      } else {
+        // handle missing card
+      }
+   });
     // this.loadMarkerData()
   }
+  async getTagFromUrl(id: string) {
+
+    await this.getTag(id);
+    this.clickedOnTag();
+    
+  }
+
+  getTag(id: string) { 
+    return new Promise((resolve, reject) =>  {
+    this.tagService.getTag(id).subscribe( res => {
+      this.currentTag = res;
+      console.log(this.currentTag );
+       resolve(true);
+      
+     });
+    })
+
+  }
+    
+
+  
+
   getUserIp() {
     this.ipService.getIpAddress().subscribe( (data) => {
+        if (data.ip){
         this.ipAddress = data.ip;
+        }
       },
       (error) => {
         console.error('Failed to fetch IP address', error);
@@ -111,14 +146,13 @@ export class MapDashboardComponent extends Helper implements OnInit {
       target: 'map',
       layers: [
         new TileLayer({
-          minZoom: 12,
           source: new OSM(),
         })
       ],
       view: new View({
         center: fromLonLat([this.QUEBEC_CITY.longitude, this.QUEBEC_CITY.latitude]),
         minZoom: 13,
-        constrainOnlyCenter: true,
+        minZoom: 12,
         zoom: 14
       })
     });
@@ -142,30 +176,32 @@ export class MapDashboardComponent extends Helper implements OnInit {
     var content = document.getElementById('popup-content');
     // var closer = document.getElementById('popup-closer');
     if(container) {
-      var overlay = new Overlay({
+      this.overlay = new Overlay({
         element: container,
         autoPan: true,
       });
-      this.map.addOverlay(overlay);
+      this.map.addOverlay(this.overlay);
     }
 
-    this.map.on('click', (evt: any) => {
-      if (this.drawingStarted || this.showPopup || this.showCard) {
-        return;
-      }
+    this.map.on('click',async (evt: any) => {
+      if (this.map.hasFeatureAtPixel(evt.pixel) && !this.showPopup) {        
+        this.feature = this.map.forEachFeatureAtPixel(evt.pixel, function(feature: any) {
+          return feature;
+        })
+        
+        await this.getTag(this.feature.values_.data.id)
+        this.clickedOnTag();
+      } else if (!this.tagService.isAdmin && !this.drawingStarted && !this.showPopup && !this.showCard) {
       this.initializeOnLoad();
-      if (this.map.hasFeatureAtPixel(evt.pixel)) {
-        this.clickedOnTag(evt);
-        overlay.setPosition(evt.coordinate);
-      } else if (!this.tagService.isAdmin) {
         // [0]: latt, [1]: long.
-        let Coords = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
-        this.currentTag.longitude = Coords[0]
-        this.currentTag.latitude = Coords[1];
+        this.currentTag.mercatorCoord = evt.coordinate;
+        let coords = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
+        this.currentTag.longitude = coords[0]
+        this.currentTag.latitude = coords[1];
 
         if (this.map.getView().getZoom() >= 18) {
           this.showPopup = true;
-          overlay.setPosition(evt.coordinate);
+          this.overlay.setPosition(evt.coordinate);
         } else {
           this.setCenter(18);
         }
@@ -286,33 +322,19 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
 
 
-  clickedOnTag(evt:any) {
+  clickedOnTag() {
     
-    this.feature = this.map.forEachFeatureAtPixel(evt.pixel, function(feature: any) {
-        return feature;
-    })
-
-    this.showCard = this.feature.values_.data;
+    this.showCard = true;
+    this.overlay.setPosition(this.currentTag.mercatorCoord); 
     
-    this.currentTag = {
-      id: this.feature.values_.data.id,
-      latitude: this.feature.values_.data.latitude,
-      longitude: this.feature.values_.data.longitude,
-      title: this.feature.values_.data.title,
-      description: this.feature.values_.data.text,
-      emotion: this.feature.values_.data.emotion,
-      trajectory: this.feature.values_.data.trajectory,
-      heart: this.feature.values_.data.heart || [],
-      flagged: this.feature.values_.data.flagged || []
 
-    }
     if (this.currentTag.flagged) {
       this.flagIsClicked =  this.currentTag.flagged.some(h => h === this.ipAddress);
     }
-    this.heartIsClicked = this.currentTag.heart.some(h => h === this.ipAddress);
+    this.heartIsClicked = this.currentTag.heart ? this.currentTag.heart.some(h => h === this.ipAddress) : false;
     this.completedCardColor = this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb || '';
-    this.selectedEmotion = this.feature.values_.data.emotion;
-    this.selectedTransport = this.feature.values_.data.transport;
+    this.selectedEmotion = this.currentTag.emotion;
+    this.selectedTransport = this.currentTag.transport;
     this.selectedType = this.currentTag.trajectory ? "Trajectoire" : "Point";
   }
 
@@ -329,7 +351,10 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.tagService.getTags()
     .subscribe(data => {
       this.tagList = data;
+      if (!this.tagService.isAdmin) {
+        // Filter inactive for non admins
       this.tagList = this.tagList.filter((x: Tag)=> x.active);
+      }
       this.tagList.forEach((tag: Tag) => {
         tag.label = this.emotions.find(x => x.name === tag.emotion)?.class;
    
@@ -347,13 +372,17 @@ export class MapDashboardComponent extends Helper implements OnInit {
     if (id) {
       this.tagService.deleteTag(id)
       .subscribe( res =>{
-        this.currentTag = new Tag();
+        this.refresh();
+      })
+    }
+  }
+
+  refresh() {
+    this.currentTag = new Tag();
         this.showCard = false;
         this.getTags();
         this.feature.values_ = null;
         this.map.render();
-      })
-    }
   }
 
   private addTrajectory(tag: Tag) {
@@ -607,6 +636,10 @@ export class MapDashboardComponent extends Helper implements OnInit {
       this.currentTag.flagged = [];
     }
     this.currentTag.flagged.push(this.ipAddress);
+    if (this.currentTag.flagged.length > 1) {
+      // Hide if more than one flagged
+      this.currentTag.active = false;
+    }
     this.flagIsClicked = true;
     
     this.updateTag(this.currentTag);
@@ -614,9 +647,9 @@ export class MapDashboardComponent extends Helper implements OnInit {
   }
 
   updateTag(tag: Tag) {
-    this.tagService.updateTag(tag.id, tag).subscribe(res => {
-      this.getTags()
-      this.map.render();
+    this.tagService.updateTag(tag.id, tag)
+      .subscribe(res => {
+        this.refresh();
     })
   }
 
@@ -636,7 +669,12 @@ export class MapDashboardComponent extends Helper implements OnInit {
       if(result.event == 'hide'){
         this.currentTag.active = false;
         this.updateTag(this.currentTag);
-      }else if(result.event == 'delete'){
+      }else if(result.event == 'unhide'){
+        this.currentTag.active = true;
+        if (this.currentTag.id) {
+          this.updateTag(this.currentTag);
+        }
+      } else if(result.event == 'delete'){
         if (this.currentTag.id) {
           this.delete(this.currentTag.id);
         }

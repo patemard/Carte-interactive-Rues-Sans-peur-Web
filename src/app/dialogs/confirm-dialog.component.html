@@ -3,7 +3,8 @@
 
   <mat-select placeholder="Choix de l'action"
     [(value)]="selectedAction">
-    <mat-option value="hide" cdkFocusInitial>Masquer</mat-option>
+    <mat-option *ngIf="tagService.selectedTag?.active" value="hide" cdkFocusInitial>Masquer</mat-option>
+    <mat-option  *ngIf="!tagService.selectedTag?.active" value="unhide" cdkFocusInitial>Démasquer</mat-option>
     <mat-option value="delete">Supprimer</mat-option>
   </mat-select>
 </div>

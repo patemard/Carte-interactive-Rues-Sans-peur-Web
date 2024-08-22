@@ -29,13 +29,6 @@
   background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
   background-size: cover;
 }
-.centered{
-  display: flex;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
 
 body {
   background: #141926;

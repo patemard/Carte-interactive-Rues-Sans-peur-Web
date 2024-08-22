@@ -108,7 +108,7 @@
       </div>
     </mat-card>
    
-    <mat-card
+   <mat-card
       [hidden]="!showCard"
       id="completedCard"
       class="centered"
@@ -145,6 +145,7 @@
             [disabled]="flagIsClicked"
             (click)="flag()">
             <i class="fa fa-flag" aria-hidden="true" title="Signaler"></i>
+            <span class="counter" *ngIf="currentTag.flagged">{{ currentTag.flagged.length }}</span>
           </button>
           <button mat-button *ngIf="tagService.isAdmin"
             type="button" class="close" aria-label="Close"
