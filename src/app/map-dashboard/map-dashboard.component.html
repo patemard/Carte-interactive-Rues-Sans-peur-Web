@@ -67,7 +67,6 @@
             </div>
           </div>
 
-
           <mat-form-field class="full-width" appearance="fill">
             <mat-label>Description</mat-label>
             <textarea name="descInput"
@@ -81,12 +80,12 @@
           <div class="row">
             <div class="col-md-4">
               <button  *ngIf="isFormValid()"
-                mat-raised-button color="accent"
+                mat-raised-button color="bleu-atv"
                 matTooltip="Sauvegarder ce témoigage"
                 (click)="onSubmit()">Cartographier
               </button>
               <button  *ngIf="!isFormValid()"
-                mat-stroked-button color="accent"
+                mat-stroked-button color="bleu-atv"
                 matTooltip="Formulaire incomplet.">Cartographier
               </button>
             </div>
@@ -96,7 +95,8 @@
               <input hidden (change)="onFileSelected()" #fileInput type="file" id="file"> -->
             </div>
             <div class="col-md-2">
-              <button mat-raised-button
+              <button mat-raised-button 
+                color="violet-atv"
                 id="closeBtn"
                 matTooltip="Abandonner la sauvegarde."
                 (click)="initializeOnLoad()">Fermer
@@ -116,7 +116,7 @@
     >
       <mat-card-header>
         <div mat-card-avatar class="example-header-image"></div>
-        <button type="button" class="close completedCardClose" aria-label="Close" (click)="showCard=false">
+        <button type="button" class="close completedCardClose" aria-label="Close" (click)="close()">
           <span aria-hidden="true">&times;</span>
         </button>
           <mat-card-title>{{currentTag.title}}</mat-card-title>
@@ -131,7 +131,7 @@
           <button mat-button
             id="heartBtn"
             [class.clicked]="heartIsClicked"
-            [disabled]="heartIsClicked"
+            [disabled]="heartIsClicked || !ipAddress"
             (click)="heart()">
             <i class="fa fa-heart" aria-hidden="true" title="Solidaire"></i>
             <span class="counter" *ngIf="currentTag.heart">{{ currentTag.heart.length }}</span>
@@ -142,7 +142,7 @@
           <button mat-button
             id="flagBtn"
             [class.clicked]="flagIsClicked"
-            [disabled]="flagIsClicked"
+            [disabled]="flagIsClicked || !ipAddress"
             (click)="flag()">
             <i class="fa fa-flag" aria-hidden="true" title="Signaler"></i>
             <span class="counter" *ngIf="currentTag.flagged">{{ currentTag.flagged.length }}</span>
@@ -159,8 +159,8 @@
 
 
        <!-- TODO -->
-      <button [hidden]="!drawingStarted" id="saveTrajectory"
-        mat-button >Sauvegarder Trajectoire
+      <button [hidden]="!drawingStarted" id="saveTrajectory" class="centered"
+        mat-raised-button   color="bleu-atv">Sauvegarder Trajectoire
       </button>
 
   </div>
@@ -176,6 +176,3 @@
     </div>
   </section> -->
   <!-- Footer-->
-  <footer class="py-5 bg-dark bleu-atv">
-      <div class="container px-4"><p class="m-0 text-center text-white">&copy; Rues Sans Peur</p></div>
-  </footer>

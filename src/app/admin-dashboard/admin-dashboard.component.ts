@@ -22,7 +22,6 @@ export class AdminDashboardComponent implements OnInit {
 
 
   login() {
-    console.log(this.currentPassword)
     if (this.currentPassword === this.password) {
       this.loginPass = true;
       this._tagService.isAdmin = true;
