@@ -31,6 +31,9 @@ import {TagChoiceDialogComponent} from "../dialogs/tagChoice-dialog.component";
 import { IpService } from '../Service/ip.service';
 import { ConfirmDialogComponent } from '../dialogs/confirm-dialog.component';
 import { Location } from '@angular/common';
+import Cluster from 'ol/source/Cluster';
+import {boundingExtent} from 'ol/extent.js';
+import { getDistance } from 'ol/sphere';
 
 @Component({
   selector: 'app-map-dashboard',
@@ -62,6 +65,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   geocoder: any;
   srcResult: any;
+  nonClusteredLayer: any;
 
 
   constructor(
@@ -92,12 +96,13 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.ipAddress = '';
   }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.initMap();
     this.initGeoCoder();
     this.initPopup();
-    this.getTags();
+    await this.getTags();
     this.getUserIp();
+    this.visualAggregation();
     this.route.paramMap.subscribe(params => {
       let id = params.get('id');
       if (id) {
@@ -106,13 +111,17 @@ export class MapDashboardComponent extends Helper implements OnInit {
         // handle missing card
       }
    });
-    // this.loadMarkerData()
   }
-  async getTagFromUrl(id: string) {
 
+  async getTagFromUrl(id: string) {
     await this.getTag(id);
-    this.clickedOnTag();
-    
+    if (this.currentTag && this.currentTag.active) {
+      this.clickedOnTag();
+      this.setCenter(16);
+    } else {
+      this.router.navigateByUrl("/introuvable")
+    }
+
   }
 
   getTag(id: string) { 
@@ -121,19 +130,15 @@ export class MapDashboardComponent extends Helper implements OnInit {
       this.currentTag = res;
       console.log(this.currentTag );
        resolve(true);
-      
      });
     })
 
   }
     
-
-  
-
   getUserIp() {
     this.ipService.getIpAddress().subscribe( (data) => {
         if (data.ip){
-        this.ipAddress = data.ip;
+          this.ipAddress = data.ip;
         }
       },
       (error) => {
@@ -189,11 +194,12 @@ export class MapDashboardComponent extends Helper implements OnInit {
         this.feature = this.map.forEachFeatureAtPixel(evt.pixel, function(feature: any) {
           return feature;
         })
+        console.log(this.feature);
         
         await this.getTag(this.feature.values_.data.id)
         this.clickedOnTag();
       } else if (!this.tagService.isAdmin && !this.drawingStarted && !this.showPopup && !this.showCard) {
-      this.initializeOnLoad();
+        this.initializeOnLoad();
         // [0]: latt, [1]: long.
         this.currentTag.mercatorCoord = evt.coordinate;
         let coords = ol.proj.transform(evt.coordinate, 'EPSG:3857', 'EPSG:4326');
@@ -233,7 +239,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
       this.map.getView().setCenter(coord);
       this.map.getView().setZoom(18);
     });
-    // this.loadMarkerData()gcd-input-query
     // let geocoderInput = document.getElementById('gcd-input-query');
     // console.log(geocoderInput);
 
@@ -250,70 +255,75 @@ export class MapDashboardComponent extends Helper implements OnInit {
   }
 
   initDrawing() {
-  // Create a vector source and layer for the trajectory
-  this.drawingStarted = true;
-  // Create a vector source and layer for the trajectory
-  const vectorSource = new VectorSource();
-  const vectorLayer = new VectorLayer({
-    source: vectorSource,
-    style: new Style({
-      stroke: new Stroke({
-        color: 'blue',
-        width: 3,
-      }),
-      image: new Circle({
-        radius: 5,
-        fill: new Fill({
+    const view = this.map.getView();  // Get the current view of the map
+    // Set a new minimum zoom level
+    view.setMinZoom(18);  
+    // Create a vector source and layer for the trajectory
+    this.drawingStarted = true;
+    // Create a vector source and layer for the trajectory
+    const vectorSource = new VectorSource();
+    const vectorLayer = new VectorLayer({
+      source: vectorSource,
+      style: new Style({
+        stroke: new Stroke({
           color: 'blue',
+          width: 3,
+        }),
+        image: new Circle({
+          radius: 5,
+          fill: new Fill({
+            color: 'blue',
+          }),
         }),
       }),
-    }),
-  });
-  this.map.addLayer(vectorLayer);
+    });
+    this.map.addLayer(vectorLayer);
 
-  // Enable drawing interaction for points
-  const draw = new Draw({
-    source: vectorSource,
-    type: 'Point',
-  });
-  this.map.addInteraction(draw);
+    // Enable drawing interaction for points
+    const draw = new Draw({
+      source: vectorSource,
+      type: 'Point',
+    });
+    this.map.addInteraction(draw);
 
-  // Collect points and create a line feature
-  const points: number[][] = [];
-  draw.on('drawend', (event: any) => {
-    console.log('drawend')
-    const feature = event.feature;
-    const coordinates = (feature.getGeometry() as Point).getCoordinates();
-    points.push(coordinates);
+    // Collect points and create a line feature
+    const points: number[][] = [];
+    draw.on('drawend', (event: any) => {
+      console.log('drawend')
+      const feature = event.feature;
+      const coordinates = (feature.getGeometry() as Point).getCoordinates();
+      points.push(coordinates);
 
-    // Create a LineString feature if we have at least two points
-    if (points.length > 1) {
-      const lineString = new LineString(points);
-      const lineFeature = new Feature({
-        geometry: lineString,
-      });
+      // Create a LineString feature if we have at least two points
+      if (points.length > 1) {
+        const lineString = new LineString(points);
+        const lineFeature = new Feature({
+          geometry: lineString,
+        });
 
-      // Clear the previous line feature and add the new one
-      vectorSource.clear();
-      vectorSource.addFeature(lineFeature);
-    }
-  });
-
-  // Save the trajectory as GeoJSON
-  document.getElementById('saveTrajectory')?.addEventListener('click', () => {
-    const format = new GeoJSON();
-    const features = vectorSource.getFeatures();
-    const geojson = format.writeFeatures(features, {
-      dataProjection: 'EPSG:4326',
-      featureProjection: 'EPSG:3857',
+        // Clear the previous line feature and add the new one
+        vectorSource.clear();
+        vectorSource.addFeature(lineFeature);
+      }
     });
 
-    // Save or display the GeoJSON string
-    this.trajectoryCoords = geojson;
-    this.drawingStarted=false;
-    this.submitTrajectory()
-    this.map.removeInteraction(draw);
-  });
+    // Save the trajectory as GeoJSON
+    document.getElementById('saveTrajectory')?.addEventListener('click', () => {
+      const format = new GeoJSON();
+      const features = vectorSource.getFeatures();
+      const geojson = format.writeFeatures(features, {
+        dataProjection: 'EPSG:4326',
+        featureProjection: 'EPSG:3857',
+      });
+      const view = this.map.getView();  // Get the current view of the map
+      // Set a new minimum zoom level
+      view.setMinZoom(12); 
+      // Save or display the GeoJSON string
+      this.trajectoryCoords = geojson;
+      this.drawingStarted=false;
+      this.submitTrajectory()
+      this.map.removeInteraction(draw);
+    });
 
   }
 
@@ -324,7 +334,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
 
   clickedOnTag() {
-    
+
     this.showCard = true;
     this.overlay.setPosition(this.currentTag.mercatorCoord); 
     this.location.go("carte/" + this.currentTag.id)
@@ -341,7 +351,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   setCenter(zoom: number) {
     var view = this.map.getView();
-    view.setCenter(ol.proj.fromLonLat([this.currentTag.longitude, this.currentTag.latitude]));
+    view.setCenter(this.currentTag.mercatorCoord);
     view.setZoom(zoom);
   }
 
@@ -349,24 +359,28 @@ export class MapDashboardComponent extends Helper implements OnInit {
    * Récupère les tag dans la base de donnée
   */
   getTags() {
-    this.tagService.getTags()
-    .subscribe(data => {
-      this.tagList = data;
-      if (!this.tagService.isAdmin) {
-        // Filter inactive for non admins
-      this.tagList = this.tagList.filter((x: Tag)=> x.active);
-      }
-      this.tagList.forEach((tag: Tag) => {
-        tag.label = this.emotions.find(x => x.name === tag.emotion)?.class;
-   
-        const isTrajectory = tag.trajectory && tag.trajectory.length !== 0
-        if (isTrajectory) {
-          this.addTrajectory(tag)
-        } else {
-          this.addPointFeature(tag);
+    return new Promise((resolve, reject) =>  {
+      this.tagService.getTags()
+      .subscribe(data => {
+        this.tagList = data;
+        if (!this.tagService.isAdmin) {
+          // Filter inactive for non admins
+          this.tagList = this.tagList.filter((x: Tag)=> x.active);
         }
-      });
-    })
+        this.tagList.forEach((tag: Tag) => {
+          tag.label = this.emotions.find(x => x.name === tag.emotion)?.class;
+    
+          const isTrajectory = tag.trajectory && tag.trajectory.length !== 0
+          if (isTrajectory) {
+            this.addTrajectory(tag)
+          } else {
+            this.addPointFeature(tag);
+          }
+          resolve(this.tagList);
+        });
+      })
+    });
+
   }
 
   delete(id: string) {
@@ -380,10 +394,11 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   refresh() {
     this.currentTag = new Tag();
-        this.showCard = false;
-        this.getTags();
-        this.feature.values_ = null;
-        this.map.render();
+    this.showCard = false;
+    this.getTags();
+    this.feature.values_ = null;
+    this.map.render();
+    this.router.navigateByUrl('/')
   }
 
   private addTrajectory(tag: Tag) {
@@ -417,7 +432,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     vectorSource.clear();
     vectorSource.addFeatures(features);
 
-    const coordinates = fromLonLat([firstCoordinate[0], firstCoordinate[1]]);
+    // const coordinates = fromLonLat([firstCoordinate[0], firstCoordinate[1]]);
 
     // Add the vector layer to the map
     this.map.addLayer(vectorLayer);
@@ -472,6 +487,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
         features: [feature]
       })
     });
+    vectorLayer.set('name', 'pointLayer');
+     this.nonClusteredLayer = this.map.getLayers().getArray().find((layer: any) => layer.get('name') === 'pointLayer');
 
     // Add the vector layer to the map
     this.map.addLayer(vectorLayer);
@@ -482,12 +499,14 @@ export class MapDashboardComponent extends Helper implements OnInit {
     console.log(this.selectedType); 
     if (this.selectedType == "Point") {
       this.setModel();
+      console.log(this.currentTag);
+      
       this.tagService.addTag(this.currentTag)
       .subscribe((data) => {
         console.log('Data added successfully!', data)
         this.ngZone.run(() => this.router.navigateByUrl('/'))
-        this.getTags();
-          this.initializeOnLoad();
+        this.initializeOnLoad();
+        this.refresh();
         }, (err: any) => {
           console.log(err);
       });
@@ -553,72 +572,169 @@ export class MapDashboardComponent extends Helper implements OnInit {
     });
     }
   }
-
-  loadMarkerData(): void {
-    // Fetch marker data from your backend or define it locally -- placeholder not called
-    // this.markerData = [
-    //   { lat: 51.5, lon: -0.1, label: 'Marker 1' },
-    //   { lat: 51.51, lon: -0.09, label: 'Marker 2' },
-    //   // Add more marker data as needed
-    // ];
-
-    // Cluster markers
-    this.clusterMarkers();
-  }
-
-  clusterMarkers(): void {
-    // Create a vector source for the markers
-    const markerSource = new VectorSource();
+  visualAggregation() {
+    let pointArray: any = [];
+    let trajectoryArray: any = [];
 
     // Loop through marker data and create point features
     this.tagList.forEach( (tag: Tag)  => {
-      if (tag.longitude && tag.latitude) {
-        tag.label ="Marker 1";
-        const pointFeature = new Feature({
-          geometry: new Point(fromLonLat([tag.longitude, tag.latitude])),
-          label: tag.label // Store label for clustering
-        });
-        markerSource.addFeature(pointFeature);
+      if (tag.active) {
+        if (tag.longitude && tag.latitude && !tag.trajectory) {
+          pointArray.push(tag)
+        } else {
+          trajectoryArray.push(tag)
+
+        }
+
+
       }
     });
+    
+    let positivePointArray: any = [];
+    let negativePointArray: any = [];
+    let positiveTrajectoryArray: any = [];
+    let negativeTrajectoryArray: any = [];
+    this.seperateInEmotionArrays(pointArray, positivePointArray, negativePointArray);
+    this.seperateInEmotionArrays(trajectoryArray, positiveTrajectoryArray, negativeTrajectoryArray);
+  
 
-    // Create a vector layer with the marker source
-    const markerLayer = new VectorLayer({
-      source: markerSource,
-      style: this.clusterStyleFunction // Apply clustering style
+    this.clusterMarkers(positivePointArray, this.emotions[0].rgb);
+    this.clusterMarkers(negativePointArray, this.emotions[1].rgb);
+    this.clusterTrajectory(positiveTrajectoryArray,  this.emotions[0].rgb);
+    this.clusterTrajectory(positiveTrajectoryArray,  this.emotions[1].rgb);
+  } 
+
+  seperateInEmotionArrays(originalArray: any[], positiveArray:any[], negativeArray: any[]) {
+    originalArray.forEach( (tag: Tag) => {
+      if (tag.emotion == this.emotions[0].name) {
+        positiveArray.push(tag);
+      } else {
+        negativeArray.push(tag);
+      }
     });
-
-    // Add the marker layer to the map
-    this.map.addLayer(markerLayer);
   }
 
-  clusterStyleFunction(feature: any): Style {
-    const size = feature.get('features').length;
-    let style;
+  clusterTrajectory(tags: Tag[], color: string) {
+    // Create a vector source with the trajectories
+    let trajectoriesArray: any = [];
+    tags.forEach( (tag: Tag) => {
+      trajectoriesArray.push(tag.trajectory);
+    })
 
-    if (size > 1) {
-      style = new Style({
+    const trajectorySource = new VectorSource({
+      features: trajectoriesArray, // Add more trajectories here
+    });
+
+    // Create a style for the trajectories
+    const trajectoryStyle = new Style({
+      stroke: new Stroke({
+        color: color,
+        width: 10,
+      }),
+    });
+        // Create a vector layer with the trajectories
+    const trajectoryLayer = new VectorLayer({
+      source: trajectorySource,
+      style: trajectoryStyle,
+    });
+
+    // Add the trajectory layer to the map
+    this.map.addLayer(trajectoryLayer);
+  }
+
+  clusterMarkers(tag: Tag[], color: string): void {
+    const features: any = []
+    tag.forEach( (tag: Tag) => {
+      if (tag.mercatorCoord && !tag.trajectory) {
+            // Create a feature with the point geometry
+        const feature = new Feature({
+          geometry: new Point(tag.mercatorCoord),
+          data: tag
+        });
+        features.push(feature)
+      }
+    });
+ 
+    // Create a vector source with the points
+    const source = new VectorSource({
+      features: features,
+    });
+
+        // Create a cluster source
+    const clusterSource = new Cluster({
+      distance: 50, // Distance in pixels within which points will be clustered
+      source: source 
+    });
+    
+    const clusterStyle = (feature: any) =>{
+      const size = feature.get('features').length;
+      let style = new Style({
         image: new Circle({
           radius: 10,
-          fill: new Fill({ color: 'rgba(255, 255, 255, 0.5)' }),
-          stroke: new Stroke({ color: '#3399CC', width: 2 }) // Define Stroke properties
+          stroke: new Stroke({
+            color: '#fff',
+          }),
+          fill: new Fill({
+            color:color,
+          }),
         }),
         text: new Text({
           text: size.toString(),
-          fill: new Fill({ color: '#fff' })
-        })
+          fill: new Fill({
+            color: '#fff',
+          }),
+        }),
       });
-    } else {
-      style = new Style({
-        image: new Circle({
-          radius: 6,
-          fill: new Fill({ color: 'red' }),
-          stroke: new Stroke({ color: '#fff', width: 2 }) // Define Stroke properties
-        })
-      });
-    }
+      return style;
+    };
+    // Create a vector layer with the cluster source and apply the cluster style
+    const clusters = new VectorLayer({
+      source: clusterSource,
+      style: clusterStyle,
+    });
+    clusters.set('name', 'clusteredLayer');
 
-    return style;
+    // Add the marker layer to the map
+    this.map.addLayer(clusters);
+    
+    this.map.on('click', (e: any) => {
+      clusters.getFeatures(e.pixel).then((clickedFeatures) => {
+        if (clickedFeatures.length) {
+          // Get clustered Coordinates
+          const features = clickedFeatures[0].get('features');
+          if (features.length > 1) {
+            const extent = boundingExtent(
+              features.map((r: any) => r.getGeometry().getCoordinates()),
+            );
+            this.map.getView().fit(extent, {duration: 1000, padding: [50, 50, 50, 50], maxZoom: 18 });
+          }
+        }
+      });
+    });
+    const zoomThreshold = 15;  // Define the zoom level where clustering disappears
+
+    // Listen to the map's 'moveend' event to check the zoom level after each interaction
+    this.map.getView().on('change:resolution', () => {
+      const zoom =  this.map.getView().getZoom();
+
+      if (zoom >= zoomThreshold) {
+        // If zoomed in, show non-clustered features
+        if ( this.map.getLayers().getArray().includes(clusters)) {
+          this.map.removeLayer(clusters);
+        }
+        if (! this.map.getLayers().getArray().includes(this.nonClusteredLayer)) {
+          this.map.addLayer(this.nonClusteredLayer);
+        }
+      } else {
+        // If zoomed out, show clustered features
+        if ( this.map.getLayers().getArray().includes(this.nonClusteredLayer)) {
+          this.map.removeLayer(this.nonClusteredLayer);
+        }
+        if (! this.map.getLayers().getArray().includes(clusters)) {
+          this.map.addLayer(clusters);
+        }
+      }
+    });
   }
 
 
@@ -705,10 +821,13 @@ export class MapDashboardComponent extends Helper implements OnInit {
     navigator.clipboard.writeText(window.location.href).then(() => {
 
       alert("Lien copié dans le presse papier."); // remplace par toast.
-      });
+    });
   }
 
 
-
+  close() {
+    this.showCard=false;
+    this.router.navigateByUrl("/")
+  }
 
 }

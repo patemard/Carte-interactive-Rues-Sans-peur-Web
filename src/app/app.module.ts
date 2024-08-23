@@ -35,16 +35,18 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
     TagChoiceDialogComponent,
     AdminDashboardComponent,
     RessourceDialogComponent,
-    ConfirmDialogComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot([
       {path: '', component: MapDashboardComponent},
       {path: 'admin', component: AdminDashboardComponent},
+      {path: 'carte/:id', component: MapDashboardComponent},
 
       // wildcard
-      {path: '**', component: PageNotFoundComponent}
+      {path: '**', component: PageNotFoundComponent},
+      {path: 'introuvable', component: PageNotFoundComponent}
     ]),
     FormsModule,
     BrowserAnimationsModule,
