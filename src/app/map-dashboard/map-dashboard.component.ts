@@ -33,8 +33,8 @@ import { ConfirmDialogComponent } from '../dialogs/confirm-dialog.component';
 import { Location } from '@angular/common';
 import Cluster from 'ol/source/Cluster';
 import {boundingExtent} from 'ol/extent.js';
-import { getDistance } from 'ol/sphere';
-
+import { Control  } from 'ol/control';
+import { defaults as defaultControls } from 'ol/control';
 @Component({
   selector: 'app-map-dashboard',
   templateUrl: './map-dashboard.component.html',
@@ -66,7 +66,10 @@ export class MapDashboardComponent extends Helper implements OnInit {
   geocoder: any;
   srcResult: any;
   nonClusteredLayer: any;
-
+  pointLayers: any;
+  trajectoryLayer: any;
+  clusteredLayer: any;
+  clikedOnLayer: any;
 
   constructor(
       protected tagService: TagService,
@@ -94,6 +97,10 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.selectedType = '';
     this.completedCardColor = '';
     this.ipAddress = '';
+    this.pointLayers = [];
+    this.trajectoryLayer = [];
+    this.clusteredLayer = [];
+    this.clikedOnLayer = [];
   }
 
   async ngOnInit() {
@@ -106,11 +113,12 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.route.paramMap.subscribe(params => {
       let id = params.get('id');
       if (id) {
-          this.getTagFromUrl(id)
-      } else {
-        // handle missing card
+        this.getTagFromUrl(id)
       }
    });
+   this.map.addControl(
+    new CustomCheckboxControl(this.pointLayers, this.trajectoryLayer, this.clusteredLayer)
+  );
   }
 
   async getTagFromUrl(id: string) {
@@ -160,7 +168,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
         center: fromLonLat([this.QUEBEC_CITY.longitude, this.QUEBEC_CITY.latitude]),
         minZoom: 12,
         zoom: 14
-      })
+      }),
+       controls: defaultControls(),
     });
     // Listen for map view changes and update geocoder extent accordingly
     // this.map.on('moveend', () => {
@@ -194,10 +203,10 @@ export class MapDashboardComponent extends Helper implements OnInit {
         this.feature = this.map.forEachFeatureAtPixel(evt.pixel, function(feature: any) {
           return feature;
         })
-        console.log(this.feature);
-        
-        await this.getTag(this.feature.values_.data.id)
-        this.clickedOnTag();
+        if (this.feature.values_.data && this.feature.values_.data.id) {
+          await this.getTag(this.feature.values_.data.id)
+          this.clickedOnTag();
+        }
       } else if (!this.tagService.isAdmin && !this.drawingStarted && !this.showPopup && !this.showCard) {
         this.initializeOnLoad();
         // [0]: latt, [1]: long.
@@ -237,7 +246,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.geocoder.on('addresschosen',  (evt: any) => {
       const coord = evt.coordinate;
       this.map.getView().setCenter(coord);
-      this.map.getView().setZoom(18);
+      this.map.getView().setZoom(16);
     });
     // let geocoderInput = document.getElementById('gcd-input-query');
     // console.log(geocoderInput);
@@ -342,11 +351,44 @@ export class MapDashboardComponent extends Helper implements OnInit {
     if (this.currentTag.flagged) {
       this.flagIsClicked =  this.currentTag.flagged.some(h => h === this.ipAddress);
     }
+    const color = this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb;
     this.heartIsClicked = this.currentTag.heart ? this.currentTag.heart.some(h => h === this.ipAddress) : false;
-    this.completedCardColor = this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb || '';
+    this.completedCardColor = color?.card || '';
     this.selectedEmotion = this.currentTag.emotion;
     this.selectedTransport = this.currentTag.transport;
     this.selectedType = this.currentTag.trajectory ? "Trajectoire" : "Point";
+    this.clikedOnLayer = this.getLayerById(this.currentTag?.id || '');
+
+    this.changeLayerColor(
+      this.clikedOnLayer, 
+      color?.highlight || '',
+      this.currentTag.trajectory 
+    )
+  }
+  // Function to get a layer by its custom 'layerId'
+  getLayerById(layerId: string) {
+    return this.map.getLayers().getArray().find((layer: any) => layer.get('layerId') === layerId);
+  }
+
+  // Used to highlight selected trajectory
+  changeLayerColor(layer: any, newColor: string, isTrajectory?: boolean) {
+    let newStyle;
+    if (isTrajectory) {
+      newStyle = new Style({
+        stroke: new Stroke({
+          color: newColor,
+          width: 6,
+        }),
+      });
+    } else {
+      newStyle = new Style({
+        image: new Circle({
+          radius: 6,
+          fill: new Fill({ color: newColor }) //couleur relatif au emotion
+        })
+      })
+    }
+    layer.setStyle(newStyle);
   }
 
   setCenter(zoom: number) {
@@ -376,11 +418,10 @@ export class MapDashboardComponent extends Helper implements OnInit {
           } else {
             this.addPointFeature(tag);
           }
-          resolve(this.tagList);
         });
+        resolve(this.tagList);
       })
     });
-
   }
 
   delete(id: string) {
@@ -401,18 +442,17 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.router.navigateByUrl('/')
   }
 
-  private addTrajectory(tag: Tag) {
+  private addTrajectory(tag: Tag, isOpen?: boolean) {
     let color = this.emotions.find(x=>x.name === tag.emotion)?.rgb;
     const vectorSource = new VectorSource();
     const vectorLayer = new VectorLayer({
       source: vectorSource,
       style: new Style({
         stroke: new Stroke({
-          color: color , //couleur relatif au emotion
-          width: 3,
+          color: isOpen ? color?.highlight :color?.point, //couleur relatif au emotion
+          width: 4,
         })
-      }),
-
+      })
     });
     const format = new GeoJSON();
     const features = format.readFeatures(tag.trajectory, {
@@ -433,8 +473,9 @@ export class MapDashboardComponent extends Helper implements OnInit {
     vectorSource.addFeatures(features);
 
     // const coordinates = fromLonLat([firstCoordinate[0], firstCoordinate[1]]);
-
+    vectorLayer.set('layerId', tag.id);
     // Add the vector layer to the map
+    this.trajectoryLayer.push(vectorLayer)
     this.map.addLayer(vectorLayer);
 
   }
@@ -457,7 +498,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
       data: data
     });
 
-
     let style = undefined;
     if (data.flagged && this.tagService.isAdmin) {
       // if admiin view and flagged, show different icon
@@ -473,11 +513,10 @@ export class MapDashboardComponent extends Helper implements OnInit {
       style = new Style({
         image: new Circle({
           radius: 6,
-          fill: new Fill({ color: color }) //couleur relatif au emotion
+          fill: new Fill({ color: color?.card }) //couleur relatif au emotion
         })
-      });
+      })
     }
-
     // Apply the style to the feature
     feature.setStyle(style);
 
@@ -488,8 +527,12 @@ export class MapDashboardComponent extends Helper implements OnInit {
       })
     });
     vectorLayer.set('name', 'pointLayer');
-     this.nonClusteredLayer = this.map.getLayers().getArray().find((layer: any) => layer.get('name') === 'pointLayer');
 
+
+    vectorLayer.set('layerId', data.id);
+    
+    this.nonClusteredLayer = this.map.getLayers().getArray().find((layer: any) => layer.get('name') === 'pointLayer');
+    this.pointLayers.push(vectorLayer)
     // Add the vector layer to the map
     this.map.addLayer(vectorLayer);
   }
@@ -530,8 +573,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
     .subscribe((data) => {
       console.log('Data added successfully!', data)
       this.ngZone.run(() => this.router.navigateByUrl('/'))
-      this.getTags();
-        this.initializeOnLoad();
+      this.initializeOnLoad();
+      this.refresh();
       }, (err: any) => {
         console.log(err);
     });
@@ -572,6 +615,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     });
     }
   }
+
   visualAggregation() {
     let pointArray: any = [];
     let trajectoryArray: any = [];
@@ -583,10 +627,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
           pointArray.push(tag)
         } else {
           trajectoryArray.push(tag)
-
         }
-
-
       }
     });
     
@@ -598,10 +639,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.seperateInEmotionArrays(trajectoryArray, positiveTrajectoryArray, negativeTrajectoryArray);
   
 
-    this.clusterMarkers(positivePointArray, this.emotions[0].rgb);
-    this.clusterMarkers(negativePointArray, this.emotions[1].rgb);
-    this.clusterTrajectory(positiveTrajectoryArray,  this.emotions[0].rgb);
-    this.clusterTrajectory(positiveTrajectoryArray,  this.emotions[1].rgb);
+    this.clusterMarkers(positivePointArray, this.emotions[0].rgb.card);
+    this.clusterMarkers(negativePointArray, this.emotions[1].rgb.card);
   } 
 
   seperateInEmotionArrays(originalArray: any[], positiveArray:any[], negativeArray: any[]) {
@@ -614,33 +653,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     });
   }
 
-  clusterTrajectory(tags: Tag[], color: string) {
-    // Create a vector source with the trajectories
-    let trajectoriesArray: any = [];
-    tags.forEach( (tag: Tag) => {
-      trajectoriesArray.push(tag.trajectory);
-    })
 
-    const trajectorySource = new VectorSource({
-      features: trajectoriesArray, // Add more trajectories here
-    });
-
-    // Create a style for the trajectories
-    const trajectoryStyle = new Style({
-      stroke: new Stroke({
-        color: color,
-        width: 10,
-      }),
-    });
-        // Create a vector layer with the trajectories
-    const trajectoryLayer = new VectorLayer({
-      source: trajectorySource,
-      style: trajectoryStyle,
-    });
-
-    // Add the trajectory layer to the map
-    this.map.addLayer(trajectoryLayer);
-  }
 
   clusterMarkers(tag: Tag[], color: string): void {
     const features: any = []
@@ -660,9 +673,9 @@ export class MapDashboardComponent extends Helper implements OnInit {
       features: features,
     });
 
-        // Create a cluster source
+      // Create a cluster source
     const clusterSource = new Cluster({
-      distance: 50, // Distance in pixels within which points will be clustered
+      distance: 60, // Distance in pixels within which points will be clustered
       source: source 
     });
     
@@ -694,6 +707,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
     });
     clusters.set('name', 'clusteredLayer');
 
+    this.clusteredLayer.push(clusters)
+
     // Add the marker layer to the map
     this.map.addLayer(clusters);
     
@@ -702,11 +717,11 @@ export class MapDashboardComponent extends Helper implements OnInit {
         if (clickedFeatures.length) {
           // Get clustered Coordinates
           const features = clickedFeatures[0].get('features');
-          if (features.length > 1) {
+          if (features.length > 0) {
             const extent = boundingExtent(
               features.map((r: any) => r.getGeometry().getCoordinates()),
             );
-            this.map.getView().fit(extent, {duration: 1000, padding: [50, 50, 50, 50], maxZoom: 18 });
+            this.map.getView().fit(extent, {duration: 1000, padding: [50, 50, 50, 50], maxZoom: 17 });
           }
         }
       });
@@ -736,6 +751,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       }
     });
   }
+
 
 
   heart() {
@@ -826,8 +842,74 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
 
   close() {
+    if (this.clikedOnLayer) {
+      this.changeLayerColor(
+        this.clikedOnLayer,
+        this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb.point || '',
+        this.currentTag?.trajectory
+      )
+    }
     this.showCard=false;
-    this.router.navigateByUrl("/")
+    this.location.go("/")
   }
 
 }
+  // Create a custom control for the checkbox
+class CustomCheckboxControl extends Control {
+    private checkboxElement: HTMLInputElement;
+    private  pointLayers_: any;
+    private  trajectoryLayer_: any;
+    private  clusteredLayer_: any;
+
+    constructor(pointLayers: any, trajectoryLayer: any, clusteredLayer: any) {
+
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.id = 'togglePoints';
+      checkbox.style.margin = '10px';
+
+      const label = document.createElement('label');
+      label.htmlFor = 'togglePoints';
+      label.textContent = 'Mettre les trajets en évidence';
+
+      const div = document.createElement('div');
+      div.className = 'ol-unselectable ol-control';
+      div.style.position = 'absolute';
+      div.style.right = '1%';
+      div.style.marginTop = '10%';
+
+      div.appendChild(checkbox);
+      div.appendChild(label);
+
+      super({
+        element: div,
+        target: undefined,
+      });
+      this.pointLayers_ = pointLayers;
+      this.trajectoryLayer_ = trajectoryLayer;
+      this.clusteredLayer_ = clusteredLayer;
+      this.checkboxElement = checkbox;
+
+
+      // Add event listener for the checkbox
+      this.checkboxElement.addEventListener('change', this.handleCheckboxChange.bind(this));
+    }
+
+    // Handle checkbox state change
+    private handleCheckboxChange(event: Event) {
+      const isChecked = (event.target as HTMLInputElement).checked
+
+      for (let i = 0; i < this.pointLayers_.length; i++) {
+        const element = this.pointLayers_[i];
+        element.setVisible(!isChecked);
+      }
+
+      for (let i = 0; i < this.clusteredLayer_.length; i++) {
+        const element = this.clusteredLayer_[i];
+        element.setVisible(!isChecked);   
+      }
+    }
+
+
+}
+
