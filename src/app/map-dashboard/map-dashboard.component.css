@@ -1,5 +1,5 @@
 .map {
-  height: 93%;
+  height: 90%;
   width: 100%;
 }
 #popupCard {
@@ -72,6 +72,16 @@ button.clicked .fa-flag {
   margin-left: 5px;
   font-size: 14px;
 }
+
+
+.ol-control {
+  background: black;
+  border: 1px solid #ccc;
+  padding: 5px;
+  border-radius: 4px;
+}
+
+/* TODO scroll for text*/
 /* width */
 #completedCardText {
   overflow-y: scroll;
