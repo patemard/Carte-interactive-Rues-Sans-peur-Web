@@ -33,8 +33,9 @@ import { ConfirmDialogComponent } from '../dialogs/confirm-dialog.component';
 import { Location } from '@angular/common';
 import Cluster from 'ol/source/Cluster';
 import {boundingExtent} from 'ol/extent.js';
-import { Control  } from 'ol/control';
+import { Control, FullScreen   } from 'ol/control';
 import { defaults as defaultControls } from 'ol/control';
+import { defaults as defaultInteractions } from 'ol/interaction';
 @Component({
   selector: 'app-map-dashboard',
   templateUrl: './map-dashboard.component.html',
@@ -117,7 +118,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       }
    });
    this.map.addControl(
-    new CustomCheckboxControl(this.pointLayers, this.trajectoryLayer, this.clusteredLayer)
+    new CustomCheckboxControl(this.pointLayers, this.trajectoryLayer, this.clusteredLayer, this.isMobileDevice())
   );
   }
 
@@ -169,8 +170,17 @@ export class MapDashboardComponent extends Helper implements OnInit {
         minZoom: 12,
         zoom: 14
       }),
+      interactions: defaultInteractions({
+        pinchZoom: true,
+        dragPan: true,
+      }),
        controls: defaultControls(),
     });
+
+    if (this.isMobileDevice()) {
+      const fullScreenControl = new FullScreen();
+      this.map.addControl(fullScreenControl);
+    }
     // Listen for map view changes and update geocoder extent accordingly
     // this.map.on('moveend', () => {
     //   this.updateGeocoderExtent();
@@ -512,7 +522,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     // Define a style for the point feature
       style = new Style({
         image: new Circle({
-          radius: 6,
+          radius: 5,
           fill: new Fill({ color: color?.card }) //couleur relatif au emotion
         })
       })
@@ -856,30 +866,60 @@ export class MapDashboardComponent extends Helper implements OnInit {
 }
   // Create a custom control for the checkbox
 class CustomCheckboxControl extends Control {
-    private checkboxElement: HTMLInputElement;
+    private  checkboxElement: HTMLInputElement;
+    private  trajectoryCheckboxElement: HTMLInputElement;
     private  pointLayers_: any;
     private  trajectoryLayer_: any;
     private  clusteredLayer_: any;
 
-    constructor(pointLayers: any, trajectoryLayer: any, clusteredLayer: any) {
+    constructor(pointLayers: any, 
+      trajectoryLayer: any, 
+      clusteredLayer: any,
+      isMobile: boolean) {
 
-      const checkbox = document.createElement('input');
-      checkbox.type = 'checkbox';
-      checkbox.id = 'togglePoints';
-      checkbox.style.margin = '10px';
+      const pointCheckbox = document.createElement('input');
+      pointCheckbox.type = 'checkbox';
+      pointCheckbox.id = 'togglePoints';
+      pointCheckbox.style.height = "2vh";
+      pointCheckbox.style.width = "2vh";
+      pointCheckbox.checked = true;
+      
+      const pointIcon = document.createElement('i');
+      pointIcon.className="fa fa-map-marker"
 
-      const label = document.createElement('label');
-      label.htmlFor = 'togglePoints';
-      label.textContent = 'Mettre les trajets en évidence';
+      const labelPoints = document.createElement('label');
+      labelPoints.htmlFor = 'togglePoints';
+      labelPoints.textContent = 'Points';
 
       const div = document.createElement('div');
       div.className = 'ol-unselectable ol-control';
       div.style.position = 'absolute';
-      div.style.right = '1%';
-      div.style.marginTop = '10%';
+      div.style.right = '3%';
+      div.id = "checkboxesDiv"
 
-      div.appendChild(checkbox);
-      div.appendChild(label);
+      div.appendChild(pointCheckbox);
+      div.appendChild(labelPoints);
+
+      const trajectoryCheckbox= document.createElement('input');
+      trajectoryCheckbox.type = 'checkbox';
+      trajectoryCheckbox.id = 'toggleTrajectory';
+      trajectoryCheckbox.style.height = "2vh";
+      trajectoryCheckbox.style.width = "2vh";
+      trajectoryCheckbox.checked = true;
+
+      const trajectoryIcon = document.createElement('i');
+      trajectoryIcon.className="fa fa-map-o"
+
+      const labelTrajectory = document.createElement('label');
+      labelTrajectory.htmlFor = 'toggleTrajectory';
+      labelTrajectory.textContent = 'Trajectoires';
+      
+      const br = document.createElement("br");
+      div.appendChild(br);
+
+      div.appendChild(trajectoryCheckbox);
+      div.appendChild(labelTrajectory);
+      // div.appendChild(trajectoryIcon);
 
       super({
         element: div,
@@ -888,11 +928,14 @@ class CustomCheckboxControl extends Control {
       this.pointLayers_ = pointLayers;
       this.trajectoryLayer_ = trajectoryLayer;
       this.clusteredLayer_ = clusteredLayer;
-      this.checkboxElement = checkbox;
+      this.checkboxElement = pointCheckbox;
+      this.trajectoryCheckboxElement = trajectoryCheckbox;
 
 
       // Add event listener for the checkbox
       this.checkboxElement.addEventListener('change', this.handleCheckboxChange.bind(this));
+      this.trajectoryCheckboxElement.addEventListener('change', this.handleTrajectoryCheckboxChange.bind(this));
+
     }
 
     // Handle checkbox state change
@@ -901,15 +944,24 @@ class CustomCheckboxControl extends Control {
 
       for (let i = 0; i < this.pointLayers_.length; i++) {
         const element = this.pointLayers_[i];
-        element.setVisible(!isChecked);
+        element.setVisible(isChecked);
       }
 
       for (let i = 0; i < this.clusteredLayer_.length; i++) {
         const element = this.clusteredLayer_[i];
-        element.setVisible(!isChecked);   
+        element.setVisible(isChecked);   
       }
     }
+    // Handle checkbox state change
+    private handleTrajectoryCheckboxChange(event: Event) {
+      const isChecked = (event.target as HTMLInputElement).checked
 
+      for (let i = 0; i < this.trajectoryLayer_.length; i++) {
+        const element = this.trajectoryLayer_[i];
+        element.setVisible(isChecked);
+      }
+
+    }
 
 }
 

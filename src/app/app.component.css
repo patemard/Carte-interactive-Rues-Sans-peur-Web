@@ -42,3 +42,32 @@ body {
     left: 0 ; right: 0; bottom: 0; 
     height:[footer-height] 
 }
+
+#rsp {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  /* .footer { 
+    display: none; 
+  } */
+  .py-5 {
+    padding-top:1vh!important;
+    padding-bottom:1vh!important
+  }
+  #rsp {
+    display: none;
+  }
+
+}
+
+
+
+@media (max-height: 500px) {
+  .footer { 
+    display: none; 
+  }
+  #rsp {
+    display:initial;
+  }
+}

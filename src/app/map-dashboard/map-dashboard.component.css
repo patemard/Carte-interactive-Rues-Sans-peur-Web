@@ -1,5 +1,5 @@
 .map {
-  height: 90%;
+  height: 95%;
   width: 100%;
 }
 #popupCard {
@@ -101,3 +101,25 @@ button.clicked .fa-flag {
   ::-webkit-scrollbar-thumb:hover {
   background: #7bac10;
   }
+
+  @media (max-width: 768px) {
+
+    .map {
+      height: 100vh;
+      width: 100%;
+      position: relative;
+    }
+   
+  }
+
+  
+@media (max-height: 500px) {
+  .map {
+    height: 100vh;
+    width: 100%;
+    position: relative;
+  }
+
+
+}
+  
