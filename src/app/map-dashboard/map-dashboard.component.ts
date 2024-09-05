@@ -41,7 +41,7 @@ import { defaults as defaultInteractions } from 'ol/interaction';
 import { RessourceDialogComponent } from '../dialogs/ressource-dialog.component';
 import { CustomCheckboxControl } from '../interfaces/CustomCheckboxControl';
 import { GeolocationButtonControl } from '../interfaces/GeolocationButtonControl';
-import { SaveTrajectoryButton } from '../interfaces/saveTrajectoryButton';
+import { SaveTrajectoryButton } from '../interfaces/SaveTrajectoryButton';
 import { transform } from 'ol/proj';
 
 @Component({
@@ -372,42 +372,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     });
   }
   // Function to extract the first coordinate from GeoJSON object
-  extractFirstCoordinate(geojson: any) {
-    console.log(geojson);
-    
-    if (geojson && geojson.features && Array.isArray(geojson.features) && geojson.features.length > 0) {
-      // Iterate over features to find the first coordinate
-      for (const feature of geojson.features) {
-        if (feature && feature.geometry && feature.geometry.coordinates) {
-          const geometryType = feature.geometry.type;
-          const coordinates = feature.geometry.coordinates;
 
-          switch (geometryType) {
-            case 'Point':
-              // For Point, return the coordinates directly
-              return coordinates;
-            case 'LineString':
-              // For LineString, return the first coordinate
-              if (coordinates.length > 0) {
-                return coordinates[0];
-              }
-              break;
-            case 'Polygon':
-              // For Polygon, return the first coordinate of the first ring
-              if (coordinates.length > 0 && coordinates[0].length > 0) {
-                return coordinates[0][0];
-              }
-              break;
-            default:
-              console.warn(`Unsupported geometry type: ${geometryType}`);
-          }
-        }
-      }
-      throw new Error('No coordinates found in any feature.');
-    } else {
-      throw new Error('Invalid GeoJSON or no features found.');
-    }
-  }
   addSaveTrajectoryButton() {
     this.saveTrajectoryButtonControl = new SaveTrajectoryButton(this.map,this.injector, this.resolver)
     this.map.addControl(this.saveTrajectoryButtonControl);
@@ -664,6 +629,43 @@ export class MapDashboardComponent extends Helper implements OnInit {
       }, (err: any) => {
         console.log(err);
     });
+  }
+
+  extractFirstCoordinate(geojson: any) {
+    console.log(geojson);
+    
+    if (geojson && geojson.features && Array.isArray(geojson.features) && geojson.features.length > 0) {
+      // Iterate over features to find the first coordinate
+      for (const feature of geojson.features) {
+        if (feature && feature.geometry && feature.geometry.coordinates) {
+          const geometryType = feature.geometry.type;
+          const coordinates = feature.geometry.coordinates;
+
+          switch (geometryType) {
+            case 'Point':
+              // For Point, return the coordinates directly
+              return coordinates;
+            case 'LineString':
+              // For LineString, return the first coordinate
+              if (coordinates.length > 0) {
+                return coordinates[0];
+              }
+              break;
+            case 'Polygon':
+              // For Polygon, return the first coordinate of the first ring
+              if (coordinates.length > 0 && coordinates[0].length > 0) {
+                return coordinates[0][0];
+              }
+              break;
+            default:
+              console.warn(`Unsupported geometry type: ${geometryType}`);
+          }
+        }
+      }
+      throw new Error('No coordinates found in any feature.');
+    } else {
+      throw new Error('Invalid GeoJSON or no features found.');
+    }
   }
 
   isFormValid(): boolean {

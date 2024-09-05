@@ -26,7 +26,7 @@ import { RessourceDialogComponent } from './dialogs/ressource-dialog.component';
 import {TagChoiceDialogComponent} from "./dialogs/tagChoice-dialog.component";
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog.component';
 import {ScrollingModule} from '@angular/cdk/scrolling';
-import { SaveTrajectoryButtonComponent } from './interfaces/saveTrajectoryButton';
+import { SaveTrajectoryButtonComponent } from './interfaces/SaveTrajectoryButton';
 @NgModule({
   declarations: [
     AppComponent,

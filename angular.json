@@ -17,6 +17,11 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": [
+              "geotiff",
+              "lodash"
+            ],
+            "statsJson": true,
             "outputPath": "dist/ng-map",
             "index": "src/index.html",
             "main": "src/main.ts",
@@ -37,7 +42,7 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
+                  "maximumWarning": "1.5mb",
                   "maximumError": "2mb"
                 },
                 {
