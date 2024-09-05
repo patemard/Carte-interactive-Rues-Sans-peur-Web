@@ -1,5 +1,7 @@
 import {
   Component,
+  ComponentFactoryResolver,
+  Injector,
   NgZone,
   OnInit,
   ViewChild,
@@ -33,9 +35,15 @@ import { ConfirmDialogComponent } from '../dialogs/confirm-dialog.component';
 import { Location } from '@angular/common';
 import Cluster from 'ol/source/Cluster';
 import {boundingExtent} from 'ol/extent.js';
-import { Control, FullScreen   } from 'ol/control';
+import {  FullScreen   } from 'ol/control';
 import { defaults as defaultControls } from 'ol/control';
 import { defaults as defaultInteractions } from 'ol/interaction';
+import { RessourceDialogComponent } from '../dialogs/ressource-dialog.component';
+import { CustomCheckboxControl } from '../interfaces/CustomCheckboxControl';
+import { GeolocationButtonControl } from '../interfaces/GeolocationButtonControl';
+import { SaveTrajectoryButton } from '../interfaces/saveTrajectoryButton';
+import { transform } from 'ol/proj';
+
 @Component({
   selector: 'app-map-dashboard',
   templateUrl: './map-dashboard.component.html',
@@ -44,6 +52,7 @@ import { defaults as defaultInteractions } from 'ol/interaction';
 
 export class MapDashboardComponent extends Helper implements OnInit {
   currentTag: Tag = new Tag;
+  saveTrajectoryButtonControl: any;
   map: any;
   overlay: any;
   description: string = '';
@@ -79,7 +88,9 @@ export class MapDashboardComponent extends Helper implements OnInit {
       private route: ActivatedRoute,
       private ngZone: NgZone,
       private ipService: IpService,
-      private location: Location
+      private location: Location,
+      private injector: Injector, 
+      private resolver: ComponentFactoryResolver
       ) {
     super();
     this.initializeOnLoad();
@@ -119,6 +130,9 @@ export class MapDashboardComponent extends Helper implements OnInit {
    });
    this.map.addControl(
     new CustomCheckboxControl(this.pointLayers, this.trajectoryLayer, this.clusteredLayer, this.isMobileDevice())
+  );
+  this.map.addControl(
+    new GeolocationButtonControl(this.map)
   );
   }
 
@@ -226,13 +240,25 @@ export class MapDashboardComponent extends Helper implements OnInit {
         this.currentTag.latitude = coords[1];
 
         if (this.map.getView().getZoom() >= 18) {
+          this.initInfoModal();
           this.showPopup = true;
-          this.overlay.setPosition(evt.coordinate);
+          this.overlay.setPosition(this.currentTag.mercatorCoord);
         } else {
           this.setCenter(18);
         }
       }
     })
+  }
+
+  initInfoModal() {
+    const dialogRef = this.dialog.open(RessourceDialogComponent, {
+      panelClass: 'violet-pale-atv',
+      enterAnimationDuration: 1300
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      // this.setCenter(16)
+    });
   }
 
   initGeoCoder() {
@@ -308,7 +334,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
     // Collect points and create a line feature
     const points: number[][] = [];
     draw.on('drawend', (event: any) => {
-      console.log('drawend')
       const feature = event.feature;
       const coordinates = (feature.getGeometry() as Point).getCoordinates();
       points.push(coordinates);
@@ -325,7 +350,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
         vectorSource.addFeature(lineFeature);
       }
     });
-
+    
+    this.addSaveTrajectoryButton();
     // Save the trajectory as GeoJSON
     document.getElementById('saveTrajectory')?.addEventListener('click', () => {
       const format = new GeoJSON();
@@ -336,20 +362,66 @@ export class MapDashboardComponent extends Helper implements OnInit {
       });
       const view = this.map.getView();  // Get the current view of the map
       // Set a new minimum zoom level
-      view.setMinZoom(12); 
+      view.setMinZoom(14); 
       // Save or display the GeoJSON string
       this.trajectoryCoords = geojson;
       this.drawingStarted=false;
       this.submitTrajectory()
       this.map.removeInteraction(draw);
+      this.removeSaveTrajectoryButton();
     });
-
   }
+  // Function to extract the first coordinate from GeoJSON object
+  extractFirstCoordinate(geojson: any) {
+    console.log(geojson);
+    
+    if (geojson && geojson.features && Array.isArray(geojson.features) && geojson.features.length > 0) {
+      // Iterate over features to find the first coordinate
+      for (const feature of geojson.features) {
+        if (feature && feature.geometry && feature.geometry.coordinates) {
+          const geometryType = feature.geometry.type;
+          const coordinates = feature.geometry.coordinates;
+
+          switch (geometryType) {
+            case 'Point':
+              // For Point, return the coordinates directly
+              return coordinates;
+            case 'LineString':
+              // For LineString, return the first coordinate
+              if (coordinates.length > 0) {
+                return coordinates[0];
+              }
+              break;
+            case 'Polygon':
+              // For Polygon, return the first coordinate of the first ring
+              if (coordinates.length > 0 && coordinates[0].length > 0) {
+                return coordinates[0][0];
+              }
+              break;
+            default:
+              console.warn(`Unsupported geometry type: ${geometryType}`);
+          }
+        }
+      }
+      throw new Error('No coordinates found in any feature.');
+    } else {
+      throw new Error('Invalid GeoJSON or no features found.');
+    }
+  }
+  addSaveTrajectoryButton() {
+    this.saveTrajectoryButtonControl = new SaveTrajectoryButton(this.map,this.injector, this.resolver)
+    this.map.addControl(this.saveTrajectoryButtonControl);
+  }
+
+  removeSaveTrajectoryButton() {
+    if (this.saveTrajectoryButtonControl) {
+      this.map.removeControl(this.saveTrajectoryButtonControl);
+    }
+  }  
 
   processWheelEvent(evt: any) {
     evt.preventDefault();
   }
-
 
 
   clickedOnTag() {
@@ -579,6 +651,10 @@ export class MapDashboardComponent extends Helper implements OnInit {
   submitTrajectory() {
     this.setModel();
     this.currentTag.trajectory = this.trajectoryCoords;
+    // Re allign the card point to be on the first trajectory point.
+    const transformedCoord = transform(this.extractFirstCoordinate(JSON.parse(this.trajectoryCoords)), 'EPSG:4326', 'EPSG:3857');
+    this.currentTag.mercatorCoord = transformedCoord;
+
     this.tagService.addTag(this.currentTag)
     .subscribe((data) => {
       console.log('Data added successfully!', data)
@@ -864,104 +940,5 @@ export class MapDashboardComponent extends Helper implements OnInit {
   }
 
 }
-  // Create a custom control for the checkbox
-class CustomCheckboxControl extends Control {
-    private  checkboxElement: HTMLInputElement;
-    private  trajectoryCheckboxElement: HTMLInputElement;
-    private  pointLayers_: any;
-    private  trajectoryLayer_: any;
-    private  clusteredLayer_: any;
 
-    constructor(pointLayers: any, 
-      trajectoryLayer: any, 
-      clusteredLayer: any,
-      isMobile: boolean) {
-
-      const pointCheckbox = document.createElement('input');
-      pointCheckbox.type = 'checkbox';
-      pointCheckbox.id = 'togglePoints';
-      pointCheckbox.style.height = "2vh";
-      pointCheckbox.style.width = "2vh";
-      pointCheckbox.checked = true;
-      
-      const pointIcon = document.createElement('i');
-      pointIcon.className="fa fa-map-marker"
-
-      const labelPoints = document.createElement('label');
-      labelPoints.htmlFor = 'togglePoints';
-      labelPoints.textContent = 'Points';
-
-      const div = document.createElement('div');
-      div.className = 'ol-unselectable ol-control';
-      div.style.position = 'absolute';
-      div.style.right = '3%';
-      div.id = "checkboxesDiv"
-
-      div.appendChild(pointCheckbox);
-      div.appendChild(labelPoints);
-
-      const trajectoryCheckbox= document.createElement('input');
-      trajectoryCheckbox.type = 'checkbox';
-      trajectoryCheckbox.id = 'toggleTrajectory';
-      trajectoryCheckbox.style.height = "2vh";
-      trajectoryCheckbox.style.width = "2vh";
-      trajectoryCheckbox.checked = true;
-
-      const trajectoryIcon = document.createElement('i');
-      trajectoryIcon.className="fa fa-map-o"
-
-      const labelTrajectory = document.createElement('label');
-      labelTrajectory.htmlFor = 'toggleTrajectory';
-      labelTrajectory.textContent = 'Trajectoires';
-      
-      const br = document.createElement("br");
-      div.appendChild(br);
-
-      div.appendChild(trajectoryCheckbox);
-      div.appendChild(labelTrajectory);
-      // div.appendChild(trajectoryIcon);
-
-      super({
-        element: div,
-        target: undefined,
-      });
-      this.pointLayers_ = pointLayers;
-      this.trajectoryLayer_ = trajectoryLayer;
-      this.clusteredLayer_ = clusteredLayer;
-      this.checkboxElement = pointCheckbox;
-      this.trajectoryCheckboxElement = trajectoryCheckbox;
-
-
-      // Add event listener for the checkbox
-      this.checkboxElement.addEventListener('change', this.handleCheckboxChange.bind(this));
-      this.trajectoryCheckboxElement.addEventListener('change', this.handleTrajectoryCheckboxChange.bind(this));
-
-    }
-
-    // Handle checkbox state change
-    private handleCheckboxChange(event: Event) {
-      const isChecked = (event.target as HTMLInputElement).checked
-
-      for (let i = 0; i < this.pointLayers_.length; i++) {
-        const element = this.pointLayers_[i];
-        element.setVisible(isChecked);
-      }
-
-      for (let i = 0; i < this.clusteredLayer_.length; i++) {
-        const element = this.clusteredLayer_[i];
-        element.setVisible(isChecked);   
-      }
-    }
-    // Handle checkbox state change
-    private handleTrajectoryCheckboxChange(event: Event) {
-      const isChecked = (event.target as HTMLInputElement).checked
-
-      for (let i = 0; i < this.trajectoryLayer_.length; i++) {
-        const element = this.trajectoryLayer_[i];
-        element.setVisible(isChecked);
-      }
-
-    }
-
-}
 
