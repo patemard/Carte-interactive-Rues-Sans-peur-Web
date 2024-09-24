@@ -23,7 +23,7 @@ import {
 
 } from '@angular/material/dialog';
 import { RessourceDialogComponent } from './dialogs/ressource-dialog.component';
-import {TagChoiceDialogComponent} from "./dialogs/tagChoice-dialog.component";
+import {CompletedCardDialogComponent} from "./dialogs/completedCard-dialog.component";
 import { ConfirmDialogComponent } from './dialogs/confirm-dialog.component';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import { SaveTrajectoryButtonComponent } from './interfaces/SaveTrajectoryButton';
@@ -33,7 +33,7 @@ import { SaveTrajectoryButtonComponent } from './interfaces/SaveTrajectoryButton
     HomeComponent,
     MapDashboardComponent,
     PageNotFoundComponent,
-    TagChoiceDialogComponent,
+    CompletedCardDialogComponent,
     AdminDashboardComponent,
     RessourceDialogComponent,
     ConfirmDialogComponent,

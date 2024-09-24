@@ -1,0 +1,14 @@
+button {
+  margin-right: 8px;
+}
+
+#completedCard {
+  width: min-content;
+}
+
+.completedCardClose {
+  cursor: pointer;
+  position: absolute;
+  top: 4%;
+  right: 4%;
+}

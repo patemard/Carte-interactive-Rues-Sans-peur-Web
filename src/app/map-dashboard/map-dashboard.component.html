@@ -28,7 +28,7 @@
               <mat-form-field appearance="fill">
                 <mat-label>Émotion</mat-label>
                 <mat-select name="Sélection émotion"
-                  [(ngModel)]="selectedEmotion">
+                  [(ngModel)]="currentTag.emotion">
                   <mat-option *ngFor="let emotion of emotions" [ngClass]="emotion.class" [value]="emotion.name">
                     <i class="fa fa-{{emotion.icon}} fa-xl"></i>{{emotion.name}}
                   </mat-option>
@@ -39,7 +39,7 @@
               <mat-form-field appearance="fill">
                 <mat-label>Transport</mat-label>
                 <mat-select name="Sélection transport"
-                  [(ngModel)]="selectedTransport">
+                  [(ngModel)]="currentTag.transport">
                   <mat-option *ngFor="let transport of transports" [value]="transport.name">
                     <i class="fa-solid fa-{{transport.icon}} fa-xl" ></i>{{transport.name}}
                   </mat-option>
@@ -95,7 +95,7 @@
               <input hidden (change)="onFileSelected()" #fileInput type="file" id="file"> -->
             </div>
             <div class="col-md-2">
-              <button mat-raised-button 
+              <button mat-raised-button
                 color="violet-atv"
                 id="closeBtn"
                 matTooltip="Abandonner la sauvegarde."
@@ -107,7 +107,7 @@
         </form>
       </div>
     </mat-card>
-   
+<!--
    <mat-card
       [hidden]="!showCard"
       id="completedCard"
@@ -154,7 +154,7 @@
             <i class="fa fa-trash" aria-hidden="true"></i>
           </button>
         </mat-card-actions>
-    </mat-card>
+    </mat-card> -->
 
 
 

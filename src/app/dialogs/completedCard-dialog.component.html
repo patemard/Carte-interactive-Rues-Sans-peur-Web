@@ -1,0 +1,43 @@
+<mat-card
+      id="completedCard"
+      class="centered"
+      [ngStyle]="{'background-color': completedCardColor}"
+    >
+      <mat-card-header>
+        <button type="button" class="close completedCardClose" aria-label="Close" (click)="close()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+          <mat-card-title>{{tagService_.selectedTag.title}}</mat-card-title>
+          <mat-card-subtitle>{{tagService_.selectedTag.emotion}}</mat-card-subtitle>
+      </mat-card-header>
+        <mat-card-content class="text-center">
+          <p> {{tagService_.selectedTag.description}}</p>
+        </mat-card-content>
+        <mat-card-actions class="centered">
+          <button mat-button
+            id="heartBtn"
+            [class.clicked]="heartIsClicked"
+            [disabled]="heartIsClicked || !ipAddress"
+            (click)="heart()">
+            <i class="fa fa-heart" aria-hidden="true" title="Solidaire"></i>
+            <span class="counter" *ngIf="tagService_.selectedTag.heart">{{ tagService_.selectedTag.heart.length }}</span>
+          </button>
+          <button mat-button title="Partager">
+            <i class="fa fa-share-square-o" aria-hidden="true" (click)="copyUrlToclipboard()"></i>
+          </button>
+          <button mat-button
+            id="flagBtn"
+            [class.clicked]="flagIsClicked"
+            [disabled]="flagIsClicked || !ipAddress"
+            (click)="flag()">
+            <i class="fa fa-flag" aria-hidden="true" title="Signaler"></i>
+            <span class="counter" *ngIf="tagService_.selectedTag?.flagged">{{ tagService_.selectedTag.flagged?.length }}</span>
+          </button>
+          <button mat-button *ngIf="tagService.isAdmin"
+            type="button" class="close" aria-label="Close"
+            title="Supprimer"
+            (click)="openDeleteDialog('100', '250')">
+            <i class="fa fa-trash" aria-hidden="true"></i>
+          </button>
+        </mat-card-actions>
+    </mat-card>
