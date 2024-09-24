@@ -4,6 +4,8 @@ import { TagService } from "../Service/tag.service";
 import { IpService } from "../Service/ip.service";
 import { Helper } from "../helper";
 import { Tag } from "../Models/tag";
+import { ConfirmDialogComponent } from '../dialogs/confirm-dialog.component';
+import { MatDialog } from "@angular/material/dialog";
 
 
 @Component({
@@ -26,7 +28,9 @@ export class CompletedCardDialogComponent extends Helper  implements OnInit {
   ipAddress: string = '';
 
   constructor(tagService: TagService,
-    ipService: IpService
+    ipService: IpService,
+    public dialog: MatDialog,
+
   ) {
     super();
     this.tagService_ = tagService;
@@ -144,25 +148,19 @@ export class CompletedCardDialogComponent extends Helper  implements OnInit {
         }
       } else if(result.event == 'delete'){
         if (this.tagService_.selectedTag.id) {
-          this.delete(this.currentTag.id);
+          this.delete(this.tagService_.selectedTag.id);
         }
       }
     });
-  // sendEmail() {
-  //   const emailData = {
-  //     from: 'RuesSansPeur@gmail.com',
-  //     to: 'pat.emard@posteo.net',
-  //     subject: 'Témoignage Signalé',
-  //     text: 'Le témoignage #' + ' ' + this.currentTag.id + ' a éte signalé'
-  //   };
+  }
 
-  //   this.tagService.sendEmail(emailData)
-  //     .subscribe((response: any) => {
-  //       console.log('Email sent successfully!', response);
-  //     }, (error: any) => {
-  //       console.error('Failed to send email.', error);
-  //     });
-  // }
+  delete(id: string) {
+    if (id) {
+      this.tagService_.deleteTag(id)
+      .subscribe( res =>{
+        // this.refresh();
+      })
+    }
   }
 
 }

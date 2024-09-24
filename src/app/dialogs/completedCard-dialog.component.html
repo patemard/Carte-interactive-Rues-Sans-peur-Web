@@ -22,9 +22,6 @@
             <i class="fa fa-heart" aria-hidden="true" title="Solidaire"></i>
             <span class="counter" *ngIf="tagService_.selectedTag.heart">{{ tagService_.selectedTag.heart.length }}</span>
           </button>
-          <button mat-button title="Partager">
-            <i class="fa fa-share-square-o" aria-hidden="true" (click)="copyUrlToclipboard()"></i>
-          </button>
           <button mat-button
             id="flagBtn"
             [class.clicked]="flagIsClicked"
@@ -33,7 +30,7 @@
             <i class="fa fa-flag" aria-hidden="true" title="Signaler"></i>
             <span class="counter" *ngIf="tagService_.selectedTag?.flagged">{{ tagService_.selectedTag.flagged?.length }}</span>
           </button>
-          <button mat-button *ngIf="tagService.isAdmin"
+          <button mat-button *ngIf="tagService_.isAdmin"
             type="button" class="close" aria-label="Close"
             title="Supprimer"
             (click)="openDeleteDialog('100', '250')">

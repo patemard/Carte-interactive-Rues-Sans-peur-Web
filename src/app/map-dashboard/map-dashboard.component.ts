@@ -31,6 +31,7 @@ import Icon from 'ol/style/Icon'
 import {MatDialog} from "@angular/material/dialog";
 import { IpService } from '../Service/ip.service';
 import { ConfirmDialogComponent } from '../dialogs/confirm-dialog.component';
+import {CompletedCardDialogComponent}from '../dialogs/completedCard-dialog.component';
 import { Location } from '@angular/common';
 import Cluster from 'ol/source/Cluster';
 import {boundingExtent} from 'ol/extent.js';
@@ -379,6 +380,9 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
 
   clickedOnTag() {
+    const dialogRef = this.dialog.open(CompletedCardDialogComponent, {
+      width: '250px'
+    });
 
     // this.showCard = true;
     // this.overlay.setPosition(this.currentTag.mercatorCoord);
@@ -405,6 +409,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       color?.highlight || '',
       this.currentTag.trajectory
     )
+
   }
   // Function to get a layer by its custom 'layerId'
   getLayerById(layerId: string) {
