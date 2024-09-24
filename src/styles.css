@@ -198,6 +198,26 @@ body {
 
 }
 
+@media (max-width: 430px) {
+  /* Change the button position */
+  .ol-geocoder.gcd-gl-container{
+    position: absolute !important;
+    float: left !important;
+    height: 3vh!important;
+    width: 3vh !important;
+    margin-top: 40% !important;
+  }
+
+  .ol-zoom.ol-unselectable.ol-control {
+    margin-top: 40% !important;
+  }
+  
+  #checkboxesDiv {
+    margin-top: 40%;
+  }
+
+}
+
 
 @media (max-height: 500px) {
   /* Change the button position */

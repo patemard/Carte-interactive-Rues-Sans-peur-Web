@@ -9,10 +9,6 @@
   width:max-content
 }
 
-#cardImg {
-  width: 100%;
-  height: 100%;
-}
 
 #completedCard {
   width: min-content;
@@ -25,17 +21,10 @@
   right: 4%;
 }
 
-.example-header-image {
-  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
-  background-size: cover;
-}
-
 body {
   background: #141926;
   font-family: Helvetica, Arial, sans-serif;
 }
-
-
 
 
 button {

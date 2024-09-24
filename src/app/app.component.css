@@ -47,6 +47,28 @@ body {
   display: none;
 }
 
+@media (max-width: 430px) {
+  .py-5 {
+    padding-top:1vh!important;
+    padding-bottom:1vh!important
+  }
+  .content {
+    max-width: 100%; /* make the image responsive */
+    max-height: 100%;
+  }
+
+  img {
+    max-width: 100%; /* make the image responsive */
+    max-height: 100%;
+  }
+  #imgContainer {
+    max-width: 50%; /* make the image responsive */
+    max-height: 50%;
+  }
+
+}
+
+
 @media (max-width: 768px) {
   /* .footer { 
     display: none; 

@@ -32,7 +32,6 @@ import {MatDialog} from "@angular/material/dialog";
 import {TagChoiceDialogComponent} from "../dialogs/tagChoice-dialog.component";
 import { IpService } from '../Service/ip.service';
 import { ConfirmDialogComponent } from '../dialogs/confirm-dialog.component';
-import { Location } from '@angular/common';
 import Cluster from 'ol/source/Cluster';
 import {boundingExtent} from 'ol/extent.js';
 import {  FullScreen   } from 'ol/control';
@@ -88,7 +87,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
       private route: ActivatedRoute,
       private ngZone: NgZone,
       private ipService: IpService,
-      private location: Location,
       private injector: Injector, 
       private resolver: ComponentFactoryResolver
       ) {
@@ -122,30 +120,14 @@ export class MapDashboardComponent extends Helper implements OnInit {
     await this.getTags();
     this.getUserIp();
     this.visualAggregation();
-    this.route.paramMap.subscribe(params => {
-      let id = params.get('id');
-      if (id) {
-        this.getTagFromUrl(id)
-      }
-   });
-   this.map.addControl(
-    new CustomCheckboxControl(this.pointLayers, this.trajectoryLayer, this.clusteredLayer, this.isMobileDevice())
-  );
-  this.map.addControl(
-    new GeolocationButtonControl(this.map)
-  );
+    this.map.addControl(
+      new CustomCheckboxControl(this.pointLayers, this.trajectoryLayer, this.clusteredLayer, this.isMobileDevice())
+    );
+    this.map.addControl(
+      new GeolocationButtonControl(this.map)
+    );
   }
 
-  async getTagFromUrl(id: string) {
-    await this.getTag(id);
-    if (this.currentTag && this.currentTag.active) {
-      this.clickedOnTag();
-      this.setCenter(16);
-    } else {
-      this.router.navigateByUrl("/introuvable")
-    }
-
-  }
 
   getTag(id: string) { 
     return new Promise((resolve, reject) =>  {
@@ -244,7 +226,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
           this.showPopup = true;
           this.overlay.setPosition(this.currentTag.mercatorCoord);
         } else {
-          this.setCenter(18);
+          this.setCenter(18, evt.coordinate);
         }
       }
     })
@@ -393,7 +375,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
     this.showCard = true;
     this.overlay.setPosition(this.currentTag.mercatorCoord); 
-    this.location.go("carte/" + this.currentTag.id)
 
     if (this.currentTag.flagged) {
       this.flagIsClicked =  this.currentTag.flagged.some(h => h === this.ipAddress);
@@ -438,9 +419,9 @@ export class MapDashboardComponent extends Helper implements OnInit {
     layer.setStyle(newStyle);
   }
 
-  setCenter(zoom: number) {
+  setCenter(zoom: number, coord: any) {
     var view = this.map.getView();
-    view.setCenter(this.currentTag.mercatorCoord);
+    view.setCenter(coord);
     view.setZoom(zoom);
   }
 
@@ -484,7 +465,9 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.currentTag = new Tag();
     this.showCard = false;
     this.getTags();
-    this.feature.values_ = null;
+    if (this.feature) {
+      this.feature.values_ = null;
+    }
     this.map.render();
     this.router.navigateByUrl('/')
   }
@@ -532,6 +515,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
    */
 
   addPointFeature(data: any): void {
+    
     // Define coordinates for the point (longitude, latitude)
     const coordinates = fromLonLat([data.longitude, data.latitude]);
     let color = this.emotions.find(x=>x.name === data.emotion)?.rgb;
@@ -574,14 +558,12 @@ export class MapDashboardComponent extends Helper implements OnInit {
       })
     });
     vectorLayer.set('name', 'pointLayer');
-
-
     vectorLayer.set('layerId', data.id);
-    
-    this.nonClusteredLayer = this.map.getLayers().getArray().find((layer: any) => layer.get('name') === 'pointLayer');
+
     this.pointLayers.push(vectorLayer)
     // Add the vector layer to the map
     this.map.addLayer(vectorLayer);
+    this.nonClusteredLayer = this.map.getLayers().getArray().find((layer: any) => layer.get('name') === 'pointLayer');
   }
 
 
@@ -680,29 +662,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
 
 
-  onFileSelected() {
-    const inputNode: any = document.querySelector('#file');
-
-    if (typeof (FileReader) !== 'undefined') {
-      const reader = new FileReader();
-
-      reader.onload = (e: any) => {
-        this.srcResult = e.target.result;
-      };
-
-      reader.readAsArrayBuffer(inputNode.files[0]);
-      this.tagService.addImage(this.srcResult)
-      .subscribe((data: any) => {
-        console.log('Data added successfully!', data)
-        this.ngZone.run(() => this.router.navigateByUrl('/Map'))
-        this.addPointFeature(data);
-
-        this.initializeOnLoad();
-      }, (err: any) => {
-        console.log(err);
-    });
-    }
-  }
 
   visualAggregation() {
     let pointArray: any = [];
@@ -766,6 +725,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       distance: 60, // Distance in pixels within which points will be clustered
       source: source 
     });
+
     
     const clusterStyle = (feature: any) =>{
       const size = feature.get('features').length;
@@ -788,10 +748,44 @@ export class MapDashboardComponent extends Helper implements OnInit {
       });
       return style;
     };
-    // Create a vector layer with the cluster source and apply the cluster style
+
+    const minClusterSize = 3;
+
+    const styleCache: any = {};
     const clusters = new VectorLayer({
       source: clusterSource,
-      style: clusterStyle,
+      style: function (feature) {
+        const size = feature.get('features').length;
+
+        // Only show clusters with more than minClusterSize points
+        if (size < minClusterSize) {
+          // Return null to not render this cluster
+          return null;
+        }
+    
+        let style = styleCache[size];
+        if (!style) {
+          style = new Style({
+            image: new Circle({
+              radius: 10,
+              stroke: new Stroke({
+                color: '#fff',
+              }),
+              fill: new Fill({
+                color:color,
+              }),
+            }),
+            text: new Text({
+              text: size.toString(),
+              fill: new Fill({
+                color: '#fff',
+              }),
+            }),
+          });
+          styleCache[size] = style;
+        }
+        return style;
+      },
     });
     clusters.set('name', 'clusteredLayer');
 
@@ -819,22 +813,23 @@ export class MapDashboardComponent extends Helper implements OnInit {
     // Listen to the map's 'moveend' event to check the zoom level after each interaction
     this.map.getView().on('change:resolution', () => {
       const zoom =  this.map.getView().getZoom();
-
-      if (zoom >= zoomThreshold) {
-        // If zoomed in, show non-clustered features
-        if ( this.map.getLayers().getArray().includes(clusters)) {
-          this.map.removeLayer(clusters);
-        }
-        if (! this.map.getLayers().getArray().includes(this.nonClusteredLayer)) {
-          this.map.addLayer(this.nonClusteredLayer);
-        }
-      } else {
-        // If zoomed out, show clustered features
-        if ( this.map.getLayers().getArray().includes(this.nonClusteredLayer)) {
-          this.map.removeLayer(this.nonClusteredLayer);
-        }
-        if (! this.map.getLayers().getArray().includes(clusters)) {
-          this.map.addLayer(clusters);
+      if (this.nonClusteredLayer) {
+        if (zoom >= zoomThreshold) {
+          // If zoomed in, show non-clustered features
+          if ( this.map.getLayers().getArray().includes(clusters)) {
+            this.map.removeLayer(clusters);
+          }
+          if (!this.map.getLayers().getArray().includes(this.nonClusteredLayer)) {
+            this.map.addLayer(this.nonClusteredLayer);
+          }
+        } else {
+          // If zoomed out, show clustered features
+          if ( this.map.getLayers().getArray().includes(this.nonClusteredLayer)) {
+            this.map.removeLayer(this.nonClusteredLayer);
+          }
+          if (! this.map.getLayers().getArray().includes(clusters)) {
+            this.map.addLayer(clusters);
+          }
         }
       }
     });
@@ -920,14 +915,14 @@ export class MapDashboardComponent extends Helper implements OnInit {
       });
   }
 
-  copyUrlToclipboard() {
-  
-    navigator.clipboard.writeText(window.location.href).then(() => {
+  getTransportIcon(): string {
+    let icon = this.transports.find(x => x.name == this.currentTag.transport)?.icon
 
-      alert("Lien copié dans le presse papier."); // remplace par toast.
-    });
+    let cssClass = `fa-solid fa-${icon} fa-xl`;
+
+    return cssClass;
   }
-
+ 
 
   close() {
     if (this.clikedOnLayer) {
@@ -938,7 +933,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
       )
     }
     this.showCard=false;
-    this.location.go("/")
   }
 
 }

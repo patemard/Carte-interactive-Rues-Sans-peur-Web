@@ -115,15 +115,12 @@
       [ngStyle]="{'background-color': completedCardColor}"
     >
       <mat-card-header>
-        <div mat-card-avatar class="example-header-image"></div>
+        <mat-card-title><i [ngClass]="getTransportIcon()"></i>{{currentTag.title}}</mat-card-title>
+
         <button type="button" class="close completedCardClose" aria-label="Close" (click)="close()">
           <span aria-hidden="true">&times;</span>
         </button>
-          <mat-card-title>{{currentTag.title}}</mat-card-title>
-          <mat-card-subtitle>{{currentTag.emotion}}</mat-card-subtitle>
       </mat-card-header>
-      <img mat-card-image id="cardImg"
-        src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
         <mat-card-content class="text-center">
           <p> {{currentTag.description}}</p>
         </mat-card-content>
@@ -135,9 +132,6 @@
             (click)="heart()">
             <i class="fa fa-heart" aria-hidden="true" title="Solidaire"></i>
             <span class="counter" *ngIf="currentTag.heart">{{ currentTag.heart.length }}</span>
-          </button>
-          <button mat-button title="Partager">
-            <i class="fa fa-share-square-o" aria-hidden="true" (click)="copyUrlToclipboard()"></i>
           </button>
           <button mat-button
             id="flagBtn"
@@ -160,15 +154,3 @@
 
 
   </div>
-  <!-- Contact section-->
-  <!-- <section id="contact" class="bg-secondary">
-    <div class="container px-4">
-        <div class="row gx-4 justify-content-center">
-            <div class="col-lg-8">
-                <h2>Contactez nous!</h2>
-                <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vero odio fugiat voluptatem dolor, provident officiis, id iusto! Obcaecati incidunt, qui nihil beatae magnam et repudiandae ipsa exercitationem, in, quo totam.</p>
-            </div>
-        </div>
-    </div>
-  </section> -->
-  <!-- Footer-->
