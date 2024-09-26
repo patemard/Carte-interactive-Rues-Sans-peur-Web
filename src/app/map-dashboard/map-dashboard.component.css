@@ -8,10 +8,17 @@
   box-shadow: none !important;
   width:max-content
 }
-
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+}
 
 #completedCard {
-  width: min-content;
+  max-width:  70%; /* Set a flexible width */
+  min-height: 35%; /* Adjust height as needed */
+}
+.multiline {
+  white-space: pre-wrap;
 }
 
 .completedCardClose {
