@@ -23,15 +23,15 @@
 
   @font-face {
     font-family: haas;
-    src: url(assets/fonts/NHaasGrotesk.ttf) format("opentype");
+    src: url(assets/fonts/NeueHaasDisplayMediu.ttf) format("opentype");
   }
   @font-face {
     font-family: haasBold;
-    src: url(assets/fonts/NHaasGroteskBold.ttf) format("opentype");
+    src: url(assets/fonts/NeueHaasDisplayBold.ttf) format("opentype");
   }
 
   html * {
-    font-family: haas
+    font-family: haas;
   }
 
   .bold {
