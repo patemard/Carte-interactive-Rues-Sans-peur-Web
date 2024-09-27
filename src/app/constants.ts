@@ -32,10 +32,10 @@ export class Constants  {
   ]
     
   transports = [
-      { name: "Marche", icon: "person-walking"},
-      { name: "Vélo ", icon: "bicycle"},
-      { name: "Bus ", icon: "bus" },
-      { name: "Voiture ", icon: "car"},
+      { name: "Marche", icon: "../../assets/png/pieton.png"},
+      { name: "Vélo ", icon: "../../assets/png/velo.png"},
+      { name: "Bus ", icon: "../../assets/png/bus.png" },
+      { name: "Voiture ", icon: "../../assets/png/auto.png"},
   ]
 
   types = [

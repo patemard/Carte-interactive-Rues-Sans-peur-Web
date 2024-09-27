@@ -41,7 +41,7 @@
                 <mat-select name="Sélection transport"
                   [(ngModel)]="selectedTransport">
                   <mat-option *ngFor="let transport of transports" [value]="transport.name">
-                    <i class="fa-solid fa-{{transport.icon}} fa-xl" ></i>{{transport.name}}
+                    <img [src]="transport.icon" alt="icon" class="icon">{{transport.name}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -116,8 +116,11 @@
       [ngStyle]="{'background-color': completedCardColor}"
     >
       <mat-card-header>
-        <mat-card-title><i [ngClass]="getTransportIcon()"></i>{{currentTag.title}}</mat-card-title>
-
+        <mat-card-title>
+          <span *ngIf="currentTag" >
+            <img [src]="getTransportIcon()" alt="icon" [ngClass]="currentTag.transport == 'Marche' ? 'icon-pieton' : 'icon'">
+          </span> 
+          {{currentTag.title}}</mat-card-title>
         <button type="button" class="close completedCardClose" aria-label="Close" (click)="close()">
           <span aria-hidden="true">&times;</span>
         </button>

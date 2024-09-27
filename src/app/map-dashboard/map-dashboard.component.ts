@@ -480,7 +480,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       style: new Style({
         stroke: new Stroke({
           color: isOpen ? color?.highlight :color?.point, //couleur relatif au emotion
-          width: 4,
+          width: 5,
         })
       })
     });
@@ -915,12 +915,9 @@ export class MapDashboardComponent extends Helper implements OnInit {
       });
   }
 
-  getTransportIcon(): string {
+  getTransportIcon(): any{
     let icon = this.transports.find(x => x.name == this.currentTag.transport)?.icon
-
-    let cssClass = `fa-solid fa-${icon} fa-xl`;
-
-    return cssClass;
+    return icon;
   }
  
 

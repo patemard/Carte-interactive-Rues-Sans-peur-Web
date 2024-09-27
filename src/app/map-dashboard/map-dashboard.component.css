@@ -14,8 +14,9 @@
 }
 
 #completedCard {
-  max-width:  70%; /* Set a flexible width */
-  min-height: 35%; /* Adjust height as needed */
+  min-width: min-content;
+  max-width:  30%; /* Set a flexible width */
+  min-height: min-content; /* Adjust height as needed */
 }
 .multiline {
   white-space: pre-wrap;
@@ -41,6 +42,27 @@ button {
   cursor: pointer;
   position: relative;
 }
+
+
+.icon {
+  width: 20%;
+  height: 20%;
+  background-size: cover; /* Adjust this to fit the icon size */
+  display: inline-block;
+  padding-right: 5%;
+  background-color: transparent;
+}
+
+
+.icon-pieton {
+  width: 14%;
+  height: 14%;
+  background-size: cover; /* Adjust this to fit the icon size */
+  display: inline-block;
+  padding-right: 5%;
+  background-color: transparent;
+}
+
 
 button.clicked .fa-heart  {
   animation: beatHeart 0.5s linear;
