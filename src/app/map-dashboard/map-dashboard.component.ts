@@ -130,6 +130,9 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
 
   getTag(id: string) { 
+    if (this.showCard) {
+      this.close();
+    }
     return new Promise((resolve, reject) =>  {
     this.tagService.getTag(id).subscribe( res => {
       this.currentTag = res;
@@ -235,7 +238,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
   initInfoModal() {
     const dialogRef = this.dialog.open(RessourceDialogComponent, {
       panelClass: 'violet-pale-atv',
-      enterAnimationDuration: 1300
+      enterAnimationDuration: 1000
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -372,7 +375,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
 
   clickedOnTag() {
-
     this.showCard = true;
     this.overlay.setPosition(this.currentTag.mercatorCoord); 
 
@@ -722,7 +724,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
       // Create a cluster source
     const clusterSource = new Cluster({
-      distance: 60, // Distance in pixels within which points will be clustered
+      distance: 20, // Distance in pixels within which points will be clustered
       source: source 
     });
 

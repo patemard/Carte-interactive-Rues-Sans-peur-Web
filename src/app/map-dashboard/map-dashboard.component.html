@@ -18,7 +18,7 @@
           <mat-form-field class="full-width " appearance="fill">
             <mat-label>Titre</mat-label>
             <input name="titleInput"
-              maxlength="50"
+              maxlength="40"
               matInput placeholder="Titre"
               [(ngModel)]="currentTag.title">
           </mat-form-field>
@@ -41,7 +41,7 @@
                 <mat-select name="Sélection transport"
                   [(ngModel)]="selectedTransport">
                   <mat-option *ngFor="let transport of transports" [value]="transport.name">
-                    <img [src]="transport.icon" alt="icon" class="icon">{{transport.name}}
+                    <img [src]="transport.icon" alt="icon" [ngClass]="currentTag.transport == 'Marche' ? 'icon-pieton' : 'icon'">{{transport.name}}
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -118,7 +118,7 @@
       <mat-card-header>
         <mat-card-title>
           <span *ngIf="currentTag" >
-            <img [src]="getTransportIcon()" alt="icon" [ngClass]="currentTag.transport == 'Marche' ? 'icon-pieton' : 'icon'">
+            <img [src]="getTransportIcon()" alt="icon" [ngClass]="currentTag.transport == 'Marche' ? 'icon-pieton-completed' : 'icon'">
           </span> 
           {{currentTag.title}}</mat-card-title>
         <button type="button" class="close completedCardClose" aria-label="Close" (click)="close()">

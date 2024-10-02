@@ -26,9 +26,9 @@ export class Constants  {
 
   emotions: {name: string, icon: string, class?: string, rgb: { point: string, card: string, highlight: string }, png: string}[] = [
         { name: "Sécurisant", icon: "smile-o", class: "text-success", 
-          rgb: {point:"rgba(40, 167, 69, 0.6)", card: "rgba(40, 167, 69, 0.8)", highlight: "rgba(40, 167, 69, 0.95)" }, png: "black"},
+          rgb: {point:"rgba(40, 167, 69, 0.6)", card: "rgba(40, 167, 69, 0.725)", highlight: "rgba(40, 167, 69, 0.95)" }, png: "black"},
         { name: "Insécurisant", icon: "frown-o" , class: "text-danger", 
-          rgb: {point: "rgba(220, 53, 69, 0.6)", card:"rgba(220, 53, 69, 0.8)", highlight: "rgba(220, 53, 69, 0.95)"}, png: "red"}
+          rgb: {point: "rgba(220, 53, 69, 0.6)", card:"rgba(220, 53, 69, 0.725)", highlight: "rgba(220, 53, 69, 0.95)"}, png: "red"}
   ]
     
   transports = [
