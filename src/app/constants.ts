@@ -34,7 +34,7 @@ export class Constants  {
   transports = [
       { name: "Marche", icon: "../../assets/png/pieton.png"},
       { name: "Vélo ", icon: "../../assets/png/velo.png"},
-      { name: "Bus ", icon: "../../assets/png/bus.png" },
+      { name: "Bus ", icon: "../../assets/png/Bus.png" },
       { name: "Voiture ", icon: "../../assets/png/auto.png"},
   ]
 
