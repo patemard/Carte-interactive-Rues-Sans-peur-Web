@@ -15,11 +15,12 @@
 
 #completedCard {
   min-width: min-content;
-  max-width:  30%; /* Set a flexible width */
+  max-width:  20%; /* Set a flexible width */
   min-height: min-content; /* Adjust height as needed */
 }
 .multiline {
   white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .completedCardClose {
@@ -106,12 +107,13 @@ button.clicked .fa-flag {
   border-radius: 4px;
 }
 
-/* TODO scroll for text*/
-/* width */
-#completedCardText {
-  overflow-y: scroll;
-  scrollbar-width: thin;
-}
+  /* TODO scroll for text*/
+  /* width */
+  #completedCardText {
+    overflow-y:visible; 
+    overflow-x: hidden; 
+    padding: 10px;
+  }
 ::-webkit-scrollbar-track {
   box-shadow: inset 0 0 10px olivedrab;
   border-radius: 10px;
