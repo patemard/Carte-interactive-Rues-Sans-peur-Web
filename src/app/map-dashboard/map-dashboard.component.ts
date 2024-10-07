@@ -157,6 +157,11 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
 
   initMap() {
+    const extent = ol.proj.transformExtent(
+      [-72.638426, 45.538850, -69.505885, 48.216402], 
+      'EPSG:4326', 'EPSG:3857'
+    );
+
     this.map = new Map({
       target: 'map',
       layers: [
@@ -166,8 +171,9 @@ export class MapDashboardComponent extends Helper implements OnInit {
       ],
       view: new View({
         center: fromLonLat([this.QUEBEC_CITY.longitude, this.QUEBEC_CITY.latitude]),
-        minZoom: 12,
-        zoom: 14
+        minZoom: 10,
+        zoom: 14,
+        extent: extent,
       }),
       interactions: defaultInteractions({
         pinchZoom: true,
