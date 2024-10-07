@@ -388,7 +388,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.selectedTransport = this.currentTag.transport;
     this.selectedType = this.currentTag.trajectory ? "Trajectoire" : "Point";
     this.clikedOnLayer = this.getLayerById(this.currentTag?.id || '');
-
     this.changeLayerColor(
       this.clikedOnLayer, 
       color?.highlight || '',
@@ -401,19 +400,19 @@ export class MapDashboardComponent extends Helper implements OnInit {
   }
 
   // Used to highlight selected trajectory
-  changeLayerColor(layer: any, newColor: string, isTrajectory?: boolean) {
+  changeLayerColor(layer: any, newColor: string, isTrajectory?: boolean, isReset?: boolean) {
     let newStyle;
     if (isTrajectory) {
       newStyle = new Style({
         stroke: new Stroke({
           color: newColor,
-          width: 6,
+          width: isReset ? 5 : 6,
         }),
       });
     } else {
       newStyle = new Style({
         image: new Circle({
-          radius: 6,
+          radius: isReset ? 5 : 6,
           fill: new Fill({ color: newColor }) //couleur relatif au emotion
         })
       })
@@ -546,7 +545,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       style = new Style({
         image: new Circle({
           radius: 5,
-          fill: new Fill({ color: color?.card }) //couleur relatif au emotion
+          fill: new Fill({ color: color?.highlight }) //couleur relatif au emotion
         })
       })
     }
@@ -570,7 +569,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
 
   onSubmit(): any {
-    console.log(this.selectedType); 
     if (this.selectedType == "Point") {
       this.setModel();
       console.log(this.currentTag);
@@ -592,9 +590,10 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   setModel() {
     this.currentTag.active = true;
+    this.currentTag.title = this.currentTag.title?.replace(/\s+/g, ' ').trim(); // remplace les multiples espaces vide par 1.
     this.currentTag.emotion = this.selectedEmotion;
     this.currentTag.transport = this.selectedTransport;
-    this.currentTag.description = this.currentTag.description?.trim()
+    this.currentTag.description = this.currentTag.description?.replace(/\s+/g, ' ').trim();// remplace les multiples espaces vide par 1.
   }
 
   submitTrajectory() {
@@ -928,7 +927,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
       this.changeLayerColor(
         this.clikedOnLayer,
         this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb.point || '',
-        this.currentTag?.trajectory
+        this.currentTag?.trajectory,
+        true
       )
     }
     this.showCard=false;

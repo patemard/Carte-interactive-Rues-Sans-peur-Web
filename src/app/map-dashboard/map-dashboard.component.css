@@ -45,29 +45,46 @@ button {
 
 
 .icon {
-  width: 27%;
-  height: 27%;
+  width: 22%;
+  height: 22%;
   background-size: cover; /* Adjust this to fit the icon size */
   display: inline-block;
-  padding: 5%;
+  padding-right: 3%;
   background-color: transparent;
 }
 .icon-pieton {
-  width: 10%;
-  height: 10%;
+  width: 16%;
+  height: 16%;
+  background-size: cover; /* Adjust this to fit the icon size */
+  display: inline-block;
+  padding-right: 3%;
+  background-color: transparent;
+}
+
+.icon-completed{
+  width: 24%;
+  height: 24%;
   background-size: cover; /* Adjust this to fit the icon size */
   display: inline-block;
   padding: 5%;
   background-color: transparent;
 }
 
-.icon-pieton-completed{
-  width: 20%;
-  height: 20%;
-  background-size: cover; /* Adjust this to fit the icon size */
-  display: inline-block;
-  padding: 5%;
-  background-color: transparent;
+
+.title-container {
+  display: flex;
+  align-items: center; /* Ensures the image and title are vertically aligned */
+}
+
+.title-container img {
+  margin-right: 8px;  /* Adds space between the image and the title */
+}
+
+.title-text {
+  white-space: nowrap;    /* Prevents text from wrapping to a new line */
+  overflow: hidden;       /* Hides the overflow text */
+  text-overflow: ellipsis; /* Adds "..." when the text overflows */
+  max-width: 100%;       /* Adjust based on your design */
 }
 
 
