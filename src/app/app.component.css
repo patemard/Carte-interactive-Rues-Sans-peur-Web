@@ -68,6 +68,11 @@ body {
 
 }
 
+button[color="violet-atv"] {
+  border-radius: 20px;      /* Makes the button more rounded */
+  padding: 8px 16px;        /* Adjust button padding */
+}
+
 
 @media (max-width: 768px) {
   /* .footer { 
