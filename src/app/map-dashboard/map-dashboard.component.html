@@ -12,20 +12,20 @@
 
 <div id="map" class="map"></div>
   <div id="popup" class="ol-popup">
-    <mat-card *ngIf="showPopup" id="popupCard" class="card-positioning">
+    <mat-card *ngIf="showPopup" id="popupCard" class="responsive-card">
       <div id="popup-content">
         <form>
-          <mat-form-field class="full-width " appearance="fill">
+          <mat-form-field class="full-width rounded-field" appearance="fill">
             <mat-label>Titre</mat-label>
             <input name="titleInput"
-              maxlength="40"
+              maxlength="35"
               matInput placeholder="Titre"
               [(ngModel)]="currentTag.title">
           </mat-form-field>
 
           <div class="row">
             <div class="col-md-6">
-              <mat-form-field appearance="fill">
+              <mat-form-field class="rounded-field" appearance="fill">
                 <mat-label>Émotion</mat-label>
                 <mat-select name="Sélection émotion"
                   [(ngModel)]="selectedEmotion">
@@ -37,7 +37,7 @@
               </mat-form-field>
             </div>
             <div class="col-md-6">
-              <mat-form-field appearance="fill">
+              <mat-form-field class="rounded-field" appearance="fill">
                 <mat-label>Transport</mat-label>
                 <mat-select name="Sélection transport"
                   [(ngModel)]="selectedTransport">
@@ -51,7 +51,7 @@
           </div>
           <div class="row">
             <div class="col-md-6">
-              <mat-form-field appearance="fill">
+              <mat-form-field class="rounded-field" appearance="fill">
                 <mat-label>Type</mat-label>
                 <mat-select name="Sélection type"
                   [(ngModel)]="selectedType">
@@ -63,14 +63,14 @@
               </mat-form-field>
             </div>
             <div class="col-md-6">
-              <mat-form-field appearance="fill">
+              <mat-form-field class="rounded-field" appearance="fill">
                 <mat-label>Auto identification</mat-label>
                 <input  name="Auto identification" matInput [(ngModel)]="currentTag.identification">
               </mat-form-field>
             </div>
           </div>
 
-          <mat-form-field class="full-width" appearance="fill">
+          <mat-form-field class="rounded-field" class="full-width" appearance="fill">
             <mat-label>Description</mat-label>
             <textarea name="descInput"
               maxlength="500"
@@ -84,11 +84,13 @@
             <div class="col-md-4">
               <button  *ngIf="isFormValid()"
                 mat-raised-button color="bleu-atv"
+                class="rounded-field"
                 matTooltip="Sauvegarder ce témoigage"
                 (click)="onSubmit()">Cartographier
               </button>
               <button  *ngIf="!isFormValid()"
                 mat-stroked-button color="bleu-atv"
+                class="rounded-field"
                 matTooltip="Formulaire incomplet.">Cartographier
               </button>
             </div>
@@ -101,6 +103,7 @@
               <button mat-raised-button 
                 color="violet-atv"
                 id="closeBtn"
+                class="rounded-field"
                 matTooltip="Abandonner la sauvegarde."
                 (click)="initializeOnLoad()">Fermer
               </button>
@@ -110,58 +113,54 @@
         </form>
       </div>
     </mat-card>
-   
-    <div class="card-container">
-   <mat-card
+
+  <div class="card-container">
+    <mat-card
       [hidden]="!showCard"
       id="completedCard"
-      class="centered"
+      class="centered responsive-card"
       [ngStyle]="{'background-color': completedCardColor}"
     >
       <mat-card-header>
         <mat-card-title>
           <div class="title-container">
-              <img *ngIf="currentTag" alt="icon"
-              [src]="getTransportIcon()"  
-              class="icon-completed"
-              >
-          <span class="title-text" title="{{currentTag.title}}">{{currentTag.title}}</span>
-         </div>
+            <img *ngIf="currentTag" alt="icon" [src]="getTransportIcon()" [ngClass]="currentTag.transport == 'Marche' ? 'icon-pieton' : 'icon-completed'">
+            <span class="title-text" title="{{currentTag.title}}">{{currentTag.title}}</span>
+          </div>
         </mat-card-title>
         <button type="button" class="close completedCardClose" aria-label="Close" (click)="close()">
           <span aria-hidden="true">&times;</span>
         </button>
       </mat-card-header>
-        <mat-card-content class="text-center">
-          <div class="multiline" id="completedCardText"> {{currentTag.description}}</div>
-        </mat-card-content>
-        <mat-card-actions class="centered">
-          <button mat-button
-            id="heartBtn"
-            [class.clicked]="heartIsClicked"
-            [disabled]="heartIsClicked || !ipAddress"
-            (click)="heart()">
-            <i class="fa fa-heart" aria-hidden="true" title="Solidaire"></i>
-            <span class="counter" *ngIf="currentTag.heart">{{ currentTag.heart.length }}</span>
-          </button>
-          <button mat-button
-            id="flagBtn"
-            [class.clicked]="flagIsClicked"
-            [disabled]="flagIsClicked || !ipAddress"
-            (click)="flag()">
-            <i class="fa fa-flag" aria-hidden="true" title="Signaler"></i>
-            <span class="counter" *ngIf="currentTag?.flagged">{{ currentTag.flagged?.length }}</span>
-          </button>
-          <button mat-button *ngIf="tagService.isAdmin"
-            type="button" class="close" aria-label="Close"
-            title="Supprimer"
-            (click)="openDeleteDialog('100', '250')">
-            <i class="fa fa-trash" aria-hidden="true"></i>
-          </button>
-        </mat-card-actions>
+      <mat-card-content class="text-center">
+        <div class="multiline" id="completedCardText">{{currentTag.description}}</div>
+      </mat-card-content>
+      <mat-card-actions class="centered">
+        <button mat-button
+          id="heartBtn"
+          [class.clicked]="heartIsClicked"
+          [disabled]="heartIsClicked || !ipAddress"
+          (click)="heart()">
+          <i class="fa fa-heart" aria-hidden="true" title="Solidaire"></i>
+          <span class="counter" *ngIf="currentTag.heart">{{ currentTag.heart.length }}</span>
+        </button>
+        <button mat-button
+          id="flagBtn"
+          [class.clicked]="flagIsClicked"
+          [disabled]="flagIsClicked || !ipAddress"
+          (click)="flag()">
+          <i class="fa fa-flag" aria-hidden="true" title="Signaler"></i>
+          <span class="counter" *ngIf="currentTag?.flagged">{{ currentTag.flagged?.length }}</span>
+        </button>
+        <button mat-button *ngIf="tagService.isAdmin"
+          type="button" class="close" aria-label="Close"
+          title="Supprimer"
+          (click)="openDeleteDialog('100', '250')">
+          <i class="fa fa-trash" aria-hidden="true"></i>
+        </button>
+      </mat-card-actions>
     </mat-card>
   </div>
-
 
 
   </div>

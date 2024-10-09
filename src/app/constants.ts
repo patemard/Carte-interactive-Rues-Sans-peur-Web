@@ -3,7 +3,7 @@
 export class Constants  {
     QUEBEC_CITY: any = {latitude: 46.813877, longitude: -71.207977};
     QUEBEC: any = {latitude: 52.476089, longitude:  -71.825867};
-    QUEBEC_BOUNDING_BOX = '-71.45,46.75,-71.15,46.95';
+    QUEBEC_BOUNDING_BOX =  [-72.638426, 45.538850, -69.505885, 48.216402];
 
 
    loremIpsum = " Lorem ipsum dolor sit amet, consectetur adipiscing elit. "+

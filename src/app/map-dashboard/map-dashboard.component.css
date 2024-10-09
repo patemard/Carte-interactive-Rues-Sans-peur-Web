@@ -6,7 +6,11 @@
   background-color: transparent !important;
   border: none !important;
   box-shadow: none !important;
-  width:max-content
+  width:max-content;
+  border-radius: 16px; /* Rounded corners for the card */
+  overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+
 }
 .card-container {
   display: flex;
@@ -15,8 +19,10 @@
 
 #completedCard {
   min-width: min-content;
-  max-width:  20%; /* Set a flexible width */
+  max-width:  30%; /* Set a flexible width */
   min-height: min-content; /* Adjust height as needed */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+
 }
 .multiline {
   white-space: pre-wrap;
@@ -45,16 +51,16 @@ button {
 
 
 .icon {
-  width: 22%;
-  height: 22%;
+  max-width: 22%;
+  max-height: 22%;
   background-size: cover; /* Adjust this to fit the icon size */
   display: inline-block;
   padding-right: 3%;
   background-color: transparent;
 }
 .icon-pieton {
-  width: 16%;
-  height: 16%;
+  max-width: 15%;
+  max-height: 15%;
   background-size: cover; /* Adjust this to fit the icon size */
   display: inline-block;
   padding-right: 3%;
@@ -62,14 +68,17 @@ button {
 }
 
 .icon-completed{
-  width: 24%;
-  height: 24%;
+  max-width: 30%;
+  max-height: 30%;
   background-size: cover; /* Adjust this to fit the icon size */
   display: inline-block;
   padding: 5%;
   background-color: transparent;
+  background-position: center; 
 }
-
+.mat-form-field-outline-start, .mat-form-field-outline-end {
+  border-radius: 16px !important;
+}
 
 .title-container {
   display: flex;
@@ -86,6 +95,7 @@ button {
   text-overflow: ellipsis; /* Adds "..." when the text overflows */
   max-width: 100%;       /* Adjust based on your design */
 }
+
 
 
 
@@ -127,9 +137,9 @@ button.clicked .fa-flag {
   /* TODO scroll for text*/
   /* width */
   #completedCardText {
-    overflow-y:visible; 
-    overflow-x: hidden; 
-    padding: 10px;
+    max-height: 50vh; /* Limits height to 80% of the viewport */
+    overflow-y: auto; /* Enables vertical scrolling if content overflows */
+    scrollbar-width: thin;
   }
 ::-webkit-scrollbar-track {
   box-shadow: inset 0 0 10px olivedrab;
@@ -146,15 +156,88 @@ button.clicked .fa-flag {
   background: #7bac10;
   }
 
+  .responsive-card {
+    width: 100%; /* Take full width of the container */
+    height: auto; /* Adjust height automatically */
+    border-radius: 16px !important; /* Ensure rounded corners */
+    overflow: hidden; /* Prevent overflow of content */
+  }
+      
+  /* Round the entire mat-form-field */
+  .rounded-field {
+    border-radius: 16px; /* Adjust this value as needed */
+    overflow: hidden; /* Prevents content from overflowing the corners */
+  }
+
+  /* Ensure all inner elements also have rounded corners */
+  .rounded-field .mat-form-field-flex {
+    border-radius: 16px; /* Round the inner content */
+  }
+
+  /* Hide the outline for filled appearance */
+  .rounded-field .mat-form-field-underline {
+    display: none; /* Remove underline */
+  }
+
+  /* Hide outline for the outline appearance */
+  .rounded-field .mat-form-field-outline {
+    display: none; /* Remove outline */
+  }
+
+  /* Round the input field */
+  .rounded-field input.mat-input-element,
+  .rounded-field textarea.mat-input-element {
+    border-radius: 16px; /* Round the input and textarea */
+  }
+
+  /* Round the select trigger */
+  .rounded-field .mat-select-trigger {
+    border-radius: 16px; /* Round the select trigger */
+  }
+
+
+
+
+
   @media (max-width: 768px) {
 
     .map {
-      height: 100vh;
+      height: 100%;
       width: 100%;
       position: relative;
     }
-   
+    
+    .icon-completed {
+      width: 80%; /* Increase width for smaller screens */
+      height: 80%; /* Adjust height to match */
+      padding: 3%;  /* Less padding for mobile */
+    }
+    #geolocationDiv {
+      padding-top: 4%;
+    }
+    .responsive-card {
+      max-width: 80%; /* Card takes almost the full width on smaller screens */
+    }
+  
+    .title-text {
+      font-size: 16px; /* Reduce title font size for mobile */
+    }
+  
+    .multiline {
+      font-size: 14px; /* Adjust description text size */
+    }
+
+    #completedCard {
+      max-width:  10%; /* Set a flexible width */
+      max-height: 15%;
+    }
+  
   }
+    
+
+
+   
+
 
   
 @media (max-height: 500px) {

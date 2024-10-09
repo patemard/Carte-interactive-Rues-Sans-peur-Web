@@ -20,7 +20,7 @@
     --violet-atv: #7770ED;
     --violet-pale-atv: #9494FE;
   }
-
+  
   @font-face {
     font-family: haas;
     src: url(assets/fonts/NeueHaasDisplayMediu.ttf) format("opentype");
@@ -79,6 +79,7 @@
  }
  .violet-pale-atv {
   background-color: var(--violet-pale-atv)  !important;
+  border-radius: 16px;
  }
 
 

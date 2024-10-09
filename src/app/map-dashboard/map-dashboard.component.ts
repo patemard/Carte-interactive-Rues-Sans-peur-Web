@@ -124,7 +124,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       new CustomCheckboxControl(this.pointLayers, this.trajectoryLayer, this.clusteredLayer, this.isMobileDevice())
     );
     this.map.addControl(
-      new GeolocationButtonControl(this.map)
+      new GeolocationButtonControl(this.map,this.isMobileDevice()), 
     );
   }
 
@@ -158,7 +158,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   initMap() {
     const extent = ol.proj.transformExtent(
-      [-72.638426, 45.538850, -69.505885, 48.216402], 
+      this.QUEBEC_BOUNDING_BOX, 
       'EPSG:4326', 'EPSG:3857'
     );
 
@@ -171,7 +171,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       ],
       view: new View({
         center: fromLonLat([this.QUEBEC_CITY.longitude, this.QUEBEC_CITY.latitude]),
-        minZoom: 10,
+        minZoom: 12,
         zoom: 14,
         extent: extent,
       }),
@@ -404,7 +404,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
   getLayerById(layerId: string) {
     return this.map.getLayers().getArray().find((layer: any) => layer.get('layerId') === layerId);
   }
-
+  
   // Used to highlight selected trajectory
   changeLayerColor(layer: any, newColor: string, isTrajectory?: boolean, isReset?: boolean) {
     let newStyle;
@@ -551,7 +551,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       style = new Style({
         image: new Circle({
           radius: 5,
-          fill: new Fill({ color: color?.highlight }) //couleur relatif au emotion
+          fill: new Fill({ color: color?.point }) //couleur relatif au emotion
         })
       })
     }

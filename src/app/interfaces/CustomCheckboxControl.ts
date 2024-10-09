@@ -26,12 +26,15 @@ import { Control   } from 'ol/control';
       const labelPoints = document.createElement('label');
       labelPoints.htmlFor = 'togglePoints';
       labelPoints.textContent = 'Points';
+      labelPoints.style.fontFamily= 'haas'
 
       const div = document.createElement('div');
       div.className = 'ol-unselectable ol-control';
       div.style.position = 'absolute';
       div.style.right = '3%';
+      div.style.borderRadius = "16px"
       div.id = "checkboxesDiv"
+      div.style.backgroundColor = "transparent"
 
       div.appendChild(pointCheckbox);
       div.appendChild(labelPoints);

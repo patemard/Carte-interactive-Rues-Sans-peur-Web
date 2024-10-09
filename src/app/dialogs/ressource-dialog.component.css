@@ -1,1 +1,24 @@
-#modal-container {}
+#modal-container {
+    max-width: 600px;         /* Limits the modal width */
+    margin: auto;             /* Centers the modal */
+    padding: 20px;            /* Adds padding inside the modal */
+    border-radius: 16px;      /* Rounds the corners */
+    background-color: var(--blanc-atv);  /* Background color for visibility */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    overflow: hidden;         /* Prevents content overflow */
+    font-family:haas ;
+}
+
+.mat-dialog-content {
+    border-radius: 16px;      /* Ensure the content also has rounded corners */
+    overflow: hidden;         /* Prevent content overflow */
+}
+
+.mat-dialog-actions {
+    border-radius: 0 0 16px 16px; /* Make the bottom corners rounded */
+}
+
+button[color="violet-atv"] {
+    border-radius: 20px;      /* Makes the button more rounded */
+    padding: 8px 16px;        /* Adjust button padding */
+}
