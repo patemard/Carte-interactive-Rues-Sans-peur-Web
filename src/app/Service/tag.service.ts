@@ -13,8 +13,8 @@ export class TagService {
   private _selectedTag: Tag | undefined;
 
 
-  // Node/Express API
-  REST_API: string = 'http://localhost:10000/api';
+  // Node/Express APIw
+  REST_API: string = 'https://mapappbackend.onrender.com/api';
 
   // Http Header
   httpHeaders = new HttpHeaders().set('Content-Type', 'application/json');

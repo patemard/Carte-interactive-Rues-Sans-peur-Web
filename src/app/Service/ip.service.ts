@@ -6,8 +6,8 @@ import { catchError, map, Observable, throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class IpService {
-  
-  REST_API: string = 'http://localhost:10000/api';
+
+  REST_API: string = 'https://mapappbackend.onrender.com/api';
   httpHeaders = new HttpHeaders().set('Content-Type', 'application/json');
 
   constructor(private http: HttpClient) { }
