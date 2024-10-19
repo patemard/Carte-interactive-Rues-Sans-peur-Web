@@ -44,10 +44,6 @@ import { SaveTrajectoryButtonComponent } from './interfaces/SaveTrajectoryButton
     RouterModule.forRoot([
       {path: '', component: MapDashboardComponent},
       {path: 'admin', component: AdminDashboardComponent},
-      {path: 'carte/:id', component: MapDashboardComponent},
-
-      // wildcard
-      {path: '**', component: PageNotFoundComponent},
       {path: 'introuvable', component: PageNotFoundComponent}
     ]),
     FormsModule,
