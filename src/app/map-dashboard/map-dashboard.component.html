@@ -15,35 +15,39 @@
     <mat-card *ngIf="showPopup" id="popupCard" class="responsive-card">
       <div id="popup-content">
         <form>
-          <mat-form-field class="full-width rounded-field" appearance="fill">
-            <mat-label>Titre</mat-label>
-            <input name="titleInput"
-              maxlength="35"
-              matInput placeholder="Titre"
-              [(ngModel)]="currentTag.title">
+          
+          <mat-form-field class="rounded-field full-width" appearance="fill">
+            <mat-label>Sentiment de sécurité</mat-label>
+            <mat-select name="Sélection émotion"
+              [(ngModel)]="selectedEmotion">
+              <mat-option *ngFor="let emotion of emotions" [ngClass]="emotion.class" [value]="emotion.name">
+                <i class="fa fa-{{emotion.icon}} fa-xl" style="margin-right: 5px;"></i>
+                <span class="bold">{{emotion.name}}</span>
+              </mat-option>
+            </mat-select>
           </mat-form-field>
 
           <div class="row">
             <div class="col-md-6">
-              <mat-form-field class="rounded-field" appearance="fill">
-                <mat-label>Émotion</mat-label>
-                <mat-select name="Sélection émotion"
-                  [(ngModel)]="selectedEmotion">
-                  <mat-option *ngFor="let emotion of emotions" [ngClass]="emotion.class" [value]="emotion.name">
-                    <i class="fa fa-{{emotion.icon}} fa-xl"></i>
-                    <span class="bold">{{emotion.name}}</span>
+              <mat-form-field class="full-width rounded-field" appearance="fill">
+                <mat-label>Catégorie</mat-label>
+                  <mat-select name="Sélection Catégorie"
+                  [(ngModel)]="selectedCategory">
+                  <mat-option *ngFor="let category of categories" [value]="category.name">
+                    <!-- <i class="fa fa-{{emotion.icon}} fa-xl"></i> -->
+                    <span class="bold">{{category.name}}</span>
                   </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
             <div class="col-md-6">
               <mat-form-field class="rounded-field" appearance="fill">
-                <mat-label>Transport</mat-label>
-                <mat-select name="Sélection transport"
-                  [(ngModel)]="selectedTransport">
-                  <mat-option *ngFor="let transport of transports" [value]="transport.name">
-                    <img [src]="transport.icon" alt="icon" [ngClass]="transport.name == 'Marche' ? 'icon-pieton' : 'icon'">
-                    <span class="bold">{{transport.name}}</span>
+                <mat-label>Type</mat-label>
+                <mat-select name="Sélection type"
+                  [(ngModel)]="selectedType">
+                  <mat-option *ngFor="let type of types" [value]="type.name">
+                    <i class="fa fa-{{type.icon}} fa-xl" style="margin-right: 5px;"></i>
+                    <span class="bold">{{type.name}}</span>
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -52,12 +56,12 @@
           <div class="row">
             <div class="col-md-6">
               <mat-form-field class="rounded-field" appearance="fill">
-                <mat-label>Type</mat-label>
-                <mat-select name="Sélection type"
-                  [(ngModel)]="selectedType">
-                  <mat-option *ngFor="let type of types" [value]="type.name">
-                    <i class="fa fa-{{type.icon}} fa-xl"></i>
-                    <span class="bold">{{type.name}}</span>
+                <mat-label>mode de Transport</mat-label>
+                <mat-select name="Sélection transport"
+                  [(ngModel)]="selectedTransport">
+                  <mat-option *ngFor="let transport of transports" [value]="transport.name">
+                    <img [src]="transport.icon" alt="icon" [ngClass]="transport.name == 'Marche' ? 'icon-pieton' : 'icon'">
+                    <span class="bold">{{transport.name}}</span>
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -81,17 +85,13 @@
 
           <mat-card-footer>
           <div class="row">
-            <div class="col-md-4">
-              <button  *ngIf="isFormValid()"
-                mat-raised-button color="bleu-atv"
+            <div class="col-md-3">
+              <button mat-raised-button
+                color="violet-atv"
+                id="closeBtn"
                 class="rounded-field"
-                matTooltip="Sauvegarder ce témoigage"
-                (click)="onSubmit()">Cartographier
-              </button>
-              <button  *ngIf="!isFormValid()"
-                mat-stroked-button color="bleu-atv"
-                class="rounded-field"
-                matTooltip="Formulaire incomplet.">Cartographier
+                matTooltip="Abandonner la sauvegarde."
+                (click)="initializeOnLoad()">Fermer
               </button>
             </div>
             <div class="col-md-5">
@@ -99,13 +99,22 @@
               (click)="fileInput.click()">Téléverser un image</button>
               <input hidden (change)="onFileSelected()" #fileInput type="file" id="file"> -->
             </div>
-            <div class="col-md-2">
-              <button mat-raised-button
-                color="violet-atv"
-                id="closeBtn"
+            <div class="col-md-4">
+              <button 
+                *ngIf="isFormValid()"
+                mat-raised-button
+                color="bleu-atv"
+                title="Sauvegarder ce témoigage"
                 class="rounded-field"
-                matTooltip="Abandonner la sauvegarde."
-                (click)="initializeOnLoad()">Fermer
+                matTooltip="Sauvegarder ce témoigage"
+                (click)="onSubmit()">Cartographier
+              </button>
+              <button  
+                *ngIf="!isFormValid()"
+                mat-raised-button
+                color="violet-atv"
+                class="rounded-field"
+                matTooltip="Formulaire incomplet.">Cartographier
               </button>
             </div>
           </div>

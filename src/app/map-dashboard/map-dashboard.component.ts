@@ -58,6 +58,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
   ipAddress: string = '';
   title: string = '';
   selectedEmotion: any;
+  selectedCategory: any;
   selectedTransport: any;
   selectedType: any;
   layer: any;
@@ -103,6 +104,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.showCard = false;
     this.heartIsClicked = false;
     this.selectedEmotion = ''
+    this.selectedCategory = '';
     this.selectedTransport = '';
     this.selectedType = '';
     this.completedCardColor = '';
@@ -575,28 +577,30 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
 
   onSubmit(): any {
-    if (this.selectedType == "Point") {
-      this.setModel();
-      console.log(this.currentTag);
-      
-      this.tagService.addTag(this.currentTag)
-      .subscribe((data) => {
-        console.log('Data added successfully!', data)
-        this.ngZone.run(() => this.router.navigateByUrl('/'))
-        this.initializeOnLoad();
-        this.refresh();
-        }, (err: any) => {
-          console.log(err);
-      });
-    } else if (this.selectedType == "Trajectoire"){
-      this.showPopup = false;
-      this.initDrawing();
+    if (this.isFormValid()) {	
+      if (this.selectedType == "Point") {
+        this.setModel();
+        console.log(this.currentTag);
+        
+        this.tagService.addTag(this.currentTag)
+        .subscribe((data) => {
+          console.log('Data added successfully!', data)
+          this.ngZone.run(() => this.router.navigateByUrl('/'))
+          this.initializeOnLoad();
+          this.refresh();
+          }, (err: any) => {
+            console.log(err);
+        });
+      } else if (this.selectedType == "Trajectoire"){
+        this.showPopup = false;
+        this.initDrawing();
+      }
     }
   }
 
   setModel() {
     this.currentTag.active = true;
-    this.currentTag.title = this.currentTag.title?.replace(/\s+/g, ' ').trim(); // remplace les multiples espaces vide par 1.
+    this.currentTag.title = this.selectedCategory;
     this.currentTag.emotion = this.selectedEmotion;
     this.currentTag.transport = this.selectedTransport;
     this.currentTag.description = this.currentTag.description?.replace(/\s+/g, ' ').trim();// remplace les multiples espaces vide par 1.
@@ -659,7 +663,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   isFormValid(): boolean {
     return !!(
-      this.currentTag.title &&
+      this.selectedCategory &&
       this.selectedEmotion &&
       this.selectedTransport &&
       this.currentTag.description &&

@@ -35,16 +35,20 @@ html { height: 100%; }
 body {
     min-height:100%; 
     position:relative; 
-    padding-bottom:[footer-height] 
+    padding-bottom:11%
 }
 .footer { 
     position: absolute; 
     left: 0 ; right: 0; bottom: 0; 
-    height:[footer-height] 
+    height:11%;
 }
 
 #rsp {
   display: none;
+}
+
+#mainNav{
+  height: 7%;
 }
 
 @media (max-width: 430px) {

@@ -24,24 +24,30 @@ export class Constants  {
       " sed erat ultricies, ut pharetra sapien molestie. Sed a posuere orci, ut interdum ";
 
 
-  emotions: {name: string, icon: string, class?: string, rgb: { point: string, card: string, highlight: string }, png: string}[] = [
-        { name: "Sécurisant", icon: "smile-o", class: "text-violet-pale-atv",
-          rgb: {point:"rgba(119, 112, 237, 0.6)", card: "rgba(119, 112, 237, 0.85)", highlight: "rgba(119, 112, 237, 0.95)" }, png: "black"},
-        { name: "Insécurisant", icon: "frown-o" , class: "text-bleu-atv",
-          rgb: {point: "rgba(52,41,121, 0.6)", card:"rgba(52,41,121, 0.85)", highlight: "rgba(52,41,121, 0.95)"}, png: "red"}
-  ]
+    emotions: {name: string, icon: string, class?: string, rgb: { point: string, card: string, highlight: string }, png: string}[] = [
+          { name: "Sécurisant", icon: "smile-o", class: "text-violet-pale-atv",
+            rgb: {point:"rgba(119, 112, 237, 0.6)", card: "rgba(119, 112, 237, 0.85)", highlight: "rgba(119, 112, 237, 0.95)" }, png: "black"},
+          { name: "Insécurisant", icon: "frown-o" , class: "text-bleu-atv",
+            rgb: {point: "rgba(52,41,121, 0.6)", card:"rgba(52,41,121, 0.85)", highlight: "rgba(52,41,121, 0.95)"}, png: "red"}
+    ]
 
-  transports = [
-      { name: "Marche", icon: "../../assets/png/pieton.png"},
-      { name: "Vélo ", icon: "../../assets/png/velo.png"},
-      { name: "Bus ", icon: "../../assets/png/Bus.png" },
-      { name: "Voiture ", icon: "../../assets/png/auto.png"},
-  ]
+    transports = [
+        { name: "Marche", icon: "../../assets/png/pieton.png"},
+        { name: "Vélo ", icon: "../../assets/png/velo.png"},
+        { name: "Bus ", icon: "../../assets/png/Bus.png" },
+        { name: "Voiture ", icon: "../../assets/png/auto.png"},
+    ]
 
-  types = [
-    {name: "Point", icon: "map-marker"},
-    {name: "Trajectoire", icon: "map-o"}
-  ]
+    types = [
+      {name: "Point", icon: "map-marker"},
+      {name: "Trajectoire", icon: "map-o"}
+    ]
+
+    categories = [
+      {name: "Témoignage"},
+      {name: "Lieux"},
+    ]
+  
 
 
 }
