@@ -45,7 +45,7 @@ import { SaveTrajectoryButtonComponent } from './interfaces/SaveTrajectoryButton
       {path: '', component: MapDashboardComponent},
       {path: 'admin', component: AdminDashboardComponent},
       {path: 'introuvable', component: PageNotFoundComponent}
-    ]),
+    ], { useHash: true }),
     FormsModule,
     BrowserAnimationsModule,
     MatFormFieldModule,
