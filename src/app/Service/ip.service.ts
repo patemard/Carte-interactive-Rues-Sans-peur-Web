@@ -7,20 +7,13 @@ import { catchError, map, Observable, throwError } from 'rxjs';
 })
 export class IpService {
 
-  REST_API: string = 'https://mapappbackend.onrender.com/api';
+  private ipifyUrl = 'https://api.ipify.org?format=json';
   httpHeaders = new HttpHeaders().set('Content-Type', 'application/json');
 
   constructor(private http: HttpClient) { }
 
   getIpAddress(): Observable<any> {
-
-    let API_URL = `${this.REST_API}/get-ip`;
-    return this.http.get(API_URL, { headers: this.httpHeaders })
-      .pipe(map((res: any) => {
-          return res || {}
-        }),
-        catchError(this.handleError)
-      )
+    return this.http.get<any>(this.ipifyUrl);
   }
 
     // Error

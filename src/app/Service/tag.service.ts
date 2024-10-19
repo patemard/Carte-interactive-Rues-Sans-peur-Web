@@ -3,6 +3,8 @@ import { Tag } from '../Models/tag';
 import { catchError, map } from 'rxjs/operators';
 import { Observable, throwError } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
+
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +16,7 @@ export class TagService {
 
 
   // Node/Express APIw
-  REST_API: string = 'https://mapappbackend.onrender.com/api';
+  REST_API: string = environment.REST_API;
 
   // Http Header
   httpHeaders = new HttpHeaders().set('Content-Type', 'application/json');
