@@ -93,7 +93,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
       ) {
     super();
     this.initializeOnLoad();
-    console.log("this.tagService.isAdmin", this.tagService.isAdmin)
   }
 
   initializeOnLoad() {
@@ -138,7 +137,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
     return new Promise((resolve, reject) =>  {
     this.tagService.getTag(id).subscribe( res => {
       this.currentTag = res;
-      console.log(this.currentTag );
        resolve(true);
      });
     })
@@ -580,11 +578,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
     if (this.isFormValid()) {	
       if (this.selectedType == "Point") {
         this.setModel();
-        console.log(this.currentTag);
-        
         this.tagService.addTag(this.currentTag)
         .subscribe((data) => {
-          console.log('Data added successfully!', data)
           this.ngZone.run(() => this.router.navigateByUrl('/'))
           this.initializeOnLoad();
           this.refresh();
@@ -615,7 +610,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
     this.tagService.addTag(this.currentTag)
     .subscribe((data) => {
-      console.log('Data added successfully!', data)
       this.ngZone.run(() => this.router.navigateByUrl('/'))
       this.initializeOnLoad();
       this.refresh();
@@ -624,9 +618,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     });
   }
 
-  extractFirstCoordinate(geojson: any) {
-    console.log(geojson);
-    
+  extractFirstCoordinate(geojson: any) {    
     if (geojson && geojson.features && Array.isArray(geojson.features) && geojson.features.length > 0) {
       // Iterate over features to find the first coordinate
       for (const feature of geojson.features) {
@@ -824,23 +816,21 @@ export class MapDashboardComponent extends Helper implements OnInit {
     // Listen to the map's 'moveend' event to check the zoom level after each interaction
     this.map.getView().on('change:resolution', () => {
       const zoom =  this.map.getView().getZoom();
-      if (this.nonClusteredLayer) {
-        if (zoom >= zoomThreshold) {
-          // If zoomed in, show non-clustered features
-          if ( this.map.getLayers().getArray().includes(clusters)) {
-            this.map.removeLayer(clusters);
-          }
-          if (!this.map.getLayers().getArray().includes(this.nonClusteredLayer)) {
-            this.map.addLayer(this.nonClusteredLayer);
-          }
-        } else {
-          // If zoomed out, show clustered features
-          if ( this.map.getLayers().getArray().includes(this.nonClusteredLayer)) {
-            this.map.removeLayer(this.nonClusteredLayer);
-          }
-          if (! this.map.getLayers().getArray().includes(clusters)) {
-            this.map.addLayer(clusters);
-          }
+      if (zoom >= zoomThreshold) {
+        // If zoomed in, show non-clustered features
+        if ( this.map.getLayers().getArray().includes(clusters)) {
+          this.map.removeLayer(clusters);
+        }
+        if (!this.map.getLayers().getArray().includes(this.nonClusteredLayer)) {
+          this.map.addLayer(this.nonClusteredLayer);
+        }
+      } else {
+        // If zoomed out, show clustered features
+        if ( this.map.getLayers().getArray().includes(this.nonClusteredLayer)) {
+          this.map.removeLayer(this.nonClusteredLayer);
+        }
+        if (! this.map.getLayers().getArray().includes(clusters)) {
+          this.map.addLayer(clusters);
         }
       }
     });
@@ -881,7 +871,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
   }
 
   openDeleteDialog(enterAnimationDuration: string, exitAnimationDuration: string): void  {
-    console.log(this.currentTag)
     this.tagService.selectedTag = this.currentTag;
     
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
@@ -891,7 +880,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('result', result);
 
       if(result.event == 'hide'){
         this.currentTag.active = false;
