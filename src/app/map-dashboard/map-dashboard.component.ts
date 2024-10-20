@@ -1,6 +1,7 @@
 import {
   Component,
   ComponentFactoryResolver,
+  ElementRef,
   Injector,
   NgZone,
   OnInit,
@@ -80,7 +81,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
   trajectoryLayer: any;
   clusteredLayer: any;
   clikedOnLayer: any;
-
+  @ViewChild('scrollableContainer') scrollableContainer: ElementRef | undefined;
   constructor(
       protected tagService: TagService,
       private router: Router,
@@ -399,7 +400,17 @@ export class MapDashboardComponent extends Helper implements OnInit {
       color?.highlight || '',
       this.currentTag.trajectory 
     )
+    this.scrollToTop();
   }
+
+  scrollToTop() {
+    setTimeout(() => {
+      if (this.scrollableContainer?.nativeElement) {
+        this.scrollableContainer.nativeElement.scrollTop = 0;
+      }
+    }, 0);
+  }
+
   // Function to get a layer by its custom 'layerId'
   getLayerById(layerId: string) {
     return this.map.getLayers().getArray().find((layer: any) => layer.get('layerId') === layerId);

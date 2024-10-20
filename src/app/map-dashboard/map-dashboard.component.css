@@ -139,7 +139,8 @@ button.clicked .fa-flag {
   #completedCardText {
     max-height: 80%; /* Limits height to 80% of the viewport */
     overflow-y: auto; /* Enables vertical scrolling if content overflows */
-    scrollbar-width: thin;
+    scrollbar-width:auto;
+    scroll-behavior: smooth;
     overflow-x: hidden; /* Hides the horizontal scrollbar */
     max-width: 100%; /* Ensures the card does not exceed its container */
   }
