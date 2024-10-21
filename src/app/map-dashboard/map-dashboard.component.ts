@@ -474,21 +474,24 @@ export class MapDashboardComponent extends Helper implements OnInit {
     if (id) {
       this.tagService.deleteTag(id)
       .subscribe( res =>{
-        this.refresh();
+          this.refresh();
       })
     }
+
+  }
+
+  updateTag(tag: Tag) {
+    this.tagService.updateTag(tag.id, tag)
+      .subscribe(res => {
+        this.refresh();
+    })
   }
 
   refresh() {
-    this.currentTag = new Tag();
-    this.showCard = false;
-    this.getTags();
-    if (this.feature) {
-      this.feature.values_ = null;
-    }
-    this.map.render();
-    this.router.navigateByUrl('/')
+    window.location.reload();
   }
+
+
 
   private addTrajectory(tag: Tag, isOpen?: boolean) {
     let color = this.emotions.find(x=>x.name === tag.emotion)?.rgb;
@@ -874,12 +877,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.sendEmail();
   }
 
-  updateTag(tag: Tag) {
-    this.tagService.updateTag(tag.id, tag)
-      .subscribe(res => {
-        this.refresh();
-    })
-  }
+
 
   openDeleteDialog(enterAnimationDuration: string, exitAnimationDuration: string): void  {
     this.tagService.selectedTag = this.currentTag;
@@ -891,7 +889,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-
       if(result.event == 'hide'){
         this.currentTag.active = false;
         this.updateTag(this.currentTag);

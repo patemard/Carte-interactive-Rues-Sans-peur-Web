@@ -11,7 +11,8 @@
 
 <div mat-dialog-actions>
 
-  <button mat-button mat-dialog-close cdkFocusInitial  (click)="confirm()">Confirmer</button>
+  <button mat-button mat-dialog-close cdkFocusInitial  (click)="confirm()" [disabled]="!selectedAction">Confirmer</button>
 
   <button mat-button mat-dialog-close>Annuler</button>
 </div>
+  

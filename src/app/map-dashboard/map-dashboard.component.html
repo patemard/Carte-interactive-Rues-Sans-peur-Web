@@ -133,7 +133,7 @@
       <mat-card-header>
         <mat-card-title>
           <div class="title-container">
-            <img *ngIf="currentTag" alt="icon" [src]="getTransportIcon()" [ngClass]="currentTag.transport == 'Marche' ? 'icon-pieton' : 'icon-completed'">
+            <img *ngIf="currentTag" alt="icon" [src]="getTransportIcon()" [ngClass]="currentTag.transport == 'Marche' ? 'icon-completed-pieton' : 'icon-completed'">
             <span class="title-text" title="{{currentTag.title}}">{{currentTag.title}}</span>
           </div>
         </mat-card-title>
@@ -141,8 +141,8 @@
           <span aria-hidden="true">&times;</span>
         </button>
       </mat-card-header>
-      <mat-card-content class="text-center">
-        <div class="multiline" id="completedCardText"  #scrollableContainer>{{currentTag.description}}</div>
+      <mat-card-content class="text-center" style="min-height:25%;">
+        <div id="completedCardText" #scrollableContainer>{{currentTag.description}}</div>
       </mat-card-content>
       <mat-card-actions class="centered">
         <button mat-button

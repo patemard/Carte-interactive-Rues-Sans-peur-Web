@@ -58,7 +58,7 @@ button {
   padding-right: 3%;
   background-color: transparent;
 }
-.icon-pieton {
+.icon-completed-pieton {
   max-width: 10%;
   max-height: 10%;
   background-size: cover; /* Adjust this to fit the icon size */
@@ -67,6 +67,16 @@ button {
   margin-bottom: 5%;
   background-color: transparent;
 }
+.icon-pieton {
+  max-width: 14%;
+  max-height: 14%;
+  background-size: cover; /* Adjust this to fit the icon size */
+  display: inline-block;
+  padding-right: 3%;
+  margin-bottom: 5%;
+  background-color: transparent;
+}
+
 
 .icon-completed{
   max-width: 25%;
@@ -138,25 +148,10 @@ button.clicked .fa-flag {
   /* width */
   #completedCardText {
     max-height: 80%; /* Limits height to 80% of the viewport */
-    overflow-y: auto; /* Enables vertical scrolling if content overflows */
-    scrollbar-width:auto;
-    scroll-behavior: smooth;
+    overflow-y:auto; /* Enables vertical scrolling if content overflows */
+    scrollbar-width: thin; /* Thin scrollbar */
+    scroll-behavior:auto;
     overflow-x: hidden; /* Hides the horizontal scrollbar */
-    max-width: 100%; /* Ensures the card does not exceed its container */
-  }
-::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 10px olivedrab;
-  border-radius: 10px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-  border-radius: 10px;
-  background: yellowgreen;
-  box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-  background: #7bac10;
   }
 
   .responsive-card {
@@ -225,10 +220,7 @@ button.clicked .fa-flag {
     .title-text {
       font-size: 16px; /* Reduce title font size for mobile */
     }
-  
-    .multiline {
-      font-size: 14px; /* Adjust description text size */
-    }
+
 
     #completedCard {
       max-width:  10%; /* Set a flexible width */
