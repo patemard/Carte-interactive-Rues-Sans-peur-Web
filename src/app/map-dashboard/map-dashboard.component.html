@@ -15,27 +15,27 @@
     <mat-card *ngIf="showPopup" id="popupCard" class="responsive-card">
       <div id="popup-content">
         <form>
-          
-          <mat-form-field class="rounded-field full-width" appearance="fill">
-            <mat-label>Sentiment de sécurité</mat-label>
-            <mat-select name="Sélection émotion"
-              [(ngModel)]="selectedEmotion">
-              <mat-option *ngFor="let emotion of emotions" [ngClass]="emotion.class" [value]="emotion.name">
-                <i class="fa fa-{{emotion.icon}} fa-xl" style="margin-right: 5px;"></i>
-                <span class="bold">{{emotion.name}}</span>
+
+          <mat-form-field class="full-width rounded-field" appearance="fill">
+            <mat-label>Catégorie</mat-label>
+              <mat-select name="Sélection Catégorie"
+              [(ngModel)]="selectedCategory">
+              <mat-option *ngFor="let category of categories" [value]="category.name">
+                <!-- <i class="fa fa-{{emotion.icon}} fa-xl"></i> -->
+                <span class="bold">{{category.name}}</span>
               </mat-option>
             </mat-select>
           </mat-form-field>
 
           <div class="row">
             <div class="col-md-6">
-              <mat-form-field class="full-width rounded-field" appearance="fill">
-                <mat-label>Catégorie</mat-label>
-                  <mat-select name="Sélection Catégorie"
-                  [(ngModel)]="selectedCategory">
-                  <mat-option *ngFor="let category of categories" [value]="category.name">
-                    <!-- <i class="fa fa-{{emotion.icon}} fa-xl"></i> -->
-                    <span class="bold">{{category.name}}</span>
+              <mat-form-field class="rounded-field full-width" appearance="fill">
+                <mat-label>Sentiment de sécurité</mat-label>
+                <mat-select name="Sélection émotion"
+                  [(ngModel)]="selectedEmotion">
+                  <mat-option *ngFor="let emotion of emotions" [ngClass]="emotion.class" [value]="emotion.name">
+                    <i class="fa fa-{{emotion.icon}} fa-xl" style="margin-right: 5px;"></i>
+                    <span class="bold">{{emotion.name}}</span>
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -100,7 +100,7 @@
               <input hidden (change)="onFileSelected()" #fileInput type="file" id="file"> -->
             </div>
             <div class="col-md-4">
-              <button 
+              <button
                 *ngIf="isFormValid()"
                 mat-raised-button
                 color="bleu-atv"
@@ -109,7 +109,7 @@
                 matTooltip="Sauvegarder ce témoigage"
                 (click)="onSubmit()">Cartographier
               </button>
-              <button  
+              <button
                 *ngIf="!isFormValid()"
                 mat-raised-button
                 color="violet-atv"
