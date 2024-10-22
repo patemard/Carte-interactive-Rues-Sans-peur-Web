@@ -45,7 +45,7 @@ export class Constants  {
 
     categories = [
       {name: "Témoignage"},
-      {name: "Lieux"},
+      {name: "Lieu"},
     ]
 
 

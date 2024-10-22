@@ -128,6 +128,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.map.addControl(
       new GeolocationButtonControl(this.map,this.isMobileDevice()),
     );
+    this.initInfoModal();
   }
 
 
@@ -232,7 +233,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
         this.currentTag.latitude = coords[1];
 
         if (this.map.getView().getZoom() >= 18) {
-          this.initInfoModal();
           this.showPopup = true;
           this.overlay.setPosition(this.currentTag.mercatorCoord);
         } else {
@@ -244,7 +244,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   initInfoModal() {
     const dialogRef = this.dialog.open(RessourceDialogComponent, {
-      panelClass: 'violet-pale-atv',
       enterAnimationDuration: 1000
     });
 

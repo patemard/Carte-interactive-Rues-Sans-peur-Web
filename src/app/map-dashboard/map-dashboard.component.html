@@ -42,12 +42,12 @@
             </div>
             <div class="col-md-6">
               <mat-form-field class="rounded-field" appearance="fill">
-                <mat-label>Type</mat-label>
-                <mat-select name="Sélection type"
-                  [(ngModel)]="selectedType">
-                  <mat-option *ngFor="let type of types" [value]="type.name">
-                    <i class="fa fa-{{type.icon}} fa-xl" style="margin-right: 5px;"></i>
-                    <span class="bold">{{type.name}}</span>
+                <mat-label>Mode de transport</mat-label>
+                <mat-select name="Sélection transport"
+                  [(ngModel)]="selectedTransport">
+                  <mat-option *ngFor="let transport of transports" [value]="transport.name">
+                    <img [src]="transport.icon" alt="icon" [ngClass]="transport.name == 'Marche' ? 'icon-pieton' : 'icon'">
+                    <span class="bold">{{transport.name}}</span>
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -56,12 +56,12 @@
           <div class="row">
             <div class="col-md-6">
               <mat-form-field class="rounded-field" appearance="fill">
-                <mat-label>mode de Transport</mat-label>
-                <mat-select name="Sélection transport"
-                  [(ngModel)]="selectedTransport">
-                  <mat-option *ngFor="let transport of transports" [value]="transport.name">
-                    <img [src]="transport.icon" alt="icon" [ngClass]="transport.name == 'Marche' ? 'icon-pieton' : 'icon'">
-                    <span class="bold">{{transport.name}}</span>
+                <mat-label>Type</mat-label>
+                <mat-select name="Sélection type"
+                  [(ngModel)]="selectedType">
+                  <mat-option *ngFor="let type of types" [value]="type.name">
+                    <i class="fa fa-{{type.icon}} fa-xl" style="margin-right: 5px;"></i>
+                    <span class="bold">{{type.name}}</span>
                   </mat-option>
                 </mat-select>
               </mat-form-field>
@@ -78,7 +78,7 @@
             <mat-label>Description</mat-label>
             <textarea name="descInput"
               maxlength="500"
-              matInput placeholder="Description"
+              matInput
               [(ngModel)]="currentTag.description">
             </textarea>
           </mat-form-field>
