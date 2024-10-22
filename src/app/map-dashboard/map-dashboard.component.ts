@@ -513,7 +513,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       source: vectorSource,
       style: new Style({
         stroke: new Stroke({
-          color: isOpen ? color?.highlight :color?.point, //couleur relatif au emotion
+          color: isOpen ? color?.highlight :color?.trajectory, //couleur relatif au emotion
           width: 5,
         })
       })
@@ -942,13 +942,19 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
 
   close() {
-    if (this.clikedOnLayer) {
-      this.changeLayerColor(
-        this.clikedOnLayer,
-        this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb.point || '',
-        this.currentTag?.trajectory,
-        true
-      )
+
+    const color = this.currentTag?.trajectory ?
+     this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb.trajectory :
+     this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb.point;
+    if (color) {
+      if (this.clikedOnLayer) {
+        this.changeLayerColor(
+          this.clikedOnLayer,
+          color,
+          this.currentTag?.trajectory,
+          true
+        )
+      }
     }
     this.showCard=false;
   }
