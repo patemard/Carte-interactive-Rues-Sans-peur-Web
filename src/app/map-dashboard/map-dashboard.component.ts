@@ -382,6 +382,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
 
   clickedOnTag() {
+    console.log(this.ipAddress)
     this.showCard = true;
     this.overlay.setPosition(this.currentTag.mercatorCoord);
 
@@ -577,7 +578,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     // Define a style for the point feature
       style = new Style({
         image: new Circle({
-          radius: 5,
+          radius: 7,
           fill: new Fill({ color: color?.point }) //couleur relatif au emotion
         })
       })
