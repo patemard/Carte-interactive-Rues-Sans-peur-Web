@@ -22,7 +22,6 @@
     "@angular/router": "^17.3.5",
     "bcryptjs": "^2.4.3",
     "bootstrap": "^5.3.3",
-    "crypto-browserify": "^3.12.1",
     "ol-ext": "^3.2.28",
     "ol-geocoder": "^4.3.3",
     "rxjs": "~7.4.0",
