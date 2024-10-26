@@ -843,22 +843,24 @@ export class MapDashboardComponent extends Helper implements OnInit {
     // Listen to the map's 'moveend' event to check the zoom level after each interaction
     this.map.getView().on('change:resolution', () => {
       const zoom =  this.map.getView().getZoom();
-      if (zoom >= zoomThreshold) {
-        // If zoomed in, show non-clustered features
-        if ( this.map.getLayers().getArray().includes(clusters)) {
-          this.map.removeLayer(clusters);
-        }
-        if (!this.map.getLayers().getArray().includes(this.nonClusteredLayer)) {
-          this.map.addLayer(this.nonClusteredLayer);
-        }
-      } else {
-        // If zoomed out, show clustered features
-        if ( this.map.getLayers().getArray().includes(this.nonClusteredLayer)) {
-          this.map.removeLayer(this.nonClusteredLayer);
-        }
-        if (! this.map.getLayers().getArray().includes(clusters)) {
-          this.map.addLayer(clusters);
-        }
+      if (clusters && this.nonClusteredLayer) {
+        if (zoom >= zoomThreshold) {
+          // If zoomed in, show non-clustered features
+          if ( this.map.getLayers().getArray().includes(clusters)) {
+            this.map.removeLayer(clusters);
+          }
+          if (!this.map.getLayers().getArray().includes(this.nonClusteredLayer)) {
+            this.map.addLayer(this.nonClusteredLayer);
+          }
+        } else {
+          // If zoomed out, show clustered features
+          if (this.map.getLayers().getArray().includes(this.nonClusteredLayer)) {
+            this.map.removeLayer(this.nonClusteredLayer);
+          }
+          if (! this.map.getLayers().getArray().includes(clusters)) {
+            this.map.addLayer(clusters);
+          }
+        } 
       }
     });
   }
