@@ -1,5 +1,7 @@
 import {Component, EventEmitter, Inject, OnInit, Output, ViewChild, ViewContainerRef} from '@angular/core';
 import {TagService} from "../Service/tag.service";
+import * as bcrypt from 'bcryptjs';
+import { IpService } from '../Service/ip.service';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -9,26 +11,33 @@ import {TagService} from "../Service/tag.service";
 export class AdminDashboardComponent implements OnInit {
   loginPass: boolean = false;
   currentPassword: string;
-  password: string = "1" // TODO: put in DB hashed
+  password: string = "";
   private _tagService: TagService;
-  constructor(tagService: TagService) {
+  private _ipService: IpService;
+  constructor(tagService: TagService,
+    ipservice: IpService
+  ) {
     this._tagService = tagService;
+    this._ipService = ipservice;
     this.currentPassword = '';
   }
 
   ngOnInit(): void {
-
+    this._ipService.getHash().subscribe((res: any) => { 
+      this.password = res[0].password_hash;
+    })
   }
 
 
   login() {
-    if (this.currentPassword === this.password) {
-      this.loginPass = true;
-      this._tagService.isAdmin = true;
-    } else {
-      this._tagService.isAdmin = false;
-      this.loginPass = false;
-
-    }
+    bcrypt.compare(this.currentPassword, this.password).then(isMatch => {
+      if (isMatch) {
+        this.loginPass = true;
+        this._tagService.isAdmin = true;
+      } else {
+        this._tagService.isAdmin = false;
+        this.loginPass = false;
+      }
+    });
   }
 }
