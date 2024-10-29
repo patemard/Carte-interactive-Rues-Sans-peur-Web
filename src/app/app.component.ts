@@ -14,7 +14,7 @@ export class AppComponent {
 
   
   openDialog() {
-    window.open('../assets/docs/ressources-soutien-psychologique.pdf', '_blank');
+    window.open('../assets/docs/Ressources-soutien-psychologique_RSP.pdf', '_blank');
   }
 
 }
