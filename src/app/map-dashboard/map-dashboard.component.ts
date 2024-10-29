@@ -174,6 +174,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       view: new View({
         center: fromLonLat([this.QUEBEC_CITY.longitude, this.QUEBEC_CITY.latitude]),
         minZoom: 12,
+        maxZoom: 20,
         zoom: 14,
         extent: extent,
       }),
@@ -234,7 +235,12 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
         if (this.map.getView().getZoom() >= 18) {
           this.showPopup = true;
+          const offsetCoord = [
+            this.currentTag.mercatorCoord[0] + 100,
+            this.currentTag.mercatorCoord[1] - 100,
+          ];
           this.overlay.setPosition(this.currentTag.mercatorCoord);
+          this.lockExtent(offsetCoord);
         } else {
           this.setCenter(18, evt.coordinate);
         }
@@ -381,7 +387,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
 
   clickedOnTag() {
-    console.log(this.ipAddress)
+
     this.showCard = true;
     this.overlay.setPosition(this.currentTag.mercatorCoord);
 
@@ -401,6 +407,54 @@ export class MapDashboardComponent extends Helper implements OnInit {
       this.currentTag.trajectory
     )
     this.scrollToTop();
+
+    this.lockExtent(this.currentTag.mercatorCoord);
+  }
+
+
+  lockExtent(centerCoord: number[]){
+    const view = this.map.getView();
+     // Animate to the specific coordinate
+     view.animate({
+      center: centerCoord,
+      zoom: view.getZoom(), 
+      duration: 800,  // Duration in milliseconds for the animation
+    });
+
+    // Lock the extent after the animation completes
+    setTimeout(() => {
+      const extent = view.calculateExtent(this.map.getSize());
+
+      // Set the final view with locked constraints
+      this.map.setView(
+        new View({
+          center: centerCoord,
+          zoom: this.map.getView().getZoom(),
+          minZoom: this.map.getView().getZoom(),
+          maxZoom: this.map.getView().getZoom(),
+          extent: extent,          // Lock panning within this extent
+          constrainResolution: true,
+        })
+      );
+    }, 800); // Delay matches the animation duration to lock view after animation
+  }
+  
+  unlockExtent() {
+    const extent = ol.proj.transformExtent(
+      this.QUEBEC_BOUNDING_BOX,
+      'EPSG:4326', 'EPSG:3857'
+    );
+    const view = this.map.getView();
+    // Re-assign the view with constraints to lock panning and zoom
+    this.map.setView(
+      new View({
+        center: view.getCenter(),
+        zoom: view.getZoom(),
+        minZoom: 12,
+        maxZoom: 20,
+        extent: extent,         // Constrains panning within this extent
+      })
+    );
   }
 
   scrollToTop() {
@@ -745,124 +799,101 @@ export class MapDashboardComponent extends Helper implements OnInit {
       }
     });
 
-    // Create a vector source with the points
-    const source = new VectorSource({
-      features: features,
-    });
-
-      // Create a cluster source
-    const clusterSource = new Cluster({
-      distance: 20, // Distance in pixels within which points will be clustered
-      source: source
-    });
-
-
-    const clusterStyle = (feature: any) =>{
-      const size = feature.get('features').length;
-      let style = new Style({
-        image: new Circle({
-          radius: 10,
-          stroke: new Stroke({
-            color: '#fff',
-          }),
-          fill: new Fill({
-            color:color,
-          }),
-        }),
-        text: new Text({
-          text: size.toString(),
-          fill: new Fill({
-            color: '#fff',
-          }),
-        }),
+   
+      // Create a vector source with the points
+      const source = new VectorSource({
+        features: features,
       });
-      return style;
-    };
 
-    const minClusterSize = 3;
+        // Create a cluster source
+      const clusterSource = new Cluster({
+        distance: 20, // Distance in pixels within which points will be clustered
+        source: source
+      });
 
-    const styleCache: any = {};
-    const clusters = new VectorLayer({
-      source: clusterSource,
-      style: function (feature) {
-        const size = feature.get('features').length;
+      const minClusterSize = 3;
 
-        // Only show clusters with more than minClusterSize points
-        if (size < minClusterSize) {
-          // Return null to not render this cluster
-          return null;
-        }
+      const styleCache: any = {};
+      const clusters = new VectorLayer({
+        source: clusterSource,
+        style: function (feature) {
+          const size = feature.get('features').length;
 
-        let style = styleCache[size];
-        if (!style) {
-          style = new Style({
-            image: new Circle({
-              radius: 10,
-              stroke: new Stroke({
-                color: '#fff',
-              }),
-              fill: new Fill({
-                color:color,
-              }),
-            }),
-            text: new Text({
-              text: size.toString(),
-              fill: new Fill({
-                color: '#fff',
-              }),
-            }),
-          });
-          styleCache[size] = style;
-        }
-        return style;
-      },
-    });
-    clusters.set('name', 'clusteredLayer');
-
-    this.clusteredLayer.push(clusters)
-
-    // Add the marker layer to the map
-    this.map.addLayer(clusters);
-
-    this.map.on('click', (e: any) => {
-      clusters.getFeatures(e.pixel).then((clickedFeatures) => {
-        if (clickedFeatures.length) {
-          // Get clustered Coordinates
-          const features = clickedFeatures[0].get('features');
-          if (features.length > 0) {
-            const extent = boundingExtent(
-              features.map((r: any) => r.getGeometry().getCoordinates()),
-            );
-            this.map.getView().fit(extent, {duration: 1000, padding: [50, 50, 50, 50], maxZoom: 17 });
+          // Only show clusters with more than minClusterSize points
+          if (size < minClusterSize) {
+            // Return null to not render this cluster
+            return null;
           }
+
+          let style = styleCache[size];
+          if (!style) {
+            style = new Style({
+              image: new Circle({
+                radius: 10,
+                stroke: new Stroke({
+                  color: '#fff',
+                }),
+                fill: new Fill({
+                  color:color,
+                }),
+              }),
+              text: new Text({
+                text: size.toString(),
+                fill: new Fill({
+                  color: '#fff',
+                }),
+              }),
+            });
+            styleCache[size] = style;
+          }
+          return style;
+        },
+      }); 
+      clusters.set('name', 'clusteredLayer');
+
+      this.clusteredLayer.push(clusters)
+
+      // Add the marker layer to the map
+      this.map.addLayer(clusters);
+      this.map.on('click', (e: any) => {
+        clusters.getFeatures(e.pixel).then((clickedFeatures) => {
+          if (clickedFeatures.length) {
+            // Get clustered Coordinates
+            const features = clickedFeatures[0].get('features');
+            if (features.length > 0) {
+              const extent = boundingExtent(
+                features.map((r: any) => r.getGeometry().getCoordinates()),
+              );
+              this.map.getView().fit(extent, {duration: 1000, padding: [50, 50, 50, 50], maxZoom: 17 });
+            }
+          }
+        });
+      });
+      const zoomThreshold = 15;  // Define the zoom level where clustering disappears
+
+      // Listen to the map's 'moveend' event to check the zoom level after each interaction
+      this.map.getView().on('change:resolution', () => {
+        const zoom =  this.map.getView().getZoom();       
+        if (clusters && this.nonClusteredLayer) {
+          if (zoom >= zoomThreshold) {
+            // If zoomed in, show non-clustered features
+            if (this.map.getLayers().getArray().includes(clusters)) {
+              this.map.removeLayer(clusters);
+            }
+            if (!this.map.getLayers().getArray().includes(this.nonClusteredLayer)) {
+              this.map.addLayer(this.nonClusteredLayer);
+            }
+          } else {
+            // If zoomed out, show clustered features
+            if (this.map.getLayers().getArray().includes(this.nonClusteredLayer)) {
+              this.map.removeLayer(this.nonClusteredLayer);
+            }
+            if (!this.map.getLayers().getArray().includes(clusters)) {
+              this.map.addLayer(clusters);
+            }
+          } 
         }
       });
-    });
-    const zoomThreshold = 15;  // Define the zoom level where clustering disappears
-
-    // Listen to the map's 'moveend' event to check the zoom level after each interaction
-    this.map.getView().on('change:resolution', () => {
-      const zoom =  this.map.getView().getZoom();
-      if (clusters && this.nonClusteredLayer) {
-        if (zoom >= zoomThreshold) {
-          // If zoomed in, show non-clustered features
-          if ( this.map.getLayers().getArray().includes(clusters)) {
-            this.map.removeLayer(clusters);
-          }
-          if (!this.map.getLayers().getArray().includes(this.nonClusteredLayer)) {
-            this.map.addLayer(this.nonClusteredLayer);
-          }
-        } else {
-          // If zoomed out, show clustered features
-          if (this.map.getLayers().getArray().includes(this.nonClusteredLayer)) {
-            this.map.removeLayer(this.nonClusteredLayer);
-          }
-          if (! this.map.getLayers().getArray().includes(clusters)) {
-            this.map.addLayer(clusters);
-          }
-        } 
-      }
-    });
   }
 
 
@@ -944,7 +975,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
 
   close() {
-
     const color = this.currentTag?.trajectory ?
      this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb.trajectory :
      this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb.point;
@@ -958,6 +988,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
         )
       }
     }
+    this.unlockExtent();
+
     this.showCard=false;
   }
 
