@@ -51,7 +51,7 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-
+      <mat-label *ngIf="minorityOther" >Personne vivant avec un autre facteur de discrimination</mat-label>
       <mat-form-field  *ngIf="minorityOther" 
         class="full-width rounded-field" appearance="fill">
         <input matInput placeholder="précisez" maxlength="45"

@@ -256,7 +256,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   initIdentificationModal() {
     const dialogRef = this.dialog.open(IdentificationDialogComponent, {
-      width: '40%',
+      width: '30%',
       enterAnimationDuration: 1000
     });
 

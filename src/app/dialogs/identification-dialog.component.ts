@@ -79,24 +79,25 @@ log($event: any) {
   checkMirorityGroup(event: any) {
     this.minorityGroup = event;
     this.minorityOther = this.minorityGroup.some((x: string) => x.toUpperCase().includes('AUTRE'));
-    this.minorityTooltip = this.minorityGroup.map((x: any) => x).join(', ');
+    this.minorityTooltip = this.minorityGroup.map((x: any) => x).join(',  ');
   }
     
   saveIdentification() {
     let finalString = '';
+    if (this.selectedGender) {
+      this.tagService.gender = this.selectedGender;
+      finalString += this.selectedGender;
+      if (this.genderPrecision) {
+        finalString += ' (' + this.genderPrecision + ')';
+        this.tagService.genderPrecision = this.genderPrecision;
+      }
+    }
+
     if (this.ageGroup) {
       this.tagService.ageGroup = this.ageGroup;
       finalString = this.ageGroup
     }
-    if (this.selectedGender) {
-      this.tagService.gender = this.selectedGender;
-      finalString += this.selectedGender;
-    }
-    if (this.genderPrecision) {
-      finalString += ' (' + this.genderPrecision + ')';
-      this.tagService.genderPrecision = this.genderPrecision;
 
-    }
     if (this.minorityGroup) {
       this.tagService.minorityGroup = this.minorityGroup;
       finalString += this.minorityGroup.map((x: any) => x.name).join(', ');
