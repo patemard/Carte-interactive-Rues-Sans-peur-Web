@@ -67,10 +67,14 @@
               </mat-form-field>
             </div>
             <div class="col-md-6">
-              <mat-form-field class="rounded-field" appearance="fill">
+          
+
+              <button
+                mat-raised-button
+                class="rounded-field"
+                (click)="initIdentificationModal()">
                 <mat-label>Auto identification</mat-label>
-                <input  name="Auto identification" matInput [(ngModel)]="currentTag.identification">
-              </mat-form-field>
+              </button>
             </div>
           </div>
 

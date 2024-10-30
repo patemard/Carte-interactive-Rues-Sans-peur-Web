@@ -1,0 +1,74 @@
+
+<form>
+
+  <h2 mat-dialog-title>Questionnaire d’auto-identification</h2>
+  <mat-dialog-content>
+
+    <div class="row">
+      <mat-label>Vous identifiez-vous comme</mat-label>
+
+      <div class="{{otherGender ? 'col-md-6' : 'col-md-12'}}">
+        <mat-form-field class="full-width rounded-field" appearance="fill">
+          <mat-select name="genre" [(value)]="selectedGender"
+            (valueChange)="checkGender($event)">
+            <mat-option *ngFor="let gender of genders"  [value]="gender">
+              <span class="bold">{{gender}}</span>
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div *ngIf="otherGender"
+        class="col-md-6">
+        <mat-form-field class="full-width rounded-field" appearance="fill">
+          <input matInput placeholder="précisez" maxlength="35"
+            name="genderPrecision"
+            [(ngModel)]="genderPrecision">
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <mat-label>À quel groupe d’âge appartenez-vous? </mat-label>
+        <mat-form-field class="full-width rounded-field" appearance="fill">
+          <mat-select name="ages" [(value)]="ageGroup"
+            (valueChange)="ageGroup=$event">
+            <mat-option *ngFor="let ageGroup of ageGroups" [value]="ageGroup">
+              <span class="bold">{{ageGroup}}</span>
+            </mat-option>
+          </mat-select>  
+        </mat-form-field>
+      </div>
+    </div>
+
+    <mat-label>Est-ce que vous vous identifiez comme une (cochez plusieurs cases, si applicable)</mat-label>
+      <mat-form-field class="full-width rounded-field" appearance="fill">       
+        <mat-select name="minorityGroups"  multiple
+          [(value)]="minorityGroup"
+          (valueChange)="checkMirorityGroup($event)"
+          matTooltip="{{minorityTooltip}}">
+          <mat-option *ngFor="let mg of minorityGroups" [value]="mg">
+            {{mg}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field  *ngIf="minorityOther" 
+        class="full-width rounded-field" appearance="fill">
+        <input matInput placeholder="précisez" maxlength="45"
+          name="minorityGroupPrecision"
+          [(ngModel)]="minorityGroupPrecision">
+      </mat-form-field>
+
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <div class="row">
+        <div class="col-md-6">
+          <button mat-button mat-dialog-close (click)="reset()">Annuler</button>
+        </div>
+        <div class="col-md-6">
+          <button
+            mat-button mat-dialog-close (click)="saveIdentification()">Continuer</button>
+        </div>
+      </div>
+    </mat-dialog-actions>
+  </form>

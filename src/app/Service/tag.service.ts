@@ -13,6 +13,11 @@ import { environment } from 'src/environments/environment';
 export class TagService {
   private _isAdmin = false;
   private _selectedTag: Tag | undefined;
+  private _gender: any;
+  private _genderPrecision: any;
+  private _ageGroup: any;
+  private _minorityGroup: any;
+  private _minorityGroupPrecision: any;
 
 
   // Node/Express APIw
@@ -22,6 +27,46 @@ export class TagService {
   httpHeaders = new HttpHeaders().set('Content-Type', 'application/json');
 
   constructor(private httpClient: HttpClient) {}
+
+  public get gender() {
+    return this._gender;
+  }
+
+  public set gender(gender: any) {
+    this._gender = gender;
+  }
+
+  public get ageGroup() {
+    return this._ageGroup;
+  }
+
+  public set ageGroup(ageGroup: any) {
+    this._ageGroup = ageGroup;
+  }
+
+  public get genderPrecision() {
+    return this._genderPrecision;
+  }
+
+  public set genderPrecision(genderPrecision: any) {
+    this._genderPrecision = genderPrecision;
+  }
+  public get minorityGroup() {
+    return this._minorityGroup;
+  }
+
+  public set minorityGroup(minorityGroup: any) {
+    this._minorityGroup = minorityGroup;
+  }
+
+  public get minorityGroupPrecision() {
+    return this._minorityGroupPrecision;
+  }
+
+  public set minorityGroupPrecision(minorityGroupPrecision: any) {
+    this._minorityGroupPrecision = minorityGroupPrecision;
+  }
+
 
   public get isAdmin() {
     return this._isAdmin;

@@ -189,6 +189,39 @@ body {
   }
 }
 
+  /* Round the entire mat-form-field */
+  .rounded-field {
+    border-radius: 16px; /* Adjust this value as needed */
+    overflow: hidden; /* Prevents content from overflowing the corners */
+  }
+
+  /* Ensure all inner elements also have rounded corners */
+  .rounded-field .mat-form-field-flex {
+    border-radius: 16px; /* Round the inner content */
+  }
+
+  /* Hide the outline for filled appearance */
+  .rounded-field .mat-form-field-underline {
+    display: none; /* Remove underline */
+  }
+
+  /* Hide outline for the outline appearance */
+  .rounded-field .mat-form-field-outline {
+    display: none; /* Remove outline */
+  }
+
+  /* Round the input field */
+  .rounded-field input.mat-input-element,
+  .rounded-field textarea.mat-input-element {
+    border-radius: 16px; /* Round the input and textarea */
+  }
+
+  /* Round the select trigger */
+  .rounded-field .mat-select-trigger {
+    border-radius: 16px; /* Round the select trigger */
+  }
+
+
 @media (max-width: 768px) {
   /* Change the button position */
   .ol-geocoder.gcd-gl-container{

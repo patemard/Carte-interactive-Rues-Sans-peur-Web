@@ -30,15 +30,15 @@ import Draw from 'ol/interaction/Draw';
 import GeoJSON from 'ol/format/GeoJSON';
 import Icon from 'ol/style/Icon'
 import {MatDialog} from "@angular/material/dialog";
-import {TagChoiceDialogComponent} from "../dialogs/tagChoice-dialog.component";
 import { IpService } from '../Service/ip.service';
 import { ConfirmDialogComponent } from '../dialogs/confirm-dialog.component';
+import { RessourceDialogComponent } from '../dialogs/ressource-dialog.component';
+import { IdentificationDialogComponent } from '../dialogs/identification-dialog.component';
 import Cluster from 'ol/source/Cluster';
 import {boundingExtent} from 'ol/extent.js';
 import {  FullScreen   } from 'ol/control';
 import { defaults as defaultControls } from 'ol/control';
 import { defaults as defaultInteractions } from 'ol/interaction';
-import { RessourceDialogComponent } from '../dialogs/ressource-dialog.component';
 import { CustomCheckboxControl } from '../interfaces/CustomCheckboxControl';
 import { GeolocationButtonControl } from '../interfaces/GeolocationButtonControl';
 import { SaveTrajectoryButton } from '../interfaces/SaveTrajectoryButton';
@@ -252,10 +252,44 @@ export class MapDashboardComponent extends Helper implements OnInit {
     const dialogRef = this.dialog.open(RessourceDialogComponent, {
       enterAnimationDuration: 1000
     });
+  }
+
+  initIdentificationModal() {
+    const dialogRef = this.dialog.open(IdentificationDialogComponent, {
+      width: '40%',
+      enterAnimationDuration: 1000
+    });
 
     dialogRef.afterClosed().subscribe(result => {
-      // this.setCenter(16)
+      this.currentTag.identification = result.identification;
     });
+  }
+
+  openDeleteDialog(enterAnimationDuration: string, exitAnimationDuration: string): void  {
+    this.tagService.selectedTag = this.currentTag;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '250px',
+      enterAnimationDuration,
+      exitAnimationDuration,
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result.event == 'hide'){
+        this.currentTag.active = false;
+        this.updateTag(this.currentTag);
+      }else if(result.event == 'unhide'){
+        this.currentTag.active = true;
+        if (this.currentTag.id) {
+          this.updateTag(this.currentTag);
+        }
+      } else if(result.event == 'delete'){
+        if (this.currentTag.id) {
+          this.delete(this.currentTag.id);
+        }
+      }
+    });
+
   }
 
   initGeoCoder() {
@@ -455,6 +489,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
         extent: extent,         // Constrains panning within this extent
       })
     );
+    this.visualAggregation();
   }
 
   scrollToTop() {
@@ -664,6 +699,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
           this.ngZone.run(() => this.router.navigateByUrl('/'))
           this.initializeOnLoad();
           this.refresh();
+          this.unlockExtent();
           }, (err: any) => {
             console.log(err);
         });
@@ -694,6 +730,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       this.ngZone.run(() => this.router.navigateByUrl('/'))
       this.initializeOnLoad();
       this.refresh();
+      this.unlockExtent();
       }, (err: any) => {
         console.log(err);
     });
@@ -924,34 +961,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
   }
 
 
-
-  openDeleteDialog(enterAnimationDuration: string, exitAnimationDuration: string): void  {
-    this.tagService.selectedTag = this.currentTag;
-
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      width: '250px',
-      enterAnimationDuration,
-      exitAnimationDuration,
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if(result.event == 'hide'){
-        this.currentTag.active = false;
-        this.updateTag(this.currentTag);
-      }else if(result.event == 'unhide'){
-        this.currentTag.active = true;
-        if (this.currentTag.id) {
-          this.updateTag(this.currentTag);
-        }
-      } else if(result.event == 'delete'){
-        if (this.currentTag.id) {
-          this.delete(this.currentTag.id);
-        }
-      }
-    });
-
-  }
-
   sendEmail() {
     const emailData = {
       from: 'RuesSansPeur@gmail.com',
@@ -989,7 +998,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
       }
     }
     this.unlockExtent();
-
     this.showCard=false;
   }
 

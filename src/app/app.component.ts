@@ -1,7 +1,4 @@
 import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { RessourceDialogComponent } from './dialogs/ressource-dialog.component';
-
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -10,7 +7,7 @@ import { RessourceDialogComponent } from './dialogs/ressource-dialog.component';
 export class AppComponent {
   isOpen = false;
 
-  constructor(public dialog: MatDialog) {}
+  constructor() {}
 
   
   openDialog() {
