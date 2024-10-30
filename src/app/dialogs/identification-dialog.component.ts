@@ -60,18 +60,15 @@ log($event: any) {
     if (this.minorityGroup){
       this.minorityTooltip = this.minorityGroup.map((x: any) => x.name).join(', ')
       this.minorityGroupPrecision = this.tagService.minorityGroupPrecision;
+      this.checkMirorityGroup(this.minorityGroup);
     } else { 
       this.minorityTooltip  = '';
     }
     this.selectedGender = this.tagService.gender;
-    
     this.genderPrecision = this.tagService.genderPrecision;
     this.ageGroup = this.tagService.ageGroup;
-    if (this.selectedGender) {
+    if (this.selectedGender && this.selectedGender.trim()) {
       this.checkGender(this.selectedGender);
-    }
-    if(this.minorityGroup){
-      this.checkMirorityGroup(this.minorityGroup);
     }
   }
   checkGender(event: any) {
@@ -112,19 +109,19 @@ log($event: any) {
   }
 
   reset() {
-    this.selectedGender = "";
-    this.ageGroup = [];
-    this.minorityGroup = [];
+    this.selectedGender = '';
+    this.ageGroup = '';
+    this.minorityGroup = '';
     this.minorityTooltip = '';
     this.minorityOther = false;
     this.minorityGroupPrecision = '';
     this.genderPrecision = '';
-    this.tagService.gender = [];
-    this.tagService.ageGroup  = [];
-    this.tagService.minorityGroup  = [];
+    this.tagService.gender = '';
+    this.tagService.ageGroup  = '';
+    this.tagService.minorityGroup  = '';
     this.tagService.genderPrecision = ''; 
     this.tagService.minorityGroupPrecision  = '';
-    this.dialogRef.close({identification: null});
+    this.dialogRef.close({identification: ''});
   }
   
 
