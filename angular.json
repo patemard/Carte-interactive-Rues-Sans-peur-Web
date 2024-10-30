@@ -74,10 +74,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "MapApp:build:production"
+              "buildTarget": "MapApp:build:production"
             },
             "development": {
-              "browserTarget": "MapApp:build:development"
+              "buildTarget": "MapApp:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -85,7 +85,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "MapApp:build"
+            "buildTarget": "MapApp:build"
           }
         },
         "test": {
