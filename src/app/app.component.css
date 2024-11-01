@@ -30,17 +30,23 @@
   text-shadow: 0 1px 0 #528ecc;
   outline: 0;
 }
-
-html { height: 100%; }
-body {
-    min-height:100%; 
-    position:relative; 
-    padding-bottom:11%
+body, html {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Prevents any unintended horizontal scroll */
+  height: 100%; /* Ensures full height for the page */
+  padding-bottom:11%
 }
-.footer { 
-    position: absolute; 
-    left: 0 ; right: 0; bottom: 0; 
-    height:12%;
+
+
+footer {
+  height: 13%;
+  margin-bottom: 0; /* Ensures no extra space from the footer */
+}
+
+.navbar, .footer {
+  width: 100%; /* Ensures the navbar and footer do not extend */
+  box-sizing: border-box; /* Includes padding and border in the element’s total width and height */
 }
 
 #rsp {
@@ -88,6 +94,9 @@ button[color="violet-atv"] {
   }
   #rsp {
     display: none;
+  }
+  #mainNav{
+    height: 12%;
   }
 
 }

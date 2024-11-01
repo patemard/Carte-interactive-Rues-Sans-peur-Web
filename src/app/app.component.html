@@ -1,26 +1,30 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top bleu-atv" id="mainNav">
-  <div class="container px-4 content">
-      <div id="imgContainer">
-        <a class="navbar-brand" href="https://transportsviables.org/" target="_blank"><img src="assets/png/logo.png" alt="logo ATV" /></a>
-      </div>
-      <div id="rsp"><p class="m-0 text-center" style="color: #EDEDDD;">&copy; Rues Sans Peur</p></div>
-      <button  mat-raised-button 
-        color="violet-atv" (click)="openDialog()">Ressources
-            <i class="fa fa-external-link" aria-hidden="true"></i>
-      </button>
+  <div class="container-fluid px-4 content">
+    <div id="imgContainer" class="d-flex justify-content-start">
+      <a class="navbar-brand" href="https://transportsviables.org/" target="_blank">
+        <img src="assets/png/logo.png" alt="logo ATV" class="img-fluid" />
+      </a>
+    </div>
+    <!-- <div id="rsp" class="d-flex justify-content-center">
+      <p class="m-0 text-center" style="color: #EDEDDD;">&copy; Rues Sans Peur</p>
+    </div> -->
+    <button mat-raised-button 
+      class="btn btn-primary" color="violet-atv" (click)="openDialog()">Ressources
+      <i class="fa fa-external-link" aria-hidden="true"></i>
+    </button>
   </div>
 </nav>
 <router-outlet></router-outlet>
-  <!-- Footer-->
+
+<!-- Footer -->
 <footer class="py-5 bleu-atv footer">
-    <div class="container px-4">
-      <p class="m-0 text-center" style="color: #EDEDDD;">
-        <span class="bold"  style="color: #9494FE;">Traumavertissement </span> : Cette page contient des références à des expériences de harcèlement de rue et d'agressions pouvant être 
-        confrontant pour certaines personnes. Au besoin, nous vous invitons à consulter la liste des ressources psychologiques accessible
-      </p> 
-      <p class="m-0 text-center" style="color: #EDEDDD;">
-        <a href="https://github.com/patemard"><i class="fa fa-github fa-2x" aria-hidden="true"></i></a> &copy; Rues Sans Peur 
-      </p></div>
+  <div class="container-fluid px-4">
+    <p class="m-0 text-center" style="color: #EDEDDD;">
+      <span class="bold" style="color: #9494FE;">Traumavertissement</span> : Cette page contient des références à des expériences de harcèlement de rue et d'agressions pouvant être 
+      confrontant pour certaines personnes. Au besoin, nous vous invitons à consulter la liste des ressources psychologiques accessible
+    </p>
+  <p class="m-0 text-center" style="color: #EDEDDD;">
+      <a href="https://github.com/patemard"><i class="fa fa-github fa-2x" aria-hidden="true" style="color:#FFFFFF"></i></a> &copy; Rues Sans Peur 
+    </p>
+  </div>
 </footer>
-
-

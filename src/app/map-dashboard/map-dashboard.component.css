@@ -1,5 +1,5 @@
 .map {
-  height: 95%;
+  height: 87%;
   width: 100%;
 }
 #popupCard {
@@ -160,16 +160,10 @@ button.clicked .fa-flag {
     border-radius: 16px !important; /* Ensure rounded corners */
     overflow: hidden; /* Prevent overflow of content */
   }
-      
-
-
-
-
 
   @media (max-width: 768px) {
 
     .map {
-      height: 100%;
       width: 100%;
       position: relative;
     }
