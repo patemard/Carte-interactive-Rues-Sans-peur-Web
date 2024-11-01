@@ -15,34 +15,37 @@
     <mat-card *ngIf="showPopup" id="popupCard" class="responsive-card">
       <div id="popup-content">
         <form>
-
-          <mat-form-field class="full-width rounded-field" appearance="fill">
-            <mat-label>Catégorie</mat-label>
-              <mat-select name="Sélection Catégorie"
-              [(ngModel)]="selectedCategory">
-              <mat-option *ngFor="let category of categories" [value]="category.name">
-                <!-- <i class="fa fa-{{emotion.icon}} fa-xl"></i> -->
-                <span class="bold">{{category.name}}</span>
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-
+          <div class="row mb-2">
+            <div class="col-12 col-md-12">
+              <mat-form-field class="full-width rounded-field" appearance="fill">
+                <mat-label>Catégorie</mat-label>
+                  <mat-select name="Sélection Catégorie"
+                  [(ngModel)]="selectedCategory">
+                  <mat-option *ngFor="let category of categories" [value]="category.name">
+                    <!-- <i class="fa fa-{{emotion.icon}} fa-xl"></i> -->
+                    <span class="bold">{{category.name}}</span>
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+          </div>
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-6 col-md-6">
               <mat-form-field class="rounded-field full-width" appearance="fill">
-                <mat-label>Sentiment de sécurité</mat-label>
+                <mat-label class="label">Sentiment de sécurité</mat-label>
                 <mat-select name="Sélection émotion"
                   [(ngModel)]="selectedEmotion">
                   <mat-option *ngFor="let emotion of emotions" [ngClass]="emotion.class" [value]="emotion.name">
-                    <i class="fa fa-{{emotion.icon}} fa-xl" style="margin-right: 5px;"></i>
+                    <i *ngIf="!isMobileDevice()" class="fa fa-{{emotion.icon}} fa-xl" style="margin-right: 5px;"></i>
+                    <i *ngIf="isMobileDevice()" class="fa fa-{{emotion.icon}} fa-lg" style="margin-right: 2px; font-size: small;"></i>
                     <span class="bold">{{emotion.name}}</span>
                   </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
-            <div class="col-md-6">
-              <mat-form-field class="rounded-field" appearance="fill">
-                <mat-label>Mode de transport</mat-label>
+            <div class="col-6 col-md-6">
+              <mat-form-field class="rounded-field full-width" appearance="fill">
+                <mat-label class="label">Mode de transport</mat-label>
                 <mat-select name="Sélection transport"
                   [(ngModel)]="selectedTransport">
                   <mat-option *ngFor="let transport of transports" [value]="transport.name">
@@ -53,22 +56,21 @@
               </mat-form-field>
             </div>
           </div>
-          <div class="row">
-            <div class="col-md-6">
-              <mat-form-field class="rounded-field" appearance="fill">
+          <div class="row mb-2">
+            <div class="col-6 col-md-6">
+              <mat-form-field class="rounded-field full-width" appearance="fill">
                 <mat-label>Type</mat-label>
                 <mat-select name="Sélection type"
                   [(ngModel)]="selectedType">
                   <mat-option *ngFor="let type of types" [value]="type.name">
-                    <i class="fa fa-{{type.icon}} fa-xl" style="margin-right: 5px;"></i>
+                    <i *ngIf="!isMobileDevice()" class="fa fa-{{type.icon}} fa-xl" style="margin-right: 5px;"></i>
+                    <i *ngIf="isMobileDevice()" class="fa fa-{{type.icon}} fa-lg" style="margin-right: 2px;"></i>
                     <span class="bold">{{type.name}}</span>
                   </mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
-            <div class="col-md-6">
-          
-
+            <div class="col-6 col-md-6">
               <button
                 mat-raised-button
                 class="rounded-field {{currentTag.identification ? 'violet-pale-atv' : ''}}"
@@ -78,50 +80,50 @@
             </div>
           </div>
 
-          <mat-form-field class="rounded-field" class="full-width" appearance="fill">
-            <mat-label>Description</mat-label>
-            <textarea name="descInput"
-              maxlength="500"
-              matInput
-              [(ngModel)]="currentTag.description">
-            </textarea>
-          </mat-form-field>
-
-          <mat-card-footer>
-          <div class="row">
-            <div class="col-md-3">
-              <button mat-raised-button
-                color="violet-atv"
-                id="closeBtn"
-                class="rounded-field"
-                matTooltip="Abandonner la sauvegarde."
-                (click)="initializeOnLoad(); unlockExtent()">Fermer
-              </button>
-            </div>
-            <div class="col-md-5">
-              <!-- <button type="button" mat-raised-button color="primary"
-              (click)="fileInput.click()">Téléverser un image</button>
-              <input hidden (change)="onFileSelected()" #fileInput type="file" id="file"> -->
-            </div>
-            <div class="col-md-4">
-              <button
-                *ngIf="isFormValid()"
-                mat-raised-button
-                color="bleu-atv"
-                title="Sauvegarder ce témoigage"
-                class="rounded-field"
-                matTooltip="Sauvegarder ce témoigage"
-                (click)="onSubmit()">Cartographier
-              </button>
-              <button
-                *ngIf="!isFormValid()"
-                mat-raised-button
-                color="violet-atv"
-                class="rounded-field"
-                matTooltip="Formulaire incomplet.">Cartographier
-              </button>
+          <div class="row mb-2">
+            <div class="col-12 col-md-12">
+              <mat-form-field class="rounded-field" class="full-width" appearance="fill">
+                <mat-label>Description</mat-label>
+                <textarea name="descInput"
+                  maxlength="500"
+                  matInput
+                  [(ngModel)]="currentTag.description">
+                </textarea>
+              </mat-form-field>
             </div>
           </div>
+
+          <mat-card-footer>
+            <div class="row">
+              <div class="col-3 col-md-3 mb-2 mb-md-0">
+                <button mat-raised-button
+                  color="violet-atv"
+                  id="closeBtn"
+                  class="rounded-field"
+                  matTooltip="Abandonner la sauvegarde."
+                  (click)="initializeOnLoad(); unlockExtent()">Fermer
+                </button>
+              </div>
+              <div class="col-3 col-md-5"></div>
+              <div class="col-6 col-md-4 text-end">
+                <button
+                  *ngIf="isFormValid()"
+                  mat-raised-button
+                  color="bleu-atv"
+                  title="Sauvegarder ce témoigage"
+                  class="rounded-field"
+                  matTooltip="Sauvegarder ce témoigage"
+                  (click)="onSubmit()">Cartographier
+                </button>
+                <button
+                  *ngIf="!isFormValid()"
+                  mat-raised-button
+                  color="violet-atv"
+                  class="rounded-field"
+                  matTooltip="Formulaire incomplet.">Cartographier
+                </button>
+              </div>
+            </div>
           </mat-card-footer>
         </form>
       </div>
@@ -134,21 +136,21 @@
       class="centered responsive-card"
       [ngStyle]="{'background-color': completedCardColor}"
     >
-      <mat-card-header>
-        <mat-card-title>
-          <div class="title-container">
+      <mat-card-header class="d-flex flex-wrap justify-content-between align-items-center">
+        <mat-card-title class="w-100 w-md-auto">
+          <div class="title-container d-flex align-items-center">
             <img *ngIf="currentTag" alt="icon" [src]="getTransportIcon()" [ngClass]="currentTag.transport == 'Marche' ? 'icon-completed-pieton' : 'icon-completed'">
             <span class="title-text" title="{{currentTag.title}}">{{currentTag.title}}</span>
           </div>
         </mat-card-title>
-        <button type="button" class="close completedCardClose" aria-label="Close" (click)="close()">
+        <button type="button" class="close completedCardClose ms-auto mt-2 mt-md-0" aria-label="Close" (click)="close()">
           <span aria-hidden="true">&times;</span>
         </button>
       </mat-card-header>
       <mat-card-content class="text-center" style="min-height:25%;">
         <div id="completedCardText" #scrollableContainer>{{currentTag.description}}</div>
       </mat-card-content>
-      <mat-card-actions class="centered">
+      <mat-card-actions class="centered d-flex flex-wrap justify-content-center">
         <button mat-button
           id="heartBtn"
           [class.clicked]="heartIsClicked"

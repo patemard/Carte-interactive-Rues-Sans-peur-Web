@@ -242,7 +242,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
           this.overlay.setPosition(this.currentTag.mercatorCoord);
           this.lockExtent(offsetCoord);
         } else {
-          this.setCenter(18, evt.coordinate);
+          this.zoomInOnClick(18, evt.coordinate);
         }
       }
     })
@@ -250,7 +250,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   initInfoModal() {
     const dialogRef = this.dialog.open(RessourceDialogComponent, {
-      enterAnimationDuration: 1000
+      enterAnimationDuration: 700
     });
   }
 
@@ -526,10 +526,13 @@ export class MapDashboardComponent extends Helper implements OnInit {
     layer.setStyle(newStyle);
   }
 
-  setCenter(zoom: number, coord: any) {
+  zoomInOnClick(zoom: number, coord: any) {
     var view = this.map.getView();
-    view.setCenter(coord);
-    view.setZoom(zoom);
+    view.animate({
+      center: coord,
+      zoom: zoom, 
+      duration: 700,  // Duration in milliseconds for the animation
+    });
   }
 
   /**
@@ -715,7 +718,19 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.currentTag.title = this.selectedCategory;
     this.currentTag.emotion = this.selectedEmotion;
     this.currentTag.transport = this.selectedTransport;
-    this.currentTag.description = this.currentTag.description?.replace(/\s+/g, ' ').trim();// remplace les multiples espaces vide par 1.
+    this.currentTag.description = this.formatLongStringWithSpaces(this.currentTag.description, 30);
+  }
+
+   formatLongStringWithSpaces(input: any, length: any) {
+    // Normalize existing spaces first, replacing multiple spaces with a single space and trimming.
+    input = input.replace(/\s+/g, ' ').trim();
+    if (!input.includes(' ')) {
+      // Insert spaces into long strings without breaking existing words.
+      input = input.replace(new RegExp(`.{1,${length}}`, 'g'), '$& ').trim();
+      input = input.replace(new RegExp(`.{1,${length}}`, 'g'), '$& ').trim();
+    }
+    return input;
+    
   }
 
   submitTrajectory() {
@@ -985,8 +1000,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   close() {
     const color = this.currentTag?.trajectory ?
-     this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb.trajectory :
-     this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb.point;
+    this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb.trajectory :
+    this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb.point;
     if (color) {
       if (this.clikedOnLayer) {
         this.changeLayerColor(

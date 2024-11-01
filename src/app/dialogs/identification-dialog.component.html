@@ -1,12 +1,9 @@
 
 <form>
-
   <h2 mat-dialog-title>Questionnaire d’auto-identification</h2>
   <mat-dialog-content>
-
     <div class="row">
       <mat-label>Vous identifiez-vous comme</mat-label>
-
       <div class="{{otherGender ? 'col-md-6' : 'col-md-12'}}">
         <mat-form-field class="full-width rounded-field" appearance="fill">
           <mat-select name="genre" [(value)]="selectedGender"
@@ -47,7 +44,7 @@
           (valueChange)="checkMirorityGroup($event)"
           matTooltip="{{minorityTooltip}}">
           <mat-option *ngFor="let mg of minorityGroups" [value]="mg">
-            {{mg}}
+           <div style="margin-top: 8px;"> {{mg}}</div>
           </mat-option>
         </mat-select>
       </mat-form-field>

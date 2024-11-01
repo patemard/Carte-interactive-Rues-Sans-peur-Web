@@ -22,8 +22,17 @@
   max-width:  30%; /* Set a flexible width */
   min-height: min-content; /* Adjust height as needed */
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-
 }
+
+/* width */
+#completedCardText {
+  max-height: 80%; /* Limits height to 80% of the viewport */
+  overflow-y:auto; /* Enables vertical scrolling if content overflows */
+  scrollbar-width: thin; /* Thin scrollbar */
+  scroll-behavior:auto;
+  overflow-x: hidden; /* Hides the horizontal scrollbar */
+}
+
 .multiline {
   white-space: pre-wrap;
   word-break: break-word;
@@ -144,15 +153,6 @@ button.clicked .fa-flag {
   border-radius: 4px;
 }
 
-  /* TODO scroll for text*/
-  /* width */
-  #completedCardText {
-    max-height: 80%; /* Limits height to 80% of the viewport */
-    overflow-y:auto; /* Enables vertical scrolling if content overflows */
-    scrollbar-width: thin; /* Thin scrollbar */
-    scroll-behavior:auto;
-    overflow-x: hidden; /* Hides the horizontal scrollbar */
-  }
 
   .responsive-card {
     width: 100%; /* Take full width of the container */
@@ -192,8 +192,30 @@ button.clicked .fa-flag {
 
 
     #completedCard {
-      max-width:  10%; /* Set a flexible width */
-      max-height: 15%;
+      max-width:  50%; /* Set a flexible width */
+      max-height: 35%;
+    }
+
+    #popupCard {
+      max-width: 70%;
+    }
+
+    .label {
+      font-size: 12px; /* Reduce font size for mobile */
+    }
+
+    .icon-completed-pieton {
+      max-width: 18%;
+      max-height: 18%;
+    }
+    .icon-pieton{
+      max-width: 20%;
+      max-height: 20%;
+    }
+    
+    .icon-completed{
+      max-width: 35%;
+      max-height: 35%;
     }
   
   }
