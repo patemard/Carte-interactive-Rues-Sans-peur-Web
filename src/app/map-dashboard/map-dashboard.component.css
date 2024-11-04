@@ -226,6 +226,10 @@ button.clicked .fa-flag {
     width: 100%;
     position: relative;
   }
+  #popupCard {
+    max-width: fit-content;
+    max-height: fit-content;
+  }
 
 
 }

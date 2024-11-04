@@ -3,7 +3,7 @@ import Geolocation from 'ol/Geolocation';
 
 export class GeolocationButtonControl extends Control {
 
-    constructor(map: any, isMobileDevice: boolean) {
+    constructor(map: any, isMobilePortrait: boolean, isMobileLandscape: boolean) {
         // Geolocation API setup
         const geolocation = new Geolocation({
             tracking: false,
@@ -24,13 +24,17 @@ export class GeolocationButtonControl extends Control {
         // Create the container div
         const div = document.createElement('div');
         div.className = 'ol-unselectable ol-control';
-        console.log("isMobileDevice", isMobileDevice);
+        console.log("isMobilePortrait", isMobilePortrait);
+        console.log(isMobileLandscape);
         
-        if (isMobileDevice) {
-            div.style.top = '40%';
+        if (isMobilePortrait) {
+            div.style.top = '38%';
             div.style.left = '2%';
+        } else if (isMobileLandscape) {
+            div.style.top = '56%';
+            div.style.left = '1.5%';
         } else {
-            div.style.top = '32%';
+            div.style.top = '30%';
             div.style.left = '0.2%'; 
         }
         div.style.position = 'absolute';

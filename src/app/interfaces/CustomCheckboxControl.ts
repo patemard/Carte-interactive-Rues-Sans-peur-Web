@@ -11,13 +11,19 @@ import { Control   } from 'ol/control';
     constructor(pointLayers: any, 
       trajectoryLayer: any, 
       clusteredLayer: any,
-      isMobile: boolean) {
+      isMobile: boolean, 
+      isMobileLandscape: boolean){
 
       const pointCheckbox = document.createElement('input');
       pointCheckbox.type = 'checkbox';
       pointCheckbox.id = 'togglePoints';
-      pointCheckbox.style.height = "2vh";
-      pointCheckbox.style.width = "2vh";
+      if (isMobileLandscape) {
+        pointCheckbox.style.height = "4vh";
+        pointCheckbox.style.width = "4vh";
+      } else {
+        pointCheckbox.style.height = "2vh";
+        pointCheckbox.style.width = "2vh";
+      }
       pointCheckbox.checked = true;
       
       const pointIcon = document.createElement('i');
@@ -42,8 +48,14 @@ import { Control   } from 'ol/control';
       const trajectoryCheckbox= document.createElement('input');
       trajectoryCheckbox.type = 'checkbox';
       trajectoryCheckbox.id = 'toggleTrajectory';
-      trajectoryCheckbox.style.height = "2vh";
-      trajectoryCheckbox.style.width = "2vh";
+      if (isMobileLandscape) {
+        trajectoryCheckbox.style.height = "4vh";
+        trajectoryCheckbox.style.width = "4vh";
+      } else {
+        trajectoryCheckbox.style.height = "2vh";
+        trajectoryCheckbox.style.width = "2vh";
+      }
+
       trajectoryCheckbox.checked = true;
 
       const trajectoryIcon = document.createElement('i');

@@ -120,13 +120,13 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.initGeoCoder();
     this.initPopup();
     await this.getTags();
-    this.getUserIp();
+    await this.getUserIp();
     this.visualAggregation();
     this.map.addControl(
-      new CustomCheckboxControl(this.pointLayers, this.trajectoryLayer, this.clusteredLayer, this.isMobileDevice())
+      new CustomCheckboxControl(this.pointLayers, this.trajectoryLayer, this.clusteredLayer, this.isMobilePortrait(), this.isMobileLandscape())
     );
     this.map.addControl(
-      new GeolocationButtonControl(this.map,this.isMobileDevice()),
+      new GeolocationButtonControl(this.map,this.isMobilePortrait(), this.isMobileLandscape()),
     );
     this.initInfoModal();
   }
@@ -146,15 +146,19 @@ export class MapDashboardComponent extends Helper implements OnInit {
   }
 
   getUserIp() {
-    this.ipService.getIpAddress().subscribe( (data) => {
-        if (data.ip){
-          this.ipAddress = data.ip;
+    return new Promise((resolve, reject) =>  {
+      this.ipService.getIpAddress().subscribe( (data) => {
+          if (data.ip){
+            this.ipAddress = data.ip;
+          }
+          resolve(true);
+        },
+        (error) => {
+          reject(error);
+          console.error('Failed to fetch IP address', error);
         }
-      },
-      (error) => {
-        console.error('Failed to fetch IP address', error);
-      }
-    );
+      );
+    });
   }
 
 
@@ -185,7 +189,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
        controls: defaultControls(),
     });
 
-    if (this.isMobileDevice()) {
+    if (this.isMobilePortrait()) {
       const fullScreenControl = new FullScreen();
       this.map.addControl(fullScreenControl);
     }
@@ -256,12 +260,14 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   initIdentificationModal() {
     const dialogRef = this.dialog.open(IdentificationDialogComponent, {
-      width: '30%',
-      enterAnimationDuration: 1000
+      width: this.isMobilePortrait() || this.isMobileLandscape() ? 'fit-content' : '35%',
+      enterAnimationDuration: 550
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.currentTag.identification = result.identification;
+      if (result) {
+        this.currentTag.identification = result.identification;
+      }
     });
   }
 
@@ -420,8 +426,12 @@ export class MapDashboardComponent extends Helper implements OnInit {
   }
 
 
-  clickedOnTag() {
+  async clickedOnTag() {
 
+    if (!this.ipAddress) {
+      await this.getUserIp();
+    }
+    
     this.showCard = true;
     this.overlay.setPosition(this.currentTag.mercatorCoord);
 

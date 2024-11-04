@@ -36,8 +36,8 @@
                 <mat-select name="Sélection émotion"
                   [(ngModel)]="selectedEmotion">
                   <mat-option *ngFor="let emotion of emotions" [ngClass]="emotion.class" [value]="emotion.name">
-                    <i *ngIf="!isMobileDevice()" class="fa fa-{{emotion.icon}} fa-xl" style="margin-right: 5px;"></i>
-                    <i *ngIf="isMobileDevice()" class="fa fa-{{emotion.icon}} fa-lg" style="margin-right: 2px; font-size: small;"></i>
+                    <i *ngIf="!isMobilePortrait()" class="fa fa-{{emotion.icon}} fa-xl" style="margin-right: 5px;"></i>
+                    <i *ngIf="isMobilePortrait()" class="fa fa-{{emotion.icon}} fa-lg" style="margin-right: 2px; font-size: small;"></i>
                     <span class="bold">{{emotion.name}}</span>
                   </mat-option>
                 </mat-select>
@@ -63,8 +63,8 @@
                 <mat-select name="Sélection type"
                   [(ngModel)]="selectedType">
                   <mat-option *ngFor="let type of types" [value]="type.name">
-                    <i *ngIf="!isMobileDevice()" class="fa fa-{{type.icon}} fa-xl" style="margin-right: 5px;"></i>
-                    <i *ngIf="isMobileDevice()" class="fa fa-{{type.icon}} fa-lg" style="margin-right: 2px;"></i>
+                    <i *ngIf="!isMobilePortrait()" class="fa fa-{{type.icon}} fa-xl" style="margin-right: 5px;"></i>
+                    <i *ngIf="isMobilePortrait()" class="fa fa-{{type.icon}} fa-lg" style="margin-right: 2px;"></i>
                     <span class="bold">{{type.name}}</span>
                   </mat-option>
                 </mat-select>

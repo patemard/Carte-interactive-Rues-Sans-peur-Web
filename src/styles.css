@@ -1,15 +1,7 @@
 
 
-@charset "UTF-8";body,html{height:100%}body{margin:0;font-family:haas}.full-width{width:100%}/*!
-* Start Bootstrap - Scrolling Nav v5.0.6 (https://startbootstrap.com/template/scrolling-nav)
-* Copyright 2013-2023 Start Bootstrap
-* Licensed under MIT (https://github.com/StartBootstrap/startbootstrap-scrolling-nav/blob/master/LICENSE)
-*//*!
- * Bootstrap  v5.2.3 (https://getbootstrap.com/)
- * Copyright 2011-2022 The Bootstrap Authors
- * Copyright 2011-2022 Twitter, Inc.
- * Licensed under MIT (https://github.com/twbs/bootstrap/blob/main/LICENSE)
- */
+@charset "UTF-8";body,html{height:100%}body{margin:0;font-family:haas}.full-width{width:100%}
+
  :root {
   --bleu-atv: #1F1750;
   --bleu-pale-atv: #342979;
@@ -49,7 +41,7 @@
   }
     
   #checkboxesDiv {
-    margin-top: 10%;
+    margin-top: 8%;
   }
    /* Change the button position */
  .ol-geocoder.gcd-gl-container{
@@ -57,11 +49,11 @@
     float: left !important;
     height: 26.75px !important;
     width: 26.75px !important;
-    margin-top: 10% !important;
+    margin-top: 8% !important;
   }
 
  .ol-zoom.ol-unselectable.ol-control {
-    margin-top: 10% !important;
+    margin-top: 8% !important;
  }
 
  .bleu-atv {
@@ -184,76 +176,76 @@ body {
   }
 }
 
-  /* Round the entire mat-form-field */
-  .rounded-field {
-    border-radius: 16px; /* Adjust this value as needed */
-    overflow: hidden; /* Prevents content from overflowing the corners */
-  }
+/* Round the entire mat-form-field */
+.rounded-field {
+  border-radius: 16px; /* Adjust this value as needed */
+  overflow: hidden; /* Prevents content from overflowing the corners */
+}
 
-  /* Ensure all inner elements also have rounded corners */
-  .rounded-field .mat-form-field-flex {
-    border-radius: 16px; /* Round the inner content */
-  }
+/* Ensure all inner elements also have rounded corners */
+.rounded-field .mat-form-field-flex {
+  border-radius: 16px; /* Round the inner content */
+}
 
-  /* Hide the outline for filled appearance */
-  .rounded-field .mat-form-field-underline {
-    display: none; /* Remove underline */
-  }
+/* Hide the outline for filled appearance */
+.rounded-field .mat-form-field-underline {
+  display: none; /* Remove underline */
+}
 
-  /* Hide outline for the outline appearance */
-  .rounded-field .mat-form-field-outline {
-    display: none; /* Remove outline */
-  }
+/* Hide outline for the outline appearance */
+.rounded-field .mat-form-field-outline {
+  display: none; /* Remove outline */
+}
 
-  /* Round the input field */
-  .rounded-field input.mat-input-element,
-  .rounded-field textarea.mat-input-element {
-    border-radius: 16px; /* Round the input and textarea */
-  }
+/* Round the input field */
+.rounded-field input.mat-input-element,
+.rounded-field textarea.mat-input-element {
+  border-radius: 16px; /* Round the input and textarea */
+}
 
-  /* Round the select trigger */
-  .rounded-field .mat-select-trigger {
-    border-radius: 16px; /* Round the select trigger */
-  }
+/* Round the select trigger */
+.rounded-field .mat-select-trigger {
+  border-radius: 16px; /* Round the select trigger */
+}
 
 
 @media (max-width: 768px) {
-  /* Change the button position */
-  .ol-geocoder.gcd-gl-container{
-    position: absolute !important;
-    float: left !important;
-    height: 3vh!important;
-    width: 3vh !important;
-    margin-top: 30% !important;
-  }
+/* Change the button position */
+.ol-geocoder.gcd-gl-container{
+  position: absolute !important;
+  float: left !important;
+  height: 3vh!important;
+  width: 3vh !important;
+  margin-top: 30% !important;
+}
 
-  .ol-zoom.ol-unselectable.ol-control {
-    margin-top: 30% !important;
-  }
-  
-  #checkboxesDiv {
-    margin-top: 30%;
-  }
+.ol-zoom.ol-unselectable.ol-control {
+  margin-top: 30% !important;
+}
+
+#checkboxesDiv {
+  margin-top: 30%;
+}
 
 }
 
 @media (max-width: 430px) {
-  /* Change the button position */
-  .ol-geocoder.gcd-gl-container{
-    position: absolute !important;
-    float: left !important;
-    height: 3vh!important;
-    width: 3vh !important;
-    margin-top: 40% !important;
-  }
+/* Change the button position */
+.ol-geocoder.gcd-gl-container{
+  position: absolute !important;
+  float: left !important;
+  height: 3vh!important;
+  width: 3vh !important;
+  margin-top: 40% !important;
+}
 
-  .ol-zoom.ol-unselectable.ol-control {
-    margin-top: 40% !important;
-  }
-  
-  #checkboxesDiv {
-    margin-top: 40%;
-  }
+.ol-zoom.ol-unselectable.ol-control {
+  margin-top: 40% !important;
+}
+
+#checkboxesDiv {
+  margin-top: 40%;
+}
 
 }
 

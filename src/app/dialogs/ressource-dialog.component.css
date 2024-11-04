@@ -1,11 +1,10 @@
 #modal-container {
-    max-width: 600px;         /* Limits the modal width */
+    max-width: 600px;          /* Limits the modal width */
     margin: auto;             /* Centers the modal */
     padding: 20px;            /* Adds padding inside the modal */
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
     overflow: hidden;         /* Prevents content overflow */
-    font-family:haas ;
-    background-color: #EDEDDD;  /* Background color for visibility */
+    font-family:haas ;;  /* Background color for visibility */
 }
 
 .mat-dialog-content {
@@ -20,4 +19,14 @@
 button[color="violet-atv"] {
     border-radius: 20px;      /* Makes the button more rounded */
     padding: 8px 16px;        /* Adjust button padding */
+}
+
+@media (max-width: 600px) {
+    #modal-container {
+        max-width: 95%; /* Make it almost full-width on small screens */
+        padding: 10px;  /* Reduce padding */
+    }
+    .mat-dialog-content {
+        padding: 10px; /* Adjust inner padding */
+    }
 }

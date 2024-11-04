@@ -96,8 +96,17 @@ button[color="violet-atv"] {
     display: none;
   }
   #mainNav{
-    height: 12%;
+    height: 10%;
   }
+  .footer {
+    min-height: min-content;
+    margin-bottom: 0; /* Ensures no extra space from the footer */
+  }
+
+  .footer-text {
+    font-size: 12px;
+  }
+  
 
 }
 
@@ -109,5 +118,8 @@ button[color="violet-atv"] {
   }
   #rsp {
     display:initial;
+  }
+  #mainNav{
+    height: 20%;
   }
 }
