@@ -113,6 +113,15 @@ button[color="violet-atv"] {
 
 
 @media (max-height: 500px) {
+
+  #imgContainer {
+    max-width: 20%; /* make the image responsive */
+    max-height: 20%;
+  }
+  #ressourcesBtn{
+    max-width: 18%; /* make the image responsive */
+    max-height: 18%;
+  }
   .footer { 
     display: none; 
   }
@@ -120,6 +129,6 @@ button[color="violet-atv"] {
     display:initial;
   }
   #mainNav{
-    height: 21%;
+    height: 16%;
   }
 }
