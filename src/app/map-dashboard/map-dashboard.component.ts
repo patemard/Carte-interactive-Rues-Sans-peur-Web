@@ -437,11 +437,9 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.showCard = true;
     this.overlay.setPosition(this.currentTag.mercatorCoord);
 
-    if (this.currentTag.flagged) {
-      this.flagIsClicked =  this.currentTag.flagged.some(h => h === this.ipAddress);
-    }
     const color = this.emotions.find(x => x.name === this.currentTag.emotion)?.rgb;
     this.heartIsClicked = this.currentTag.heart ? this.currentTag.heart.some(h => h === this.ipAddress) : false;
+    this.flagIsClicked = this.currentTag.flagged ? this.currentTag.flagged.some(h => h === this.ipAddress): false;
     this.completedCardColor = color?.card || '';
     this.selectedEmotion = this.currentTag.emotion;
     this.selectedTransport = this.currentTag.transport;
@@ -459,6 +457,13 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
 
   lockExtent(centerCoord: number[]){
+    if (this._isMobilePortrait) {
+      centerCoord = [
+        this.currentTag.mercatorCoord[0] + 700,
+        this.currentTag.mercatorCoord[1] ,
+      ];
+    }
+
     const view = this.map.getView();
      // Animate to the specific coordinate
      view.animate({
