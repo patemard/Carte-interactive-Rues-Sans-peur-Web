@@ -24,8 +24,6 @@ export class GeolocationButtonControl extends Control {
         // Create the container div
         const div = document.createElement('div');
         div.className = 'ol-unselectable ol-control';
-        console.log("isMobilePortrait", isMobilePortrait);
-        console.log(isMobileLandscape);
         
         if (isMobilePortrait) {
             div.style.top = '38%';

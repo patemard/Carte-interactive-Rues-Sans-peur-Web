@@ -26,7 +26,7 @@
 
 /* width */
 #completedCardText {
-  max-height: 80%; /* Limits height to 80% of the viewport */
+  max-height: 100%; /* Limits height to 80% of the viewport */
   overflow-y:auto; /* Enables vertical scrolling if content overflows */
   scrollbar-width: thin; /* Thin scrollbar */
   scroll-behavior:auto;
