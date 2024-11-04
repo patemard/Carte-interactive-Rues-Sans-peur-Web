@@ -24,15 +24,16 @@ export class GeolocationButtonControl extends Control {
         // Create the container div
         const div = document.createElement('div');
         div.className = 'ol-unselectable ol-control';
+        div.style.marginTop = '10%';
         
         if (isMobilePortrait) {
-            div.style.top = '38%';
+            div.style.top = '40%';
             div.style.left = '2%';
         } else if (isMobileLandscape) {
             div.style.top = '56%';
             div.style.left = '1.5%';
         } else {
-            div.style.top = '30%';
+            div.style.top = '25%';
             div.style.left = '0.2%'; 
         }
         div.style.position = 'absolute';

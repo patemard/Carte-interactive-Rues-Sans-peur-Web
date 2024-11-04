@@ -798,9 +798,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   isFormValid(): boolean {
     return !!(
-      this.selectedCategory &&
       this.selectedEmotion &&
-      this.selectedTransport &&
       this.currentTag.description &&
       this.selectedType
       )

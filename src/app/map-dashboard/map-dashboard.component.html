@@ -1,15 +1,3 @@
-
-<!-- Header-->
-<!-- <header class="bg-primary bg-gradient text-white">
-  <div class="container px-4 text-center">
-      <h1 class="fw-bolder">Bienvenue dans la cartographie émotionnelle!</h1>
-      <p class="lead">{{loremIpsum}}</p>
-      <a class="btn btn-lg btn-outline-atv" href="#about">gravida eget massa</a>
-  </div>
-</header> -->
-
-
-
 <div id="map" class="map"></div>
   <div id="popup" class="ol-popup">
     <mat-card *ngIf="showPopup" id="popupCard" class="responsive-card">
@@ -31,17 +19,18 @@
           </div>
           <div class="row">
             <div class="col-6 col-md-6">
-              <mat-form-field class="rounded-field full-width" appearance="fill">
+              <mat-form-field class="rounded-field full-width" appearance="fill" [ngClass]="{'error-field': !selectedEmotion}">
                 <mat-label class="label">Sentiment de sécurité</mat-label>
-                <mat-select name="Sélection émotion"
-                  [(ngModel)]="selectedEmotion">
+                <mat-select name="Sélection émotion" [(ngModel)]="selectedEmotion" required>
                   <mat-option *ngFor="let emotion of emotions" [ngClass]="emotion.class" [value]="emotion.name">
                     <i *ngIf="!isMobilePortrait()" class="fa fa-{{emotion.icon}} fa-xl" style="margin-right: 5px;"></i>
                     <i *ngIf="isMobilePortrait()" class="fa fa-{{emotion.icon}} fa-lg" style="margin-right: 2px; font-size: small;"></i>
                     <span class="bold">{{emotion.name}}</span>
                   </mat-option>
                 </mat-select>
+                <mat-error class="bold" *ngIf="!selectedEmotion">Veuillez sélectionner.</mat-error>
               </mat-form-field>
+              
             </div>
             <div class="col-6 col-md-6">
               <mat-form-field class="rounded-field full-width" appearance="fill">
@@ -58,17 +47,18 @@
           </div>
           <div class="row mb-2">
             <div class="col-6 col-md-6">
-              <mat-form-field class="rounded-field full-width" appearance="fill">
+              <mat-form-field class="rounded-field full-width" appearance="fill" [ngClass]="{'error-field': !selectedType}">
                 <mat-label>Type</mat-label>
-                <mat-select name="Sélection type"
-                  [(ngModel)]="selectedType">
+                <mat-select name="Sélection type" [(ngModel)]="selectedType" required>
                   <mat-option *ngFor="let type of types" [value]="type.name">
                     <i *ngIf="!isMobilePortrait()" class="fa fa-{{type.icon}} fa-xl" style="margin-right: 5px;"></i>
                     <i *ngIf="isMobilePortrait()" class="fa fa-{{type.icon}} fa-lg" style="margin-right: 2px;"></i>
                     <span class="bold">{{type.name}}</span>
                   </mat-option>
                 </mat-select>
+                <mat-error class="bold" *ngIf="!selectedType">Veuillez sélectionner un type.</mat-error>
               </mat-form-field>
+              
             </div>
             <div class="col-6 col-md-6">
               <button
@@ -82,14 +72,17 @@
 
           <div class="row mb-2">
             <div class="col-12 col-md-12">
-              <mat-form-field class="rounded-field" class="full-width" appearance="fill">
+              <mat-form-field class="rounded-field full-width" appearance="fill" [ngClass]="{'error-field': !currentTag.description}">
                 <mat-label>Description</mat-label>
                 <textarea name="descInput"
-                  maxlength="500"
-                  matInput
-                  [(ngModel)]="currentTag.description">
+                          maxlength="500"
+                          matInput
+                          [(ngModel)]="currentTag.description"
+                          required>
                 </textarea>
+                <mat-error *ngIf="!currentTag.description" class="bold">Veuillez entrer une description.</mat-error>
               </mat-form-field>
+              
             </div>
           </div>
 
@@ -153,6 +146,7 @@
       <mat-card-actions class="centered d-flex flex-wrap justify-content-center">
         <button mat-button
           id="heartBtn"
+          matTooltip="Solidaire"
           [class.clicked]="heartIsClicked"
           [disabled]="heartIsClicked || !ipAddress"
           (click)="heart()">
@@ -161,6 +155,7 @@
         </button>
         <button mat-button
           id="flagBtn"
+          matTooltip="Signaler"
           [class.clicked]="flagIsClicked"
           [disabled]="flagIsClicked || !ipAddress"
           (click)="flag()">
