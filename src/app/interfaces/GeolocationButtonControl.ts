@@ -3,7 +3,39 @@ import Geolocation from 'ol/Geolocation';
 
 export class GeolocationButtonControl extends Control {
 
-    constructor(map: any, isMobilePortrait: boolean, isMobileLandscape: boolean) {
+
+    constructor(map: any) {
+
+        const isMobile = /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
+        let _isMobilePortrait: boolean = false;
+        let _isMobileLandscape: boolean = false;
+
+        if (isMobile) {
+
+            _isMobilePortrait = window.innerWidth <= 768;
+            _isMobileLandscape = window.innerWidth > window.innerHeight; // Typical breakpoint for tablets and mobile
+
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > window.innerHeight) {
+                    _isMobilePortrait = false;
+                    _isMobileLandscape = true;
+                } else if(window.innerWidth <= 768) {
+                    _isMobilePortrait = true;
+                    _isMobileLandscape = false;
+                }
+                if (_isMobilePortrait) {
+                    div.style.top = '35%';
+                    div.style.left = '2%';
+                } else if (_isMobileLandscape) {
+                    div.style.top = '45%';
+                    div.style.left = '1.2%';
+                } else {
+                    div.style.marginTop = '18%';
+                    div.style.left = '0.2%'; 
+                }
+            }); 
+        }
+
         // Geolocation API setup
         const geolocation = new Geolocation({
             tracking: false,
@@ -26,14 +58,14 @@ export class GeolocationButtonControl extends Control {
         div.className = 'ol-unselectable ol-control';
         div.style.marginTop = '10%';
         
-        if (isMobilePortrait) {
-            div.style.top = '40%';
+        if (_isMobilePortrait) {
+            div.style.top = '35%';
             div.style.left = '2%';
-        } else if (isMobileLandscape) {
-            div.style.top = '56%';
-            div.style.left = '1.5%';
+        } else if (_isMobileLandscape) {
+            div.style.top = '45%';
+            div.style.left = '1.2%';
         } else {
-            div.style.top = '25%';
+            div.style.marginTop = '18%';
             div.style.left = '0.2%'; 
         }
         div.style.position = 'absolute';

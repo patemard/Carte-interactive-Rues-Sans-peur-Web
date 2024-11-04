@@ -122,11 +122,12 @@ export class MapDashboardComponent extends Helper implements OnInit {
     await this.getTags();
     await this.getUserIp();
     this.visualAggregation();
+    this.isMobile();
     this.map.addControl(
-      new CustomCheckboxControl(this.pointLayers, this.trajectoryLayer, this.clusteredLayer, this.isMobilePortrait(), this.isMobileLandscape())
+      new CustomCheckboxControl(this.pointLayers, this.trajectoryLayer, this.clusteredLayer)
     );
     this.map.addControl(
-      new GeolocationButtonControl(this.map,this.isMobilePortrait(), this.isMobileLandscape()),
+      new GeolocationButtonControl(this.map),
     );
     this.initInfoModal();
   }
@@ -154,7 +155,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
           resolve(true);
         },
         (error) => {
-          reject(error);
+          resolve(error);
           console.error('Failed to fetch IP address', error);
         }
       );
@@ -189,7 +190,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
        controls: defaultControls(),
     });
 
-    if (this.isMobilePortrait()) {
+    if (this._isMobilePortrait) {
       const fullScreenControl = new FullScreen();
       this.map.addControl(fullScreenControl);
     }
@@ -260,7 +261,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   initIdentificationModal() {
     const dialogRef = this.dialog.open(IdentificationDialogComponent, {
-      width: this.isMobilePortrait() || this.isMobileLandscape() ? 'fit-content' : '35%',
+      width: this._isMobilePortrait || this._isMobileLandscape ? 'fit-content' : '35%',
       enterAnimationDuration: 550
     });
 
@@ -480,6 +481,22 @@ export class MapDashboardComponent extends Helper implements OnInit {
           constrainResolution: true,
         })
       );
+
+      if (this._isMobilePortrait || this._isMobileLandscape) {
+        let lockOrientationIn = '';
+        if (this._isMobilePortrait) {
+          lockOrientationIn = 'portrait';
+        } else if(this._isMobileLandscape) {
+          lockOrientationIn = 'landscape';  
+        }
+        (screen.orientation as any).lock(lockOrientationIn)
+        .then(() => {
+            console.log('Orientation locked to portrait');
+        })
+        .catch((error: any) => {
+            console.error('Failed to lock orientation:', error);
+        });
+      }
     }, 800); // Delay matches the animation duration to lock view after animation
   }
   
@@ -500,6 +517,12 @@ export class MapDashboardComponent extends Helper implements OnInit {
       })
     );
     this.visualAggregation();
+    if (screen.orientation && screen.orientation.unlock) {
+      screen.orientation.unlock();
+      console.log('Orientation unlocked');
+    } else {
+      console.error('Orientation unlocking is not supported by this browser.');
+    }
   }
 
   scrollToTop() {

@@ -41,7 +41,7 @@
   }
     
   #checkboxesDiv {
-    margin-top: 15%;
+    margin-top: 10%;
   }
    /* Change the button position */
  .ol-geocoder.gcd-gl-container{
@@ -49,11 +49,11 @@
     float: left !important;
     height: 26.75px !important;
     width: 26.75px !important;
-    margin-top: 15% !important;
+    margin-top: 10% !important;
   }
 
  .ol-zoom.ol-unselectable.ol-control {
-    margin-top: 15% !important;
+    margin-top: 10% !important;
  }
 
  .bleu-atv {

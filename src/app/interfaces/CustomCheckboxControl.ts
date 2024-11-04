@@ -10,14 +10,39 @@ import { Control   } from 'ol/control';
 
     constructor(pointLayers: any, 
       trajectoryLayer: any, 
-      clusteredLayer: any,
-      isMobile: boolean, 
-      isMobileLandscape: boolean){
+      clusteredLayer: any){
+        const isMobile = /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
+        let _isMobilePortrait: boolean = false;
+        let _isMobileLandscape: boolean = false;
+
+        if (isMobile) {
+
+            _isMobilePortrait = window.innerWidth <= 768;
+            _isMobileLandscape = window.innerWidth > window.innerHeight; // Typical breakpoint for tablets and mobile
+
+            window.addEventListener('resize', () => {
+                if (window.innerWidth > window.innerHeight) {
+                    pointCheckbox.style.height = "4vh";
+                    pointCheckbox.style.width = "4vh";
+                    trajectoryCheckbox.style.height = "4vh";
+                    trajectoryCheckbox.style.width = "4vh";
+                    _isMobilePortrait = false;
+                    _isMobileLandscape = true;
+                } else {
+                    pointCheckbox.style.height = "2vh";
+                    pointCheckbox.style.width = "2vh";
+                    trajectoryCheckbox.style.height = "2vh";
+                    trajectoryCheckbox.style.width = "2vh";
+                    _isMobilePortrait = true;
+                    _isMobileLandscape = false;
+                }
+            }); 
+        }
 
       const pointCheckbox = document.createElement('input');
       pointCheckbox.type = 'checkbox';
       pointCheckbox.id = 'togglePoints';
-      if (isMobileLandscape) {
+      if (_isMobileLandscape) {
         pointCheckbox.style.height = "4vh";
         pointCheckbox.style.width = "4vh";
       } else {
@@ -48,7 +73,7 @@ import { Control   } from 'ol/control';
       const trajectoryCheckbox= document.createElement('input');
       trajectoryCheckbox.type = 'checkbox';
       trajectoryCheckbox.id = 'toggleTrajectory';
-      if (isMobileLandscape) {
+      if (_isMobileLandscape) {
         trajectoryCheckbox.style.height = "4vh";
         trajectoryCheckbox.style.width = "4vh";
       } else {
