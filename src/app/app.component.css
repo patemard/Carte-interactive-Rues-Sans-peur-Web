@@ -113,15 +113,17 @@ button[color="violet-atv"] {
 
 
 @media (max-height: 500px) {
+  img {
+    max-width: 80%; /* make the image responsive */
+    max-height: 80%;
+  }
 
-  #imgContainer {
+  #ressourcesBtnContainer {
     max-width: 20%; /* make the image responsive */
     max-height: 20%;
+    margin-bottom: 2%;
   }
-  #ressourcesBtn{
-    max-width: 20%; /* make the image responsive */
-    max-height: 20%;
-  }
+  
   .footer { 
     display: none; 
   }

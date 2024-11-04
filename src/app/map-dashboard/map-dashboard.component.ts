@@ -255,7 +255,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   initInfoModal() {
     const dialogRef = this.dialog.open(RessourceDialogComponent, {
-      enterAnimationDuration: 700
+      enterAnimationDuration: 700,
+      panelClass: this._isMobileLandscape  ? 'mt-5' : '',
     });
   }
 
