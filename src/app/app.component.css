@@ -119,8 +119,8 @@ button[color="violet-atv"] {
     max-height: 20%;
   }
   #ressourcesBtn{
-    max-width: 18%; /* make the image responsive */
-    max-height: 18%;
+    max-width: 20%; /* make the image responsive */
+    max-height: 20%;
   }
   .footer { 
     display: none; 
@@ -129,6 +129,6 @@ button[color="violet-atv"] {
     display:initial;
   }
   #mainNav{
-    height: 16%;
+    height: 18%;
   }
 }
