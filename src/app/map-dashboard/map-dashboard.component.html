@@ -61,12 +61,12 @@
               
             </div>
             <div class="col-6 col-md-6">
-              <button
+              <a
                 mat-raised-button
                 class="rounded-field {{currentTag.identification ? 'violet-pale-atv' : ''}}"
                 (click)="initIdentificationModal()">
                 <mat-label>Auto identification</mat-label>
-              </button>
+              </a>
             </div>
           </div>
 
@@ -132,7 +132,9 @@
       <mat-card-header class="d-flex flex-wrap justify-content-between align-items-center">
         <mat-card-title class="w-100 w-md-auto">
           <div class="title-container d-flex align-items-center">
-            <img *ngIf="currentTag" alt="icon" [src]="getTransportIcon()" [ngClass]="currentTag.transport == 'Marche' ? 'icon-completed-pieton' : 'icon-completed'">
+            <img *ngIf="currentTag && currentTag.transport" alt="icon" [src]="getTransportIcon()" [ngClass]="currentTag.transport == 'Marche' ? 'icon-completed-pieton' : 'icon-completed'">
+            <!-- image placehollden quand pas de choix de transport-->
+            <img *ngIf="!currentTag.transport">
             <span class="title-text" title="{{currentTag.title}}">{{currentTag.title}}</span>
           </div>
         </mat-card-title>
@@ -160,7 +162,7 @@
           [disabled]="flagIsClicked || !ipAddress"
           (click)="flag()">
           <i class="fa fa-flag" aria-hidden="true" title="Signaler"></i>
-          <span class="counter" *ngIf="currentTag?.flagged">{{ currentTag.flagged?.length }}</span>
+          <!-- <span class="counter" *ngIf="currentTag?.flagged">{{ currentTag.flagged?.length }}</span> -->
         </button>
         <button mat-button *ngIf="tagService.isAdmin"
           type="button" class="close" aria-label="Close"

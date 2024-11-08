@@ -100,12 +100,18 @@ log($event: any) {
 
     if (this.minorityGroup) {
       this.tagService.minorityGroup = this.minorityGroup;
-      finalString += this.minorityGroup.map((x: any) => x.name).join(', ');
+      if (this.minorityGroup.length > 1) {
+        finalString += this.minorityGroup.map((x: any) => x.name).join(', ');
+      } else {
+        finalString += this.minorityGroup;
+      }
+
       if (this.minorityGroupPrecision) {
         this.tagService.minorityGroupPrecision = this.minorityGroupPrecision;
         finalString += ' (' + this.minorityGroupPrecision + ')';
       }
     }
+    
     this.dialogRef.close({identification: finalString});
   }
 
