@@ -8,7 +8,7 @@ body, html {
 
 
 #mainNav{
-  height: 10%;
+  height: 12%;
   width: 100%;
 }
 
@@ -66,17 +66,6 @@ body, html {
   border-radius: 5px;
 }
 
-/* Footer Styles */
-.footer {
-  position: relative;
-  object-position: center; /* Centers the image */
-  width: 100%;
-  height: 12%;
-  padding: 10px 0;
-  overflow: hidden;
-  text-align: center;
-  background-color: #333;
-}
 
 
 /* Button Styles */
@@ -120,8 +109,17 @@ body, html {
   display: flex;
   align-items: center;
   justify-content: center;
-  
-  
+}
+/* Footer Styles */
+.footer {
+  position: relative;
+  object-position: center; /* Centers the image */
+  width: 100%;
+  height: 12%;
+  padding: 10px 0;
+  overflow: hidden;
+  text-align: center;
+  background-color: #333;
 }
 
 
@@ -134,12 +132,6 @@ body, html {
 
   .footer {
     height: 10%;
-
-
-  }
-  .navbar-banner {
-    flex-shrink: 0;
-    min-width:50%;
   }
 }
 
@@ -155,9 +147,7 @@ body, html {
     padding: 5px;
   }
 
-  .navbar-banner{
-    object-fit: cover;
-  }
+
 
   .nav-links-container {
     padding: 10px;
@@ -177,21 +167,18 @@ body, html {
 }
 
 @media (max-width: 480px) {
-
-  .navbar-banner {
-    flex-shrink: 0;
-    width: 100vw;
-    object-fit: cover;
-  }
   #mainNav {
-    height: 12%;
+    height: 15%;
   }
 
   .footer {
-    height: 13%;
-
-
+    height: 15%;
   }
+
+  .navbar-banner {
+    height: 15%;
+  }
+
   .nav-links{
     flex-direction: column;
   }

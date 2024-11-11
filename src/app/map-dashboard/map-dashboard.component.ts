@@ -312,8 +312,9 @@ export class MapDashboardComponent extends Helper implements OnInit {
       keepOpen: true,
       preventDefault: true,
       countrycodes: 'ca',
-      params: {
-        viewbox: this.QUEBEC_BOUNDING_BOX
+      viewbox:{
+        viewbox: this.QUEBEC_BOUNDING_BOX.join(','), // add viewbox as comma-separated string
+        bounded: "1",
       }
     });
     this.map.addControl(this.geocoder);
@@ -323,19 +324,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
       this.map.getView().setCenter(coord);
       this.map.getView().setZoom(16);
     });
-    // let geocoderInput = document.getElementById('gcd-input-query');
-    // console.log(geocoderInput);
-
-    // if (geocoderInput) {
-    //   geocoderInput.addEventListener('beforequery', function(event) {
-    //     // Your event handling code here
-    //     console.log('Input value changed:', event);
-    //   });
-    // }
-    //   this.geocoder.on('beforequery', (evt: any) => {
-    //     // it's up to you
-    //     console.info(evt);
-    //   });
   }
 
   initDrawing() {
@@ -429,11 +417,12 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
 
   async clickedOnTag() {
+    console.log(this.currentTag);
 
     if (!this.ipAddress) {
       await this.getUserIp();
     }
-    
+
     this.showCard = true;
     this.overlay.setPosition(this.currentTag.mercatorCoord);
 
@@ -451,61 +440,75 @@ export class MapDashboardComponent extends Helper implements OnInit {
       this.currentTag.trajectory
     )
     this.scrollToTop();
-
     this.lockExtent(this.currentTag.mercatorCoord);
   }
 
 
   lockExtent(centerCoord: number[]){
-    if (this._isMobilePortrait) {
-      centerCoord = [
-        this.currentTag.mercatorCoord[0] + 700,
-        this.currentTag.mercatorCoord[1] ,
-      ];
-    }
+    // if (this._isMobilePortrait) {
+    //   centerCoord = [
+    //     this.currentTag.mercatorCoord[0] + 300,
+    //     this.currentTag.mercatorCoord[1] ,
+    //   ];
+    // }
 
     const view = this.map.getView();
      // Animate to the specific coordinate
      view.animate({
       center: centerCoord,
-      zoom: view.getZoom(), 
+      zoom: view.getZoom(),
       duration: 800,  // Duration in milliseconds for the animation
     });
+    if (!this._isMobile) {
+          // Lock the extent after the animation completes
+      setTimeout(() => {
+        let extent = view.calculateExtent(this.map.getSize());
+        const margin = 0.05;
 
-    // Lock the extent after the animation completes
-    setTimeout(() => {
-      const extent = view.calculateExtent(this.map.getSize());
+        // Calculate the width and height of the extent
+        const width = extent[2] - extent[0];
+        const height = extent[3] - extent[1];
 
-      // Set the final view with locked constraints
-      this.map.setView(
-        new View({
-          center: centerCoord,
-          zoom: this.map.getView().getZoom(),
-          minZoom: this.map.getView().getZoom(),
-          maxZoom: this.map.getView().getZoom(),
-          extent: extent,          // Lock panning within this extent
-          constrainResolution: true,
-        })
-      );
+        // Expand the extent by adding/subtracting a margin
+        extent = [
+          extent[0] - width * margin, // minX with margin
+          extent[1] - height * margin, // minY with margin
+          extent[2] + width * margin,  // maxX with margin
+          extent[3] + height * margin  // maxY with margin
+        ];
 
-      if (this._isMobilePortrait || this._isMobileLandscape) {
-        let lockOrientationIn = '';
-        if (this._isMobilePortrait) {
-          lockOrientationIn = 'portrait';
-        } else if(this._isMobileLandscape) {
-          lockOrientationIn = 'landscape';  
+        // Set the final view with locked constraints
+        this.map.setView(
+          new View({
+            center: centerCoord,
+            zoom: this.map.getView().getZoom(),
+            minZoom: this.map.getView().getZoom() -1,
+            maxZoom: this.map.getView().getZoom() +1,
+            extent: extent,          // Lock panning within this extent
+            constrainResolution: true,
+          })
+        );
+
+        if (this._isMobilePortrait || this._isMobileLandscape) {
+          let lockOrientationIn = '';
+          if (this._isMobilePortrait) {
+            lockOrientationIn = 'portrait';
+          } else if(this._isMobileLandscape) {
+            lockOrientationIn = 'landscape';
+          }
+          (screen.orientation as any).lock(lockOrientationIn)
+          .then(() => {
+              console.log('Orientation locked to portrait');
+          })
+          .catch((error: any) => {
+              console.error('Failed to lock orientation:', error);
+          });
         }
-        (screen.orientation as any).lock(lockOrientationIn)
-        .then(() => {
-            console.log('Orientation locked to portrait');
-        })
-        .catch((error: any) => {
-            console.error('Failed to lock orientation:', error);
-        });
-      }
-    }, 800); // Delay matches the animation duration to lock view after animation
+      }, 800); // Delay matches the animation duration to lock view after animation
+    }
+
   }
-  
+
   unlockExtent() {
     const extent = ol.proj.transformExtent(
       this.QUEBEC_BOUNDING_BOX,
@@ -569,7 +572,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     var view = this.map.getView();
     view.animate({
       center: coord,
-      zoom: zoom, 
+      zoom: zoom,
       duration: 700,  // Duration in milliseconds for the animation
     });
   }
@@ -754,7 +757,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   setModel() {
     this.currentTag.active = true;
-    this.currentTag.title = this.selectedCategory;
+    this.currentTag.title = this.selectedCategory || "Témoignage";
     this.currentTag.emotion = this.selectedEmotion;
     this.currentTag.transport = this.selectedTransport;
     this.currentTag.description = this.formatLongStringWithSpaces(this.currentTag.description, 30);
@@ -769,7 +772,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       input = input.replace(new RegExp(`.{1,${length}}`, 'g'), '$& ').trim();
     }
     return input;
-    
+
   }
 
   submitTrajectory() {
@@ -888,7 +891,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       }
     });
 
-   
+
       // Create a vector source with the points
       const source = new VectorSource({
         features: features,
@@ -937,7 +940,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
           }
           return style;
         },
-      }); 
+      });
       clusters.set('name', 'clusteredLayer');
 
       this.clusteredLayer.push(clusters)
@@ -962,7 +965,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
       // Listen to the map's 'moveend' event to check the zoom level after each interaction
       this.map.getView().on('change:resolution', () => {
-        const zoom =  this.map.getView().getZoom();       
+        const zoom =  this.map.getView().getZoom();
         if (clusters && this.nonClusteredLayer) {
           if (zoom >= zoomThreshold) {
             // If zoomed in, show non-clustered features
@@ -980,7 +983,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
             if (!this.map.getLayers().getArray().includes(clusters)) {
               this.map.addLayer(clusters);
             }
-          } 
+          }
         }
       });
   }

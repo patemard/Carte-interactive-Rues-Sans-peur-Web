@@ -7,7 +7,8 @@ button {
 }
 
 .rounded-field {
-  border-radius: 8px;
+  border-radius: 16px; /* Adjust this value as needed */
+  overflow: hidden; /* Prevents content from overflowing the corners */
 }
 
 button {

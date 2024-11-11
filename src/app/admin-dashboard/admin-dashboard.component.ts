@@ -23,14 +23,14 @@ export class AdminDashboardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this._ipService.getHash().subscribe((res: any) => { 
+    this._ipService.getHash().subscribe((res: any) => {
       this.password = res[0].password_hash;
     })
   }
 
 
   login() {
-    bcrypt.compare(this.currentPassword, this.password).then(isMatch => {
+    bcrypt.compare(this.currentPassword, this.password).then((isMatch: any) => {
       if (isMatch) {
         this.loginPass = true;
         this._tagService.isAdmin = true;

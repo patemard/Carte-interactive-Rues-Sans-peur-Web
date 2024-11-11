@@ -1,5 +1,5 @@
 .map {
-  height: 78%;
+  height: 76%;
   width: 100%;
 }
 #popupCard {
@@ -27,6 +27,7 @@
 /* width */
 #completedCardText {
   max-height: 100%; /* Limits height to 80% of the viewport */
+  min-height:25%;
   overflow-y:auto; /* Enables vertical scrolling if content overflows */
   scrollbar-width: thin; /* Thin scrollbar */
   scroll-behavior:auto;
@@ -94,7 +95,7 @@ button {
   display: inline-block;
   padding: 5%;
   background-color: transparent;
-  background-position: center; 
+  background-position: center;
 }
 .mat-form-field-outline-start, .mat-form-field-outline-end {
   border-radius: 16px !important;
@@ -160,79 +161,75 @@ button.clicked .fa-flag {
     border-radius: 16px !important; /* Ensure rounded corners */
     overflow: hidden; /* Prevent overflow of content */
   }
-  @media (max-width: 1080px) {
-    .map {
-      height: 80%;
-      width: 100%;
-      position: relative;
-    }
+@media (max-width: 1080px) {
+  .map {
+    height: 80%;
+    width: 100%;
+    position: relative;
   }
-  @media (max-width: 768px) {
+}
+@media (max-width: 768px) {
 
-    .map {
-      height: 85%;
-      width: 100%;
-      position: relative;
-    }
-    
-    .icon-completed {
-      width: 80%; /* Increase width for smaller screens */
-      height: 80%; /* Adjust height to match */
-      padding: 3%;  /* Less padding for mobile */
-    }
-    #geolocationDiv {
-      padding-top: 4%;
-    }
-    .responsive-card {
-      max-width: 80%; /* Card takes almost the full width on smaller screens */
-    }
-  
-    .title-text {
-      font-size: 16px; /* Reduce title font size for mobile */
-    }
-
-
-    #completedCard {
-      max-width:  50%; /* Set a flexible width */
-      max-height: 35%;
-    }
-
-    #popupCard {
-      max-width: 70%;
-    }
-
-    .label {
-      font-size: 12px; /* Reduce font size for mobile */
-    }
-
-    .icon-completed-pieton {
-      max-width: 18%;
-      max-height: 18%;
-    }
-    .icon-pieton{
-      max-width: 20%;
-      max-height: 20%;
-    }
-    
-    .icon-completed{
-      max-width: 35%;
-      max-height: 35%;
-    }
-  
-  }
-    
-  @media (max-width: 480px) {
-    .map {
-      height: 75%;
-      width: 100%;
-      position: relative;
-    }
+  .map {
+    height: 85%;
+    width: 100%;
+    position: relative;
   }
 
-   
+  .icon-completed {
+    width: 80%; /* Increase width for smaller screens */
+    height: 80%; /* Adjust height to match */
+    padding: 3%;  /* Less padding for mobile */
+  }
+  #geolocationDiv {
+    padding-top: 4%;
+  }
+  .responsive-card {
+    max-width: 80%; /* Card takes almost the full width on smaller screens */
+  }
+
+  .title-text {
+    font-size: 16px; /* Reduce title font size for mobile */
+  }
 
 
-  
+  #completedCard {
+    max-width:  50%; /* Set a flexible width */
+    max-height: 35%;
+  }
+
+  #popupCard {
+    max-width: 70%;
+  }
+
+  .label {
+    font-size: 12px; /* Reduce font size for mobile */
+  }
+
+  .icon-completed-pieton {
+    max-width: 18%;
+    max-height: 18%;
+  }
+  .icon-pieton{
+    max-width: 20%;
+    max-height: 20%;
+  }
+
+  .icon-completed{
+    max-width: 35%;
+    max-height: 35%;
+  }
+
+}
+
+@media (max-width: 480px) {
+  .map {
+    height: 70%;
+    width: 100%;
+    position: relative;
+  }
+}
+
 @media (max-height: 500px) {
   .map {
     height: 100vh;
@@ -243,8 +240,6 @@ button.clicked .fa-flag {
     max-width: fit-content;
     max-height: fit-content;
   }
-
-
 }
 
-  
+

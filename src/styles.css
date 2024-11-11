@@ -39,9 +39,9 @@
     height: 3vh !important;
     width: 3vh !important;
   }
-    
+
   #checkboxesDiv {
-    margin-top: 10%;
+    margin-top: 8%;
   }
    /* Change the button position */
  .ol-geocoder.gcd-gl-container{
@@ -49,11 +49,11 @@
     float: left !important;
     height: 26.75px !important;
     width: 26.75px !important;
-    margin-top: 10% !important;
+    margin-top: 8% !important;
   }
 
  .ol-zoom.ol-unselectable.ol-control {
-    margin-top: 10% !important;
+    margin-top: 8% !important;
  }
 
  .bleu-atv {
@@ -216,15 +216,15 @@ body {
   float: left !important;
   height: 3vh!important;
   width: 3vh !important;
-  margin-top: 30% !important;
+  margin-top: 25% !important;
 }
 
 .ol-zoom.ol-unselectable.ol-control {
-  margin-top: 30% !important;
+  margin-top: 25% !important;
 }
 
 #checkboxesDiv {
-  margin-top: 30%;
+  margin-top: 25%;
 }
 
 }
@@ -236,15 +236,15 @@ body {
   float: left !important;
   height: 3vh!important;
   width: 3vh !important;
-  margin-top: 40% !important;
+  margin-top: 30% !important;
 }
 
 .ol-zoom.ol-unselectable.ol-control {
-  margin-top: 40% !important;
+  margin-top: 30% !important;
 }
 
 #checkboxesDiv {
-  margin-top: 40%;
+  margin-top: 30%;
 }
 
 }

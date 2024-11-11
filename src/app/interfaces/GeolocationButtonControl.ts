@@ -24,16 +24,16 @@ export class GeolocationButtonControl extends Control {
                     _isMobileLandscape = false;
                 }
                 if (_isMobilePortrait) {
-                    div.style.top = '35%';
-                    div.style.left = '2%';
+                    div.style.top = '40%';
+                    div.style.left = '3%';
                 } else if (_isMobileLandscape) {
                     div.style.top = '45%';
                     div.style.left = '1.2%';
                 } else {
                     div.style.marginTop = '18%';
-                    div.style.left = '0.2%'; 
+                    div.style.left = '0.2%';
                 }
-            }); 
+            });
         }
 
         // Geolocation API setup
@@ -57,16 +57,16 @@ export class GeolocationButtonControl extends Control {
         const div = document.createElement('div');
         div.className = 'ol-unselectable ol-control';
         div.style.marginTop = '10%';
-        
+
         if (_isMobilePortrait) {
-            div.style.top = '35%';
-            div.style.left = '2%';
+            div.style.top = '40%';
+            div.style.left = '3%';
         } else if (_isMobileLandscape) {
             div.style.top = '45%';
             div.style.left = '1.2%';
         } else {
             div.style.marginTop = '18%';
-            div.style.left = '0.2%'; 
+            div.style.left = '0.2%';
         }
         div.style.position = 'absolute';
 

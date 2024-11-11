@@ -1,16 +1,17 @@
 import { Constants } from "./constants";
 
 export class Helper extends Constants {
-    
+
    _isMobilePortrait: boolean = false;
    _isMobileLandscape: boolean = false;
+   _isMobile: boolean = false;
 
 
     isMobile() {
-        const isMobile = /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
+        this._isMobile = /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
 
 
-        if (isMobile) {
+        if (this._isMobile) {
 
             this._isMobilePortrait = window.innerWidth <= 768;
             this._isMobileLandscape = window.innerWidth > window.innerHeight; // Typical breakpoint for tablets and mobile
@@ -23,10 +24,10 @@ export class Helper extends Constants {
                     this._isMobilePortrait = true;
                     this._isMobileLandscape = false;
                 }
-            }); 
+            });
         }
     }
-  
+
 
 
 }

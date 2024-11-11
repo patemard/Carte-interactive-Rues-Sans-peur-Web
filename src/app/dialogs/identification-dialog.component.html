@@ -20,7 +20,7 @@
         </mat-form-field>
       </div>
     </div>
-    
+
     <div class="row mb-3">
       <div class="col-12">
         <mat-label>À quel groupe d’âge appartenez-vous?</mat-label>
@@ -60,10 +60,15 @@
   <mat-dialog-actions>
     <div class="row w-100">
       <div class="col-md-6 col-12 mb-2 mb-md-0">
-        <button mat-button mat-dialog-close class="btn btn-outline-secondary w-100" (click)="reset()">Annuler</button>
+        <button mat-raised-button
+          color="violet-atv"
+          class="rounded-field  w-100" (click)="reset()">Annuler
+        </button>
       </div>
       <div class="col-md-6 col-12">
-        <button mat-button mat-dialog-close class="btn btn-primary w-100" (click)="saveIdentification()">Continuer</button>
+        <button mat-raised-button
+          color="violet-atv"
+          class="rounded-field  w-100" (click)="saveIdentification()">Continuer</button>
       </div>
     </div>
   </mat-dialog-actions>
