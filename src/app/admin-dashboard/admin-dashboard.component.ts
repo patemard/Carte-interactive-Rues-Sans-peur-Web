@@ -1,6 +1,5 @@
 import {Component, EventEmitter, Inject, OnInit, Output, ViewChild, ViewContainerRef} from '@angular/core';
 import {TagService} from "../Service/tag.service";
-import * as bcrypt from 'bcryptjs';
 import { IpService } from '../Service/ip.service';
 
 @Component({
@@ -10,34 +9,29 @@ import { IpService } from '../Service/ip.service';
 })
 export class AdminDashboardComponent implements OnInit {
   loginPass: boolean = false;
-  currentPassword: string;
-  password: string = "";
-  private _tagService: TagService;
-  private _ipService: IpService;
-  constructor(tagService: TagService,
-    ipservice: IpService
-  ) {
-    this._tagService = tagService;
-    this._ipService = ipservice;
-    this.currentPassword = '';
-  }
+  currentPassword: string = '';
 
-  ngOnInit(): void {
-    this._ipService.getHash().subscribe((res: any) => {
-      this.password = res[0].password_hash;
-    })
-  }
+  constructor(private tagService: TagService, private ipService: IpService) {}
 
+
+  ngOnInit(): void {}
 
   login() {
-    bcrypt.compare(this.currentPassword, this.password).then((isMatch: any) => {
-      if (isMatch) {
-        this.loginPass = true;
-        this._tagService.isAdmin = true;
-      } else {
-        this._tagService.isAdmin = false;
+    this.ipService.verifyPassword(this.currentPassword).subscribe({
+      next: (res: any) => {
+        if (res.message === 'Password match') {
+          this.loginPass = true;
+          this.tagService.isAdmin = true;
+        } else {
+          this.loginPass = false;
+          this.tagService.isAdmin = false;
+        }
+      },
+      error: (err: any) => {
+        console.error('Error during password verification:', err);
         this.loginPass = false;
+        this.tagService.isAdmin = false;
       }
     });
-  }
+}
 }
