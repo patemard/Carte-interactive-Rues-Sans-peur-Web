@@ -19,6 +19,15 @@ export class IpService {
     return this.http.get<any>(this.ipifyUrl);
   }
 
+  verifyPassword(inputPassword: string): Observable<any> {
+    const API_URL = `${this.REST_API}/verify-password`;
+    return this.http.post(API_URL, { inputPassword }, { headers: this.httpHeaders })
+      .pipe(
+        map((res: any) => res || {}),
+        catchError(this.handleError)
+      );
+  }
+  
   getHash(): Observable<any> {
     let API_URL = `${this.REST_API}/get-hash`;
     return this.http.get(API_URL, { headers: this.httpHeaders })
