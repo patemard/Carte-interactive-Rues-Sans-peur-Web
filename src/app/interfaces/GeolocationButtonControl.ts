@@ -31,7 +31,7 @@ export class GeolocationButtonControl extends Control {
                     div.style.left = '1.2%';
                 } else {
                     div.style.marginTop = '18%';
-                    div.style.left = '0.2%';
+                    div.style.left = '0.4%';
                 }
             });
         }
@@ -66,7 +66,7 @@ export class GeolocationButtonControl extends Control {
             div.style.left = '1.2%';
         } else {
             div.style.marginTop = '18%';
-            div.style.left = '0.2%';
+            div.style.left = '0.4%';
         }
         div.style.position = 'absolute';
 

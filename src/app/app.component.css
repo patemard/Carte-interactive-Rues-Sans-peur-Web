@@ -8,7 +8,7 @@ body, html {
 
 
 #mainNav{
-  height: 12%;
+  height: 11%;
   width: 100%;
 }
 
@@ -21,10 +21,11 @@ body, html {
 
 .navbar-banner {
   width: 100%;      /* Make it responsive */
-  height: auto;     /* Keep the image's aspect ratio */
+  height: 100%;     /* Keep the image's aspect ratio */
   object-fit: cover; /* Ensures image fills the container */
   display: block;
   object-position: center; /* Centers the image content */
+  flex-shrink: 0;
 }
 
 .navbar-banner, .navbar-banner {
@@ -96,11 +97,7 @@ body, html {
   text-shadow: 0 1px 0 #528ecc;
   outline: 0;
 }
-.navbar-banner {
-  flex-shrink: 0;
-  min-width: 100%;
-  min-height: 100%;
-}
+
 .navbar, .footer {
   width: 100%;
   padding: 0;
@@ -115,7 +112,7 @@ body, html {
   position: relative;
   object-position: center; /* Centers the image */
   width: 100%;
-  height: 12%;
+  height: 13%;
   padding: 10px 0;
   overflow: hidden;
   text-align: center;
@@ -126,13 +123,7 @@ body, html {
 /* Media Queries */
 
 @media (max-width: 1080px) {
-  #mainNav {
-    height: 12%;
-  }
 
-  .footer {
-    height: 10%;
-  }
 }
 
 @media (max-width: 768px) {
@@ -153,31 +144,13 @@ body, html {
     padding: 10px;
   }
 
-  #mainNav {
-    height: 7%;
-  }
 
-  .footer {
-    height: 8%;
-
-
-  }
 
 
 }
 
 @media (max-width: 480px) {
-  #mainNav {
-    height: 15%;
-  }
 
-  .footer {
-    height: 15%;
-  }
-
-  .navbar-banner {
-    height: 15%;
-  }
 
   .nav-links{
     flex-direction: column;

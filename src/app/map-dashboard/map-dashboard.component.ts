@@ -194,20 +194,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
       const fullScreenControl = new FullScreen();
       this.map.addControl(fullScreenControl);
     }
-    // Listen for map view changes and update geocoder extent accordingly
-    // this.map.on('moveend', () => {
-    //   this.updateGeocoderExtent();
-    // });
   }
-    // Function to update geocoder's search extent
-  // updateGeocoderExtent() {
-  //   var extent = this.map.getView().calculateExtent(this.map.getSize());
-  //     console.log("extent", extent)
-  //   this.geocoder.options.bounded = true; // Ensure geocoder search is bounded
-  //   this.geocoder.options.viewbox = extent; // Set the search extent to the current map extent
 
-  //   this.geocoder.options.extent = extent; // Set the search extent to the current map extent
-  // }
 
   initPopup() {
     var container = document.getElementById('popup');
@@ -417,8 +405,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
 
   async clickedOnTag() {
-    console.log(this.currentTag);
-
     if (!this.ipAddress) {
       await this.getUserIp();
     }
@@ -528,9 +514,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.visualAggregation();
     if (screen.orientation && screen.orientation.unlock) {
       screen.orientation.unlock();
-      console.log('Orientation unlocked');
-    } else {
-      console.error('Orientation unlocking is not supported by this browser.');
     }
   }
 

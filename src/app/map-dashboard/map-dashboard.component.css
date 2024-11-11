@@ -176,19 +176,10 @@ button.clicked .fa-flag {
     overflow: hidden; /* Prevent overflow of content */
   }
 @media (max-width: 1080px) {
-  .map {
-    height: 78%;
-    width: 100%;
-    position: relative;
-  }
+
 }
 @media (max-width: 768px) {
 
-  .map {
-    height: 85%;
-    width: 100%;
-    position: relative;
-  }
 
   .icon-completed {
     width: 80%; /* Increase width for smaller screens */
@@ -237,11 +228,7 @@ button.clicked .fa-flag {
 }
 
 @media (max-width: 480px) {
-  .map {
-    height: 70%;
-    width: 100%;
-    position: relative;
-  }
+
 }
 
 @media (max-height: 500px) {
