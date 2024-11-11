@@ -133,9 +133,8 @@
         <mat-card-title class="w-100 w-md-auto">
           <div class="title-container d-flex align-items-center">
 
-            <img *ngIf="currentTag && currentTag.transport" alt="icon" [src]="getTransportIcon()" [ngClass]="currentTag.transport == 'Marche' ? 'icon-completed-pieton' : 'icon-completed'">
-            <!-- image placehollden quand pas de choix de transport-->
-            <img *ngIf="!currentTag.transport">
+            <img *ngIf="currentTag && currentTag.transport" alt="icon" [src]="getTransportIcon()"
+              [ngClass]="currentTag.transport == 'Marche' ? 'icon-completed-pieton' : 'icon-completed'">
             <span class="title-text" title="{{currentTag.title}}">{{currentTag.title}}</span>
             <span style="margin-left: 5%;">
               <i *ngIf="currentTag.emotion == 'Sécurisant'" class="fa fa-smile-o fa-xl" style="margin-right: 5px;"></i>

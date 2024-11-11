@@ -744,6 +744,10 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.currentTag.emotion = this.selectedEmotion;
     this.currentTag.transport = this.selectedTransport;
     this.currentTag.description = this.formatLongStringWithSpaces(this.currentTag.description, 30);
+    if (!this.currentTag.transport) {
+      const randomIndex = Math.floor(Math.random() * this.rdmTransports.length);
+      this.currentTag.transport = this.rdmTransports[randomIndex].name
+    }
   }
 
    formatLongStringWithSpaces(input: any, length: any) {
