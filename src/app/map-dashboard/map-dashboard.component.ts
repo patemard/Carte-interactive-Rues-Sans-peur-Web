@@ -468,8 +468,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
           new View({
             center: centerCoord,
             zoom: this.map.getView().getZoom(),
-            minZoom: this.map.getView().getZoom() -1,
-            maxZoom: this.map.getView().getZoom() +1,
+            minZoom: this.map.getView().getZoom() -2,
+            maxZoom: this.map.getView().getZoom() +2,
             extent: extent,          // Lock panning within this extent
             constrainResolution: true,
           })
@@ -1020,7 +1020,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
   }
 
   getTransportIcon(): any{
-    let icon = this.transports.find(x => x.name == this.currentTag.transport)?.icon
+    const transportForIcon = [...this.transports, ...this.rdmTransports]
+    let icon = transportForIcon.find(x => x.name == this.currentTag.transport)?.icon
     return icon;
   }
 

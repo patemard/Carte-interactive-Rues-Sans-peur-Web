@@ -41,9 +41,6 @@ export class Constants  {
         { name: "Vélo ", icon: "../../assets/png/velo.png"},
         { name: "Bus ", icon: "../../assets/png/Bus.png" },
         { name: "Voiture ", icon: "../../assets/png/auto.png"},
-        { name: "none1", icon: this.rdmImages[0]},
-        { name: "none2", icon: this.rdmImages[1]},
-        { name: "none3", icon:this.rdmImages[2]},
     ]
     rdmTransports = [
       { name: "none1", icon: this.rdmImages[0]},

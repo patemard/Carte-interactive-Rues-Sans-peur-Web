@@ -24,10 +24,10 @@ export class GeolocationButtonControl extends Control {
                     _isMobileLandscape = false;
                 }
                 if (_isMobilePortrait) {
-                    div.style.top = '40%';
+                    div.style.top = '30%';
                     div.style.left = '3%';
                 } else if (_isMobileLandscape) {
-                    div.style.top = '45%';
+                    div.style.top = '35%';
                     div.style.left = '1.2%';
                 } else {
                     div.style.marginTop = '18%';
@@ -59,10 +59,10 @@ export class GeolocationButtonControl extends Control {
         div.style.marginTop = '10%';
 
         if (_isMobilePortrait) {
-            div.style.top = '40%';
+            div.style.top = '30%';
             div.style.left = '3%';
         } else if (_isMobileLandscape) {
-            div.style.top = '45%';
+            div.style.top = '35%';
             div.style.left = '1.2%';
         } else {
             div.style.marginTop = '18%';
