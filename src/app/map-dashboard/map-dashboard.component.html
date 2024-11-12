@@ -5,16 +5,15 @@
         <form>
           <div class="row mb-2">
             <div class="col-12 col-md-12">
-              <mat-form-field class="rounded-field full-width" appearance="fill" [ngClass]="{'error-field': !selectedType}">
-                <mat-label>Type</mat-label>
-                <mat-select name="Sélection type" [(ngModel)]="selectedType" required>
-                  <mat-option *ngFor="let type of types" [value]="type.name">
-                    <i *ngIf="!_isMobilePortrait" class="fa fa-{{type.icon}} fa-xl" style="margin-right: 5px;"></i>
-                    <i *ngIf="_isMobilePortrait" class="fa fa-{{type.icon}} fa-lg" style="margin-right: 2px;"></i>
-                    <span class="bold">{{type.name}}</span>
+              <mat-form-field class="full-width rounded-field" appearance="fill">
+                <mat-label>Témoignage</mat-label>
+                  <mat-select name="Sélection Témoignage"
+                  [(ngModel)]="selectedCategory">
+                  <mat-option *ngFor="let category of categories" [value]="category.name">
+                    <!-- <i class="fa fa-{{emotion.icon}} fa-xl"></i> -->
+                    <span style="margin-top: 5px;">{{category.name}}</span>
                   </mat-option>
                 </mat-select>
-                <mat-error class="bold" *ngIf="!selectedType">Veuillez sélectionner un type.</mat-error>
               </mat-form-field>
             </div>
           </div>
@@ -48,17 +47,17 @@
           </div>
           <div class="row mb-2">
             <div class="col-6 col-md-6">
-              <mat-form-field class="full-width rounded-field" appearance="fill">
-                <mat-label>Témoignage</mat-label>
-                  <mat-select name="Sélection Témoignage"
-                  [(ngModel)]="selectedCategory">
-                  <mat-option *ngFor="let category of categories" [value]="category.name">
-                    <!-- <i class="fa fa-{{emotion.icon}} fa-xl"></i> -->
-                    <span class="bold">{{category.name}}</span>
+              <mat-form-field class="rounded-field full-width" appearance="fill" [ngClass]="{'error-field': !selectedType}">
+                <mat-label>Type</mat-label>
+                <mat-select name="Sélection type" [(ngModel)]="selectedType" required>
+                  <mat-option *ngFor="let type of types" [value]="type.name">
+                    <i *ngIf="!_isMobilePortrait" class="fa fa-{{type.icon}} fa-xl" style="margin-right: 5px;"></i>
+                    <i *ngIf="_isMobilePortrait" class="fa fa-{{type.icon}} fa-lg" style="margin-right: 2px;"></i>
+                    <span class="bold">{{type.name}}</span>
                   </mat-option>
                 </mat-select>
+                <mat-error class="bold" *ngIf="!selectedType">Veuillez sélectionner un type.</mat-error>
               </mat-form-field>
-
             </div>
             <div class="col-6 col-md-6">
               <a
