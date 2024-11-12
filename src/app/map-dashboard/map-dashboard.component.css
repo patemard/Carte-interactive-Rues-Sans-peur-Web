@@ -22,8 +22,24 @@
   max-width:  30%; /* Set a flexible width */
   min-height: min-content; /* Adjust height as needed */
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  border-radius: 16px !important;
 }
 
+#completed-card-header {
+  padding: 0 !important; /* Ensure no padding */
+  height: min-content;
+}
+
+#completed-card-header .top-left-icon {
+  padding: 2px; /* Slight padding adjustment */
+}
+
+.top-left-icon  {
+  position: absolute;
+  top: 3%;
+  left: 3%;
+  padding: 2px;
+}
 /* width */
 .completedCardText {
   max-height: 40%; /* Limits height to 50% of the viewport or parent container */
@@ -171,7 +187,6 @@ button.clicked .fa-flag {
 
   .responsive-card {
     width: 100%; /* Take full width of the container */
-    height: auto; /* Adjust height automatically */
     border-radius: 16px !important; /* Ensure rounded corners */
     overflow: hidden; /* Prevent overflow of content */
   }
@@ -179,7 +194,18 @@ button.clicked .fa-flag {
 
 }
 @media (max-width: 768px) {
+  #completed-card-header .title-container {
+    gap: 2px; /* Reduce spacing between elements on smaller screens */
+  }
 
+  #completed-card-header .title-text {
+    font-size: 0.875rem; /* Smaller font size for mobile */
+  }
+
+  #completed-card-header .close {
+    padding: 0.25rem; /* Smaller padding for close button */
+    margin-top: 0.25rem; /* Adjust margin to avoid excess spacing */
+  }
 
   .icon-completed {
     width: 80%; /* Increase width for smaller screens */
@@ -197,11 +223,6 @@ button.clicked .fa-flag {
     font-size: 16px; /* Reduce title font size for mobile */
   }
 
-
-  #completedCard {
-    max-width:  50%; /* Set a flexible width */
-    max-height: 35%;
-  }
 
   #popupCard {
     max-width: 70%;
@@ -228,6 +249,31 @@ button.clicked .fa-flag {
 }
 
 @media (max-width: 480px) {
+  #completedCard {
+    max-width: 80%; /* Set a flexible width */
+    max-height: 20% !important;
+  }
+  .completedCardText {
+    max-height: 30%; /* Limits height to 50% of the viewport or parent container */
+    min-height: 15%; /* Ensures element doesn't shrink below 25% */
+    overflow-y: auto; /* Enables vertical scrolling if content overflows */
+    scrollbar-width:auto; /* Firefox: thin scrollbar */
+    scroll-behavior: smooth; /* Adds smooth scroll behavior (optional) */
+    overflow-x: hidden; /* Hides horizontal scrollbar */
+  }
+  .icon-completed-pieton {
+    max-width: 10%;
+    max-height: 10%;
+  }
+  .icon-pieton{
+    max-width: 15%;
+    max-height: 15%;
+  }
+
+  .icon-completed{
+    max-width: 25%;
+    max-height: 25%;
+  }
 
 }
 

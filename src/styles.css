@@ -81,7 +81,7 @@
 
 
 
- .centered{
+.centered{
   justify-content: center;
   padding: 0;
   margin: 0;
@@ -214,17 +214,23 @@ body {
 .ol-geocoder.gcd-gl-container{
   position: absolute !important;
   float: left !important;
-  height: 3vh!important;
-  width: 3vh !important;
-  margin-top: 25% !important;
+  height: 20px !important;
+  width: 20px !important;
+  margin-top: 20% !important;
 }
 
+.ol-custom-button {
+  position: absolute !important;
+  float: left !important;
+  height: 2vh !important;
+  width: 2vh !important;
+}
 .ol-zoom.ol-unselectable.ol-control {
-  margin-top: 25% !important;
+  margin-top: 20% !important;
 }
 
 #checkboxesDiv {
-  margin-top: 25%;
+  margin-top: 20%;
 }
 
 }
@@ -234,17 +240,22 @@ body {
 .ol-geocoder.gcd-gl-container{
   position: absolute !important;
   float: left !important;
-  height: 3vh!important;
-  width: 3vh !important;
-  margin-top: 30% !important;
+  height: 15px !important;
+  width: 15px !important;
+  margin-top: 15% !important;
 }
-
+.ol-custom-button {
+  position: absolute !important;
+  float: left !important;
+  height: 1vh !important;
+  width: 1vh !important;
+}
 .ol-zoom.ol-unselectable.ol-control {
-  margin-top: 30% !important;
+  margin-top: 15% !important;
 }
 
 #checkboxesDiv {
-  margin-top: 30%;
+  margin-top: 15%;
 }
 
 }
