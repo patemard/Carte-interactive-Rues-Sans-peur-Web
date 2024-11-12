@@ -251,7 +251,6 @@ button.clicked .fa-flag {
 @media (max-width: 480px) {
   #completedCard {
     max-width: 80%; /* Set a flexible width */
-    max-height: 20% !important;
   }
   .completedCardText {
     max-height: 30%; /* Limits height to 50% of the viewport or parent container */

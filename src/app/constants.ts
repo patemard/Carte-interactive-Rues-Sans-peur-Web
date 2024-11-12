@@ -54,8 +54,8 @@ export class Constants  {
     ]
 
     categories = [
-      {name: "Témoignage"},
-      {name: "Lieu"},
+      {name: "Épisode de harcèlement de rue"},
+      {name: "Aménagement sécurisant/insécurisant"},
     ]
 
 
