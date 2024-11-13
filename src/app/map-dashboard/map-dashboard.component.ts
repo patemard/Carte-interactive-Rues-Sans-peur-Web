@@ -1027,11 +1027,10 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.sendEmail();
   }
 
-
   sendEmail() {
     const emailData = {
       from: 'RuesSansPeur@gmail.com',
-      to: 'pat.emard@posteo.net',
+      to: ['a.metivierhudon@transportsviables.org', 'm.lucas@transportsviables.org', 'acces@transportsviables.org'],
       subject: 'Témoignage Signalé',
       text: 'Le témoignage #' + ' ' + this.currentTag.id + ' a éte signalé'
     };

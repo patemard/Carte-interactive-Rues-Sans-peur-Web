@@ -6,6 +6,10 @@ body, html {
   height: 100%;
 }
 
+@font-face {
+  font-family: haas;
+  src: url(../assets/fonts/NeueHaasDisplayMediu.ttf) format("opentype");
+}
 
 #mainNav{
   height: 11%;
@@ -62,12 +66,47 @@ body, html {
   text-decoration: none;
   font-size: 18px;
   font-weight: bold;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(21, 49, 112, 0.7);
   padding: 5px 8px;
   border-radius: 5px;
 }
 
+.nav-text {
+  flex-grow: 1;  /* Makes the text take up available space and center it */
+  text-align: center; /* Centers the text */
+  float: left;
+  color: white;
+  margin-right:20%;
+  font-size: x-large;
+  white-space: normal;
+  font: haas;
+  white-space: normal;  /* Ensures text can wrap onto multiple lines */
+  word-wrap: break-word; /* Breaks long words if needed */
+  padding: 10px; /* Optional: Adds padding to give space around the text */
+  line-height: 1.8; /* Optional: Adjust line height for better readability */
+  max-width: 100%;
+  font-weight: lighter;
+}
 
+#logo {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.logo-container {
+  padding:15px;
+  margin-left: 5%;
+  max-width: 20%;
+  min-width: 20%;
+  flex-shrink: 0;
+}
+
+.footer-text{
+  font-weight: lighter;
+  margin: 0 auto; /* Centers the text horizontally */
+  text-align: center; /* Ensures the text is centered within the width */
+  width: 60%;
+}
 
 /* Button Styles */
 .button {
@@ -123,11 +162,19 @@ body, html {
 /* Media Queries */
 
 @media (max-width: 1080px) {
-
+  .nav-text {
+    font-size:large;
+    line-height: 1.6; /* Optional: Adjust line height for better readability */
+  }
+  .logoContainer {
+    max-width: 35%;
+  }
 }
 
 @media (max-width: 768px) {
-
+  .logo-container {
+    max-width: 40%;
+  }
   .py-5 {
     padding-top:1vh!important;
     padding-bottom:1vh!important
@@ -138,19 +185,31 @@ body, html {
     padding: 5px;
   }
 
-
-
   .nav-links-container {
     padding: 10px;
   }
 
-
-
-
+  .nav-text {
+    font-size:medium;
+    line-height: 1.4; /* Optional: Adjust line height for better readability */
+  }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 580px) {
 
+  .nav-text {
+    font-size:medium;
+    line-height: 1.2;
+
+  }
+  .footer {
+    height: 15%;
+  }
+  .footer-text{
+    width: 100%;
+    line-height: 1.2;
+    font-size: smaller;
+  }
 
   .nav-links{
     flex-direction: column;
@@ -163,6 +222,19 @@ body, html {
   .nav-links a {
     font-size: 12px;
     padding: 5px 8px;
+  }
+  .nav-links-container {
+    padding: 5px;
+  }
+  .logo-container {
+    max-width: 50%;
+  }
+
+  .nav-text {
+    font-size: x-small;
+    line-height: 1.2; /* Optional: Adjust line height for better readability */
+    width: 100%;
+
   }
 
 

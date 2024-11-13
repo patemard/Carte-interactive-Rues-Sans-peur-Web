@@ -1,26 +1,56 @@
 <nav class="navbar navbar-expand-lg fixed-top " id="mainNav">
   <div class="container-fluid px-4 content">
     <picture>
-      <!-- For screens smaller than or equal to 768px wide, load the small image -->
-      <!-- <source media="(max-width: 768px)" srcset="assets/banner/header-small.jpg"> -->
+      <!-- For screens 768px or smaller, load the small image -->
+      <source media="(max-width: 768px)" srcset="assets/banner/headerNoTextSmall.png">
 
-      <!-- For screens between 769px and 969px, load the medium image -->
-      <source media="(max-width: 768px)" srcset="assets/banner/header-medium.jpg">
+      <!-- For screens between 769px and 1269px, load the medium image -->
+      <source media="(min-width: 769px) and (max-width: 1269px)" srcset="assets/banner/headerNoTextMedium.png">
 
-      <!-- For screens 970px or larger, load the large image -->
-      <source media="(min-width: 1270px)" srcset="assets/banner/header.jpg">
+      <!-- For screens 1270px or larger, load the large image -->
+      <source media="(min-width: 1270px)" srcset="assets/banner/headerNoText.png">
 
-      <!-- Default image for browsers that do not support <picture> -->
-      <img src="assets/banner/header.jpg" alt="Banner" class="navbar-banner" id="headerImg"/>
+      <!-- Fallback image for older browsers that don't support <source> -->
+      <img src="assets/banner/headerNoText.png" class="navbar-banner img-fluid">
     </picture>
 
+    <div class="nav-links-container d-flex justify-content-between align-items-center">
 
-    <!-- Overlay Navigation Links -->
-    <div class="nav-links-container">
-      <ul class="nav-links">
-        <li><a style="cursor: pointer;" title="Resssources psychologiques" (click)="openDialog()">Ressources</a></li>
-        <li><a style="cursor: pointer;" title="À propos"  (click)="openAbout()">À propos</a></li>
-      </ul>
+      <div class="logo-container">
+        <picture id="logo">
+          <!-- For screens 768px or smaller, load the small image -->
+          <source media="(max-width: 768px)" srcset="assets/banner/logoSmall.png">
+
+          <!-- For screens between 769px and 1269px, load the medium image -->
+          <source media="(min-width: 769px) and (max-width: 1269px)" srcset="assets/banner/logoMedium.png">
+
+          <!-- For screens 1270px or larger, load the large image -->
+          <source media="(min-width: 1270px)" srcset="assets/banner/logo.png">
+
+          <!-- Fallback image for older browsers that don't support <source> -->
+          <img src="assets/banner/logoNoText.png" class="img-fluid" >
+        </picture>
+      </div>
+
+
+      <div class="nav-text">Carte interactive sur le harcèlement de rue
+        <br>en Capitale-Nationale et Chaudière-Appalaches
+      </div>
+
+      <!-- Centered Text -->
+      <!-- Overlay Navigation Links -->
+      <div class="nav-links-container">
+        <ul class="nav-links">
+          <li><a style="cursor: pointer;" title="Resssources psychologiques" (click)="openDialog()">
+            <span *ngIf="_isMobile"><i class="fa fa-medkit" aria-hidden="true"></i></span>
+            <span *ngIf="!_isMobile">Ressources</span>
+          </a></li>
+          <li><a style="cursor: pointer;" title="À propos"  (click)="openAbout()">
+            <span *ngIf="_isMobile"><i class="fa fa-question-circle" aria-hidden="true"></i></span>
+            <span *ngIf="!_isMobile"> À propos</span>
+          </a></li>
+        </ul>
+      </div>
     </div>
   </div>
 </nav>
@@ -29,18 +59,26 @@
 <footer class="footer">
   <div class="container-fluid px-4 content">
     <picture>
-      <!-- For screens smaller than or equal to 768px wide, load the small image -->
-      <!-- <source media="(max-width: 768px)" srcset="assets/banner/footer-small.jpg"> -->
-
+      <!-- For screens 768px or smaller, load the small image -->
+      <source media="(max-width: 768px)" srcset="assets/banner/footerNoTextMedium.png">
       <!-- For screens between 769px and 1269px, load the medium image -->
-      <source media="(max-width: 768px)" srcset="assets/banner/footer-medium.jpg">
+      <!-- <source media="(min-width: 769px) and (max-width: 1269px)" srcset="assets/banner/footerNoTextMedium.png"> -->
 
       <!-- For screens 1270px or larger, load the large image -->
-      <source media="(min-width: 1270px)" srcset="assets/banner/footer.jpg">
+      <source media="(min-width: 769px) " srcset="assets/banner/footerNoText.png">
 
-      <!-- Default image for browsers that do not support <picture> -->
-      <img src="assets/banner/footer.jpg" alt="Banner" class="navbar-banner img-fluid"/>
+      <!-- Fallback image for older browsers that don't support <source> -->
+      <img src="assets/banner/footerNoText.png" class="navbar-banner img-fluid">
     </picture>
+    <div class="nav-links-container d-flex justify-content-between align-items-center footer-text" >
+
+      <p class="m-0 text-center " style="color: #EDEDDD;">
+        <span class="bold" style="color: #342979;">Traumavertissement</span> : Cette page contient des références à des expériences de harcèlement de rue et d'agressions pouvant être
+        confrontant pour certaines personnes. Au besoin, nous vous invitons à consulter la liste des ressources psychologiques accessible
+      <br>
+      <span class="bold" style="color: #342979;">&copy; Rues Sans Peur, un projet porté par Accès Transports viables</span>
+      </p>
+    </div>
     <!-- <picture>
 
       <source media="(max-width: 768px)" srcset="assets/banner/footer-small.jpg">

@@ -253,9 +253,13 @@ button.clicked .fa-flag {
 }
 
 @media (max-width: 480px) {
+  .map {
+    height: 74%;
+  }
   #completedCard {
     max-width: 80%; /* Set a flexible width */
   }
+
   .top-left-icon  {
     position: absolute;
     top: 1%;
@@ -284,7 +288,10 @@ button.clicked .fa-flag {
     max-width: 25%;
     max-height: 25%;
   }
-
+  #popupCard {
+    max-width: 70%;
+    max-height: 40%;
+  }
 }
 
 @media (max-height: 500px) {

@@ -1,11 +1,23 @@
 #modal-container {
-    max-width: 600px;          /* Limits the modal width */
-    margin: auto;             /* Centers the modal */
-    padding: 20px;            /* Adds padding inside the modal */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
-    overflow: hidden;         /* Prevents content overflow */
-    font-family:haas ;;  /* Background color for visibility */
+  max-width: 600px;          /* Limits the modal width */
+  margin: auto;             /* Centers the modal */
+  padding: 20px;            /* Adds padding inside the modal */
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  overflow: hidden;         /* Prevents content overflow */
+  font-family:haas ;;  /* Background color for visibility */
 }
+
+p {
+  display: block;
+  word-wrap: break-word; /* Ensures long words wrap onto the next line */
+  white-space: normal;   /* Makes sure the text wraps as normal (not on a single line) */
+}
+
+a {     /* Makes the link inherit the text color */
+  text-decoration: none;   /* Removes underline (if you don't want it) */
+  word-wrap: break-word;   /* Ensures the link itself wraps with the text */
+}
+
 
 .mat-dialog-content {
     border-radius: 16px;      /* Ensure the content also has rounded corners */

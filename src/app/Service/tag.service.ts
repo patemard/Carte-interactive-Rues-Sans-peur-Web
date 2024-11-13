@@ -147,7 +147,7 @@ export class TagService {
     return throwError(errorMessage);
   }
 
-  sendEmail(emailData: { from: string; to: string; subject: string; text: string; }) {
+  sendEmail(emailData: { from: string; to: string[]; subject: string; text: string; }) {
     let API_URL = `${this.REST_API}/send-email`;
 
     return this.httpClient.post(API_URL, emailData);
