@@ -131,18 +131,19 @@
     <mat-card-header class="d-flex flex-wrap justify-content-between align-items-center p-1">
       <mat-card-title class="w-100 w-md-auto">
         <span class="top-left-icon">
-          <i *ngIf="currentTag.emotion == 'Sécurisant'" class="fa fa-smile-o fa-sm"></i>
-          <i *ngIf="currentTag.emotion == 'Insécurisant'" class="fa fa-frown-o fa-sm"></i>
+          <i *ngIf="currentTag.emotion == 'Sécurisant'" class="fa fa-smile-o fa-xs"></i>
+          <i *ngIf="currentTag.emotion == 'Insécurisant'" class="fa fa-frown-o fa-xs"></i>
         </span>
         <div class="title-container d-flex align-items-center">
           <img
             *ngIf="currentTag && currentTag.transport"
             alt="icon"
             [src]="getTransportIcon()"
-            [ngClass]="currentTag.transport == 'Marche' || currentTag.transport == 'none1' || currentTag.transport == 'none2' || currentTag.transport == 'none3' ? 'icon-completed-pieton' : 'icon-completed'"
+            [ngClass]="currentTag.transport == 'Marche' || currentTag.transport == 'none1' ||
+              currentTag.transport == 'none2' || currentTag.transport == 'none3' ? 'icon-completed-pieton' : 'icon-completed'"
             class="me-1"
           />
-          <span class="title-text small" title="{{ currentTag.title }}">{{ currentTag.title }}</span>
+          <span class="title-text">{{ currentTag.title }}</span>
         </div>
       </mat-card-title>
       <button type="button" class="close completedCardClose ms-auto mt-1" aria-label="Close" (click)="close()">

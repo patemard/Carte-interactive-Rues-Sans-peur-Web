@@ -19,7 +19,7 @@
 
 #completedCard {
   min-width: min-content;
-  max-width:  30%; /* Set a flexible width */
+  max-width:  40%; /* Set a flexible width */
   min-height: min-content; /* Adjust height as needed */
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
   border-radius: 16px !important;
@@ -36,10 +36,10 @@
 
 .top-left-icon  {
   position: absolute;
-  top: 3%;
-  left: 3%;
-  padding: 2px;
+  top: 2%;
+  left: 2%;
 }
+
 /* width */
 .completedCardText {
   max-height: 40%; /* Limits height to 50% of the viewport or parent container */
@@ -143,7 +143,8 @@ button {
 }
 
 .title-text {
-  margin-left: 8px; /* Adds space between the image and the title */
+  margin-left: 5px; /* Adds space between the image and the title */
+  font-size:large;
 }
 
 
@@ -239,11 +240,14 @@ button.clicked .fa-flag {
   .icon-pieton{
     max-width: 20%;
     max-height: 20%;
+    margin-left: 2%;
+
   }
 
   .icon-completed{
     max-width: 35%;
     max-height: 35%;
+    margin-left: 2%;
   }
 
 }
@@ -252,6 +256,12 @@ button.clicked .fa-flag {
   #completedCard {
     max-width: 80%; /* Set a flexible width */
   }
+  .top-left-icon  {
+    position: absolute;
+    top: 1%;
+    left: 1%;
+  }
+
   .completedCardText {
     max-height: 30%; /* Limits height to 50% of the viewport or parent container */
     min-height: 15%; /* Ensures element doesn't shrink below 25% */
@@ -261,8 +271,9 @@ button.clicked .fa-flag {
     overflow-x: hidden; /* Hides horizontal scrollbar */
   }
   .icon-completed-pieton {
-    max-width: 10%;
-    max-height: 10%;
+    max-width: 12%;
+    max-height: 12%;
+    margin-left: 15px;
   }
   .icon-pieton{
     max-width: 15%;

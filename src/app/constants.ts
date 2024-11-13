@@ -29,11 +29,13 @@ export class Constants  {
       " sed erat ultricies, ut pharetra sapien molestie. Sed a posuere orci, ut interdum ";
 
 
-    emotions: {name: string, icon: string, class?: string, rgb: { point: string, card: string, highlight: string,trajectory: string }, png: string}[] = [
+    emotions: {name: string, icon: string, class?: string, rgb: { point: string, card: string, highlight: string,trajectory: string, cluster: string}, png: string}[] = [
           { name: "Sécurisant", icon: "smile-o", class: "text-violet-pale-atv",
-            rgb: {point:"rgba(71, 166, 255, 0.9)", card: "rgba(71, 166, 255, 0.95)", highlight: "rgba(71, 166, 255, 1)", trajectory: "rgba(71, 166, 255, 0.8)" }, png: "black"},
+            rgb: {point:"rgba(71, 166, 255, 0.9)", card: "rgba(71, 166, 255, 0.95)", highlight: "rgba(71, 166, 255, 1)",
+            trajectory: "rgba(71, 166, 255, 0.8)", cluster: "rgba(71, 166, 255, 0.5)" }, png: "black"},
           { name: "Insécurisant", icon: "frown-o" , class: "text-bleu-atv",
-            rgb: {point: "rgba(119, 112, 237, 0.9)", card:"rgba(119, 112, 237, 0.95)", highlight: "rgba(52,41,121, 1)", trajectory: "rgba(119, 112, 237, 0.8)"}, png: "red"}
+            rgb: {point: "rgba(119, 112, 237, 0.9)", card:"rgba(119, 112, 237, 0.95)", highlight: "rgba(52,41,121, 1)",
+            trajectory: "rgba(119, 112, 237, 0.8)", cluster: "rgba(119, 112, 237, 0.5)"}, png: "red"}
     ]
 
     transports = [

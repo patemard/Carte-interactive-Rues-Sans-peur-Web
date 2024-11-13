@@ -431,13 +431,13 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
 
   lockExtent(centerCoord: number[]){
-    // if (this._isMobilePortrait) {
-    //   centerCoord = [
-    //     this.currentTag.mercatorCoord[0] + 300,
-    //     this.currentTag.mercatorCoord[1] ,
-    //   ];
-    // }
-
+    this.hideOrShowFieldForMobile(true);
+    if (this._isMobilePortrait) {
+      centerCoord = [
+        this.currentTag.mercatorCoord[0] + 175,
+        this.currentTag.mercatorCoord[1] ,
+      ];
+    }
     const view = this.map.getView();
      // Animate to the specific coordinate
      view.animate({
@@ -495,7 +495,33 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   }
 
+  hideOrShowFieldForMobile(hide: boolean) {
+    if (this._isMobile) {
+      const geolocationDiv = document.getElementById('geolocationDiv');
+      if (geolocationDiv) {
+        geolocationDiv.style.display = hide ? 'none' : 'block';
+      }
+      const checkboxesDiv = document.getElementById('checkboxesDiv');
+      if (checkboxesDiv) {
+        checkboxesDiv.style.display = hide ? 'none' : 'block';
+      }
+      const goecoderBtn = document.getElementById('gcd-button-control');
+      if (goecoderBtn) {
+        goecoderBtn.style.display = hide ? 'none' : 'block';
+      }
+      const zoomIn = document.getElementsByClassName('ol-zoom-in');
+      for (let i = 0; i < zoomIn.length; i++) {
+        (zoomIn[i] as HTMLElement).style.display = hide ? 'none' : 'block';
+      }
+      const zoomOut = document.getElementsByClassName('ol-zoom-out');
+      for (let i = 0; i < zoomOut.length; i++) {
+        (zoomOut[i] as HTMLElement).style.display =  hide ? 'none' : 'block';
+      }
+    }
+  }
+
   unlockExtent() {
+    this.hideOrShowFieldForMobile(false);
     const extent = ol.proj.transformExtent(
       this.QUEBEC_BOUNDING_BOX,
       'EPSG:4326', 'EPSG:3857'
@@ -848,9 +874,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.seperateInEmotionArrays(pointArray, positivePointArray, negativePointArray);
     this.seperateInEmotionArrays(trajectoryArray, positiveTrajectoryArray, negativeTrajectoryArray);
 
-
-    this.clusterMarkers(positivePointArray, this.emotions[0].rgb.card);
-    this.clusterMarkers(negativePointArray, this.emotions[1].rgb.card);
+    this.clusterMarkers(positivePointArray, this.emotions[0].rgb.cluster);
+    this.clusterMarkers(negativePointArray, this.emotions[1].rgb.cluster);
   }
 
   seperateInEmotionArrays(originalArray: any[], positiveArray:any[], negativeArray: any[]) {
