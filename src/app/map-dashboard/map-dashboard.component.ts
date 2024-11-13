@@ -426,18 +426,19 @@ export class MapDashboardComponent extends Helper implements OnInit {
       this.currentTag.trajectory
     )
     this.scrollToTop();
-    this.lockExtent(this.currentTag.mercatorCoord);
+    this.lockExtent(this.currentTag.mercatorCoord, true);
   }
 
 
-  lockExtent(centerCoord: number[]){
+  lockExtent(centerCoord: number[], offSet?: boolean){
     this.hideOrShowFieldForMobile(true);
-    if (this._isMobilePortrait) {
+    if (this._isMobilePortrait && offSet) {
       centerCoord = [
         this.currentTag.mercatorCoord[0] + 175,
         this.currentTag.mercatorCoord[1] ,
       ];
     }
+
     const view = this.map.getView();
      // Animate to the specific coordinate
      view.animate({
@@ -771,8 +772,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     this.currentTag.transport = this.selectedTransport;
     this.currentTag.description = this.formatLongStringWithSpaces(this.currentTag.description, 30);
     if (!this.currentTag.transport) {
-      const randomIndex = Math.floor(Math.random() * this.rdmTransports.length);
-      this.currentTag.transport = this.rdmTransports[randomIndex].name
+      this.currentTag.transport = this.rdmTransports[0].name
     }
   }
 

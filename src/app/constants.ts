@@ -4,11 +4,6 @@ export class Constants  {
     QUEBEC_CITY: any = {latitude: 46.813877, longitude: -71.207977};
     QUEBEC: any = {latitude: 52.476089, longitude:  -71.825867};
     QUEBEC_BOUNDING_BOX =  [-72.638426, 45.538850, -69.505885, 48.216402];
-    rdmImages = [
-      '../../assets/png/perso1.png',
-      '../../assets/png/perso2.png',
-      '../../assets/png/perso3.png'
-    ];
 
 
    loremIpsum = " Lorem ipsum dolor sit amet, consectetur adipiscing elit. "+
@@ -45,9 +40,7 @@ export class Constants  {
         { name: "Voiture ", icon: "../../assets/png/auto.png"},
     ]
     rdmTransports = [
-      { name: "none1", icon: this.rdmImages[0]},
-      { name: "none2", icon: this.rdmImages[1]},
-      { name: "none3", icon:this.rdmImages[2]},
+      { name: "none", icon:  '../../assets/png/perso1.png'},
     ]
 
     types = [
