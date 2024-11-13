@@ -197,11 +197,6 @@ body, html {
 
 @media (max-width: 580px) {
 
-  .nav-text {
-    font-size:medium;
-    line-height: 1.2;
-
-  }
   .footer {
     height: 15%;
   }
@@ -225,9 +220,6 @@ body, html {
   }
   .nav-links-container {
     padding: 5px;
-  }
-  .logo-container {
-    max-width: 50%;
   }
 
   .nav-text {
