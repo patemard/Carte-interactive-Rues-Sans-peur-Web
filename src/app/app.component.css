@@ -76,7 +76,7 @@ body, html {
   text-align: center; /* Centers the text */
   float: left;
   color: white;
-  margin-right:20%;
+  margin-right:25%;
   font-size: x-large;
   white-space: normal;
   font: haas;
@@ -102,7 +102,8 @@ body, html {
 }
 
 .footer-text{
-  font-weight: lighter;
+  font-weight:lighter;
+  font-size:medium;
   margin: 0 auto; /* Centers the text horizontally */
   text-align: center; /* Ensures the text is centered within the width */
   width: 60%;
@@ -196,14 +197,16 @@ body, html {
 }
 
 @media (max-width: 580px) {
-
+  .logo-container {
+    margin-left: 0 ;
+  }
   .footer {
     height: 15%;
   }
   .footer-text{
     width: 100%;
     line-height: 1.2;
-    font-size: smaller;
+    font-size: small;
   }
 
   .nav-links{
@@ -223,8 +226,8 @@ body, html {
   }
 
   .nav-text {
-    font-size: x-small;
-    line-height: 1.2; /* Optional: Adjust line height for better readability */
+    font-size: small;
+    line-height:1; /* Optional: Adjust line height for better readability */
     width: 100%;
 
   }
