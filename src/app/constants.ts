@@ -40,7 +40,7 @@ export class Constants  {
         { name: "Voiture ", icon: "../../assets/png/auto.png"},
     ]
     rdmTransports = [
-      { name: "none", icon:  '../../assets/png/perso1.png'},
+      { name: "none", icon:  '../../assets/png/perso.png'},
     ]
 
     types = [
