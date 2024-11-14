@@ -989,9 +989,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
             }
           } else {
             // If zoomed out, show clustered features
-            if (this.map.getLayers().getArray().includes(this.nonClusteredLayer)) {
-              this.map.removeLayer(this.nonClusteredLayer);
-            }
             if (!this.map.getLayers().getArray().includes(clusters)) {
               this.map.addLayer(clusters);
             }
