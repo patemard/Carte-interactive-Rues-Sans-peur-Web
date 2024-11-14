@@ -190,7 +190,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
        controls: defaultControls(),
     });
 
-    if (this._isMobilePortrait) {
+    if (this._isMobile) {
       const fullScreenControl = new FullScreen();
       this.map.addControl(fullScreenControl);
     }
@@ -289,7 +289,6 @@ export class MapDashboardComponent extends Helper implements OnInit {
   }
 
   initGeoCoder() {
-    // Add search control https://www.npmjs.com/package/ol-geocoder
     this.geocoder = new Geocoder('nominatim', {
       provider: 'osm',
       lang: 'fr-ca',
