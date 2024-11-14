@@ -116,13 +116,13 @@ export class MapDashboardComponent extends Helper implements OnInit {
   }
 
   async ngOnInit() {
+    this.isMobile();
     this.initMap();
     this.initGeoCoder();
     this.initPopup();
     await this.getTags();
     await this.getUserIp();
     this.visualAggregation();
-    this.isMobile();
     this.map.addControl(
       new CustomCheckboxControl(this.pointLayers, this.trajectoryLayer, this.clusteredLayer)
     );
@@ -559,11 +559,15 @@ export class MapDashboardComponent extends Helper implements OnInit {
   // Used to highlight selected trajectory
   changeLayerColor(layer: any, newColor: string, isTrajectory?: boolean, isReset?: boolean) {
     let newStyle;
+    let width = isReset ? 5 : 6;
+    if (this._isMobile) {
+      width = isReset ? 8 : 9;
+    }
     if (isTrajectory) {
       newStyle = new Style({
         stroke: new Stroke({
           color: newColor,
-          width: isReset ? 5 : 6,
+          width: width,
         }),
       });
     } else {
@@ -657,7 +661,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       style: new Style({
         stroke: new Stroke({
           color: isOpen ? color?.highlight :color?.trajectory, //couleur relatif au emotion
-          width: 5,
+          width: this._isMobile ? 8 : 5,
         })
       })
     });
