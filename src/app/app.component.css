@@ -176,11 +176,17 @@ body, html {
   .logoContainer {
     max-width: 35%;
   }
+  .footer-text {
+    line-height: 1.0; /* Optional: Adjust line height for better readability */
+
+  }
 }
 
 @media (max-width: 870px) {
   .footer-text {
     font-size: medium;
+    line-height: 1.1; /* Optional: Adjust line height for better readability */
+
   }
 }
 
@@ -208,7 +214,7 @@ body, html {
   }
   .footer-text{
     font-size: small;
-    line-height: 1.4; /* Optional: Adjust line height for better readability */
+    line-height: 1.1; /* Optional: Adjust line height for better readability */
 
   }
 }
