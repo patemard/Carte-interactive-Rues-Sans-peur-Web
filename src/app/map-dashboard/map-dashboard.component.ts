@@ -180,7 +180,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
         center: fromLonLat([this.QUEBEC_CITY.longitude, this.QUEBEC_CITY.latitude]),
         minZoom: 12,
         maxZoom: 20,
-        zoom: 14,
+        zoom: 13,
         extent: extent,
       }),
       interactions: defaultInteractions({
@@ -1028,19 +1028,33 @@ export class MapDashboardComponent extends Helper implements OnInit {
   }
 
   sendEmail() {
-    const emailData = {
+    const lat = this.currentTag.latitude;
+    const lon = this.currentTag.longitude;
+    let emailData = {
       from: 'RuesSansPeur@gmail.com',
       to: ['a.metivierhudon@transportsviables.org', 'm.lucas@transportsviables.org', 'acces@transportsviables.org'],
       subject: 'Témoignage Signalé',
-      text: 'Le témoignage #' + ' ' + this.currentTag.id + ' a éte signalé'
+      text: ""
     };
-
-    this.tagService.sendEmail(emailData)
-      .subscribe((response: any) => {
-        console.log('Email sent successfully!', response);
-      }, (error: any) => {
-        console.error('Failed to send email.', error);
-      });
+    if (lat && lon) {
+      this.ipService.getCoordDetails(lat.toString(), lon.toString()).subscribe(res => {
+         emailData.text = 'Un témoignage sur a éte signalé.\n Info de localisation: \n' + '"'+ res.display_name +'"';
+      this.tagService.sendEmail(emailData)
+        .subscribe((response: any) => {
+          console.log('Email sent successfully!', response);
+        }, (error: any) => {
+          console.error('Failed to send email.', error);
+        });
+      })
+    } else {
+       emailData.text = 'Le témoignage #' + ' ' + this.currentTag.id + ' a éte signalé'
+       this.tagService.sendEmail(emailData)
+        .subscribe((response: any) => {
+           console.log('Email sent successfully!', response);
+        }, (error: any) => {
+          console.error('Failed to send email.', error);
+        });
+    }
   }
 
   getTransportIcon(): any{

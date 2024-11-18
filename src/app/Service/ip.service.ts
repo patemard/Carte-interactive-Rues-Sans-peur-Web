@@ -9,6 +9,8 @@ import { environment } from '../../environments/environment';
 export class IpService {
 
   private ipifyUrl = 'https://api.ipify.org?format=json';
+  private nomatimUrl = 'https://nominatim.openstreetmap.org/reverse?';
+
   REST_API: string = environment.REST_API;
 
   httpHeaders = new HttpHeaders().set('Content-Type', 'application/json');
@@ -17,6 +19,11 @@ export class IpService {
 
   getIpAddress(): Observable<any> {
     return this.http.get<any>(this.ipifyUrl);
+  }
+
+  getCoordDetails(lat: string, lon: string) : Observable<any> {
+    let url = this.nomatimUrl + 'lat=' + lat +'&lon=' + lon + '&format=json';
+    return this.http.get<any>(url);
   }
 
   verifyPassword(inputPassword: string): Observable<any> {
