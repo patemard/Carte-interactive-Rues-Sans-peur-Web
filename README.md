@@ -2,8 +2,6 @@
 # Frontend - Rues Sans Peur
 
 Bienvenue sur le projet **Rues Sans Peur**, Cette partie concerne le **frontend**, développé avec **Angular 16**, utilisant **Angular Material** pour le design et **TypeScript 5.4**.
-Ce projet vise à offrir une plateforme conviviale et performante pour documenter les lieux et les trajets sécurisants et insécurisants en Capitale-Nationale et Chaudière-Appalaches. Elle est l’occasion de témoigner d’épisodes de harcèlement de rue et/ou d’insécurités vécus, perçus, ou entendus, tout en se solidarisant autour d’une lutte commune contre le harcèlement de rue!
-[http://rues-sans-peur.org/](http://rues-sans-peur.org/)
 
 ---
 
