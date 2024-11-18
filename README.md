@@ -1,7 +1,7 @@
 
 # Frontend - Rues Sans Peur
 
-Bienvenue sur le projet **Rues Sans Peur**, Cette partie concerne le **frontend**, développé avec **Angular 16**, utilisant **Angular Material** pour le design et **TypeScript 5.4** , ainsi que **OpenLayers** pour la manipulation de la carte avec fourni avec **OpenStreetMap**.
+Bienvenue sur le projet **Rues Sans Peur**, Cette partie concerne le **frontend**, développé avec **Angular 16**, **TypeScript 5.4** , ainsi que **OpenLayers** et **OpenStreetMap** pour la manipulation de la carte.
 
 ---
 
