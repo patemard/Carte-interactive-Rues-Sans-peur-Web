@@ -12,9 +12,6 @@ export class ConfirmDialogComponent {
   ) {}
 
   confirm(){
-    console.log(this.selectedAction);
-
     this.dialogRef.close({event:this.selectedAction});
-
     }
 }
