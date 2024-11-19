@@ -661,7 +661,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       style: new Style({
         stroke: new Stroke({
           color: isOpen ? color?.highlight :color?.trajectory, //couleur relatif au emotion
-          width: this._isMobile ? 8 : 5,
+          width: this._isMobile ? 9 : 5,
         })
       })
     });
@@ -724,7 +724,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
     // Define a style for the point feature
       style = new Style({
         image: new Circle({
-          radius: 7,
+          radius: this._isMobile ? 11 : 7,
           fill: new Fill({ color: color?.point }) //couleur relatif au emotion
         })
       })
