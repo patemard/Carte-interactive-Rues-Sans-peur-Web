@@ -7,12 +7,17 @@ declare var ol: any;
     constructor(map: any, private injector: Injector, private resolver: ComponentFactoryResolver){
         // Create a container for the Angular component
         const container = document.createElement('div');
+        const isMobile = /Mobi|Android|iPhone|iPad|iPod/.test(navigator.userAgent);
         
         // Create a div element to append the Angular component
         const div = document.createElement('div');
         div.style.position = 'absolute';
+        if (isMobile) {
+            div.style.left = '25%';
+        } else {
+            div.style.left = '50%';
+        }
         div.style.top = '30%';
-        div.style.left = '50%';
         div.id = 'saveTrajectoryDiv';
         div.appendChild(container);
     
@@ -29,7 +34,7 @@ declare var ol: any;
     
         // Run change detection manually
         componentRef.changeDetectorRef.detectChanges();
-  }
+    }
   }
 
   import { Component, ComponentFactoryResolver, Injector} from '@angular/core';
@@ -43,7 +48,12 @@ declare var ol: any;
     `,
     styles: [`
         #saveTrajectory {
-            width:full-width
+           max-width: 80%;
+        }
+        @media (max-width: 430px) {
+            #saveTrajectory{
+                max-width: 100%;
+            }
         }
     `]
 })

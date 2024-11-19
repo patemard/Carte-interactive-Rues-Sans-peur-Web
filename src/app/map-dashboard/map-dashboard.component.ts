@@ -42,6 +42,7 @@ import { defaults as defaultInteractions } from 'ol/interaction';
 import { CustomCheckboxControl } from '../interfaces/CustomCheckboxControl';
 import { GeolocationButtonControl } from '../interfaces/GeolocationButtonControl';
 import { SaveTrajectoryButton } from '../interfaces/SaveTrajectoryButton';
+import { TrajectoryInfoBanner } from '../interfaces/TrajectoryInfoBanner';
 import { transform } from 'ol/proj';
 
 @Component({
@@ -53,6 +54,7 @@ import { transform } from 'ol/proj';
 export class MapDashboardComponent extends Helper implements OnInit {
   currentTag: Tag = new Tag;
   saveTrajectoryButtonControl: any;
+  trajectoryInfoBanner: any;
   map: any;
   overlay: any;
   description: string = '';
@@ -314,6 +316,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
   }
 
   initDrawing() {
+    this.unlockExtent(true)
     const view = this.map.getView();  // Get the current view of the map
     // Set a new minimum zoom level
     view.setMinZoom(18);
@@ -364,8 +367,9 @@ export class MapDashboardComponent extends Helper implements OnInit {
         vectorSource.addFeature(lineFeature);
       }
     });
-
     this.addSaveTrajectoryButton();
+    this.addTrajectoryInfoBanner();
+
     // Save the trajectory as GeoJSON
     document.getElementById('saveTrajectory')?.addEventListener('click', () => {
       const format = new GeoJSON();
@@ -383,6 +387,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
       this.submitTrajectory()
       this.map.removeInteraction(draw);
       this.removeSaveTrajectoryButton();
+      this.removeTrajectoryInfoBanner();
     });
   }
   // Function to extract the first coordinate from GeoJSON object
@@ -395,6 +400,17 @@ export class MapDashboardComponent extends Helper implements OnInit {
   removeSaveTrajectoryButton() {
     if (this.saveTrajectoryButtonControl) {
       this.map.removeControl(this.saveTrajectoryButtonControl);
+    }
+  }
+
+  addTrajectoryInfoBanner() {
+    this.trajectoryInfoBanner = new TrajectoryInfoBanner(this.map,this.injector, this.resolver)
+    this.map.addControl(this.trajectoryInfoBanner);
+  }
+
+  removeTrajectoryInfoBanner() {
+    if (this.trajectoryInfoBanner) {
+      this.map.removeControl(this.trajectoryInfoBanner);
     }
   }
 
@@ -520,8 +536,8 @@ export class MapDashboardComponent extends Helper implements OnInit {
     }
   }
 
-  unlockExtent() {
-    this.hideOrShowFieldForMobile(false);
+  unlockExtent(hide?: boolean) {
+    this.hideOrShowFieldForMobile(!!hide);
     const extent = ol.proj.transformExtent(
       this.QUEBEC_BOUNDING_BOX,
       'EPSG:4326', 'EPSG:3857'
