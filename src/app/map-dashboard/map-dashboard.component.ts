@@ -182,7 +182,7 @@ export class MapDashboardComponent extends Helper implements OnInit {
         center: fromLonLat([this.QUEBEC_CITY.longitude, this.QUEBEC_CITY.latitude]),
         minZoom: 12,
         maxZoom: 20,
-        zoom: 13,
+        zoom: 14,
         extent: extent,
       }),
       interactions: defaultInteractions({
