@@ -72,13 +72,13 @@ export class TrajectoryInfoBanner extends Control {
   template: `
     <div class="info-banner">
       <p>
-       Tracez votre trajectoire en ajoutant des points pour les relier, puis, une fois la trajectoire complète, cliquez sur "Sauvegarder trajectoire".
+       Tracez votre trajectoire en ajoutant des points pour les relier, une fois la trajectoire complète, cliquez sur "Sauvegarder trajectoire".
       </p>
     </div>
   `,
   styles: [`
     .info-banner {
-      background-color: rgba(52, 41, 121, 0.8);
+      background-color: rgba(52, 41, 121, 0.9);
       color: white;
       padding: 15px;
       border-radius: 16px;
