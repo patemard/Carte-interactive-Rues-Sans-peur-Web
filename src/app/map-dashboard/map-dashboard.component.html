@@ -8,7 +8,7 @@
               <mat-form-field class="full-width rounded-field" appearance="fill">
                 <mat-label>Témoignage</mat-label>
                   <mat-select name="Sélection Témoignage"
-                  [(ngModel)]="selectedCategory">
+                  [(ngModel)]="selectedCategory" >
                   <mat-option *ngFor="let category of categories" [value]="category.name">
                     <!-- <i class="fa fa-{{emotion.icon}} fa-xl"></i> -->
                     <span style="margin-top: 5px;">{{category.name}}</span>
@@ -157,12 +157,12 @@
       <mat-card-actions class="centered d-flex flex-wrap justify-content-center">
         <button mat-button
           id="heartBtn"
-          matTooltip="Solidaire"
+          title="Solidaire"
           [class.clicked]="heartIsClicked"
           [disabled]="heartIsClicked || !ipAddress"
           (click)="heart()">
           <i class="fa fa-heart" aria-hidden="true" title="Solidaire"></i>
-          <span class="counter" *ngIf="currentTag.heart">{{ currentTag.heart.length }}</span>
+          <span class="counter" *ngIf="currentTag.heart" title="Solidaire">{{ currentTag.heart.length }}</span>
         </button>
         <button mat-button
           id="flagBtn"

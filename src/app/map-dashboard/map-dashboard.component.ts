@@ -786,7 +786,12 @@ export class MapDashboardComponent extends Helper implements OnInit {
 
   setModel() {
     this.currentTag.active = true;
-    this.currentTag.title = this.selectedCategory || "Témoignage";
+    let title = this.selectedCategory || "Témoignage";
+    if (this.selectedCategory== this.categories[1]['name']) {
+      title = this.selectedEmotion == this.emotions[0]['name'] ? "Aménagement sécurisant" : "Aménagement insécurisant"
+    }
+    
+    this.currentTag.title = title;
     this.currentTag.emotion = this.selectedEmotion;
     this.currentTag.transport = this.selectedTransport;
     this.currentTag.description = this.formatLongStringWithSpaces(this.currentTag.description, 30);
