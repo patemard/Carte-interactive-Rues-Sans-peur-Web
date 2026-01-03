@@ -155,6 +155,7 @@
         <div #scrollableContainer>{{currentTag.description}}</div>
       </mat-card-content>
       <mat-card-actions class="centered d-flex flex-wrap justify-content-center">
+        <div title="Solidaire">
         <button mat-button
           id="heartBtn"
           title="Solidaire"
@@ -164,6 +165,7 @@
           <i class="fa fa-heart" aria-hidden="true" title="Solidaire"></i>
           <span class="counter" *ngIf="currentTag.heart" title="Solidaire">{{ currentTag.heart.length }}</span>
         </button>
+        </div>
         <button mat-button
           id="flagBtn"
           matTooltip="Signaler"
