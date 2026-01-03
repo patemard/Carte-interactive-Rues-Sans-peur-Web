@@ -139,7 +139,7 @@
             *ngIf="currentTag && currentTag.transport"
             alt="icon"
             [src]="getTransportIcon()"
-            [ngClass]="currentTag.transport == 'Marche' || currentTag.transport == 'none1' ||
+            [ngClass]="currentTag.transport == 'Marche' || currentTag.transport == 'none'  || currentTag.transport == 'none1' ||
               currentTag.transport == 'none2' || currentTag.transport == 'none3' ? 'icon-completed-pieton' : 'icon-completed'"
             class="me-1"
           />
